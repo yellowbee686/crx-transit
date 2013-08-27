@@ -1,4 +1,5 @@
-var PAT_ENGLISH = /[a-zA-Z-\'\s]+/img;
+var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
+var timer = null;
 
 // 取消翻译
 function cancel() {
@@ -8,40 +9,36 @@ function cancel() {
 	this.removeEventListener('dblclick', cancel);
 }
 
-// 翻译选中文本
-function translate(selection)	{
-	var range = selection.getRangeAt(0);
-	if (range && !selection.isCollapsed) {
-		if (selection.anchorNode.parentNode == selection.focusNode.parentNode) {
-			// 防止对已经翻译胡文本进行叠加翻译
-			if (selection.anchorNode.parentNode.className.indexOf('transit-') != -1) return;
-			var span = null;
-			
-			// 重复利用之前生成的 source 元素
-			if (selection.anchorNode.parentNode.className == 'transit') {
-				span = selection.anchorNode.parentNode;
-			} else {
-				span = document.createElement('span');
-				range.surroundContents(span);
-			}
-			span.className = 'transit-source';
-			// TODO: 对选择的文本进行翻译
-			span.innerHTML += '<span class="transit-result">(翻译结果)</em>';	
+function showPopup(text) {
+    var popup = document.getElementById('transit-popup');
+    if (!popup) {
+        popup = document.createElement('div');
+        popup.id = 'transit-popup';
+        document.body.appendChild(popup);
+    }
+    popup.innerHTML = text;
+    popup.style.display = 'block';
 
-			span.addEventListener('dblclick', cancel, false);
-		}
-	}
+    timer && clearTimeout(timer);
+    timer = setTimeout(function() {
+        popup.style.display = 'none';
+    }, 3000);
+}
+
+// 翻译选中文本
+function translate(text)	{
+    showPopup(text);
 }
 
 // 仅翻译英文
-function canTranslate(selection) {
-	var text = selection && selection.toString() || '';
-	return PAT_ENGLISH.test(text.replace(/(^\s+|\s+$)/mg, ''));
+function canTranslate(text) {
+	return PAT_ENGLISH.test(text);
 }
 
 function transIt(evt){
-	var selection = window.getSelection();
-	canTranslate(selection) && translate(selection);
+	var selection = window.getSelection().toString();
+	var text = selection && selection.toString().replace(/(^\s+|\s+$)/mg) || '';
+	canTranslate(text) && translate(text);
 };
 
 document.addEventListener('mouseup', transIt);

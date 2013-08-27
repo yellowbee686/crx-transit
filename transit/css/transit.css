@@ -1,1 +1,9 @@
-.transit-source { text-decoration: underline; cursor: pointer; }
+#transit-popup {
+    position: fixed;
+    padding: 3px 4px;
+    display: none;
+    right: 0;
+    top: 0;
+    background: #6ec650;
+    padding: 3px 5px;
+}
