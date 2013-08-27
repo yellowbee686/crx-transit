@@ -36,7 +36,7 @@ function canTranslate(text) {
 }
 
 function transIt(evt){
-	var selection = window.getSelection().toString();
+	var selection = window.getSelection();
 	var text = selection && selection.toString().replace(/(^\s+|\s+$)/mg) || '';
 	canTranslate(text) && translate(text);
 };
