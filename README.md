@@ -14,6 +14,11 @@ Chrome划词翻译扩展
 
 ## 参考资料
 
+- [Chrome Extension Document](http://developer.chrome.com/extensions/index.html)
 - [Javascript - Highlighting Selected Text](http://tech.pro/tutorial/1075/javascript-highlighting-selected-text)
 - [wrapping a selected text node with span](http://stackoverflow.com/questions/6328718/wrapping-a-selected-text-node-with-span)
 - [ChromeExtension_HighlightAll](https://github.com/majgis/ChromeExtension_HighlightAll)
+
+## 翻译支持
+
+- [有道翻译API文档和申请地址](http://fanyi.youdao.com/openapi?path=data-mode)

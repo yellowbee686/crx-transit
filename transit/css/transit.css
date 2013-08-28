@@ -1,4 +1,7 @@
 #transit-popup {
+	line-height: 1.5;
+	font-size: 14px;
+	text-align: left;
     position: fixed;
     padding: 3px 4px;
     display: none;
@@ -6,4 +9,11 @@
     top: 0;
     background: #6ec650;
     padding: 3px 5px;
+}
+
+.transit-error { 
+	background: red;
+	padding: 3px 5px;
+	margin: -3px -5px;
+	color: #ffffff;
 }
