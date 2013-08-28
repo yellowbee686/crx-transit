@@ -40,7 +40,6 @@ function getTranslations(result) {
 function youdaoTranslateCallback() {
     if (this.readyState == 4) {
         var result = JSON.parse(this.responseText);
-        console.log(result);
         result.errorCode || showPopup(getTranslations(result));
     }
 }
