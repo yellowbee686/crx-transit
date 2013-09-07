@@ -1,5 +1,4 @@
 var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
-var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var timer = null;
 
 
@@ -46,10 +45,9 @@ function youdaoTranslateCallback() {
 
 // 翻译选中文本
 function translate(text) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = youdaoTranslateCallback;
-    xhr.open('GET', API_URL + encodeURIComponent(text), true);
-    xhr.send();
+    chrome.runtime.sendMessage({ type: 'translation', text: text }, function(response) {
+        showPopup(getTranslations(response.result));
+    });
 }
 
 // 仅翻译英文

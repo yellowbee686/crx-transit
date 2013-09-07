@@ -1,4 +1,4 @@
-body { margin: 2px; width: 230px; }
+body { margin: 2px; width: 230px; padding: 5px; }
 #source { width: 170px; }
 #search { width: 52px; }
 #result { background: #f9fff9; min-height: 50px; margin-top: 2px; }
