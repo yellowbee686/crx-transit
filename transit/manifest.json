@@ -8,14 +8,27 @@
   "icons": {
     "48": "icon48.png"
   },
+
+  "background": {
+    "scripts": ["js/helpers.js", "js/event.js"],
+    "persistent": false
+  },
+
+  "browser_action": {
+    "default_icon": "icon48.png",
+    "default_popup": "popup.html"
+  },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "css": ["css/transit.css"],
-      "js": ["js/transit.js"]
+      "js": ["js/helpers.js", "js/transit.js"]
     }
   ],
+
   "permissions": [
-    "tabs"
+    "tabs", "http://fanyi.youdao.com/openapi.do"
   ]
 }
+

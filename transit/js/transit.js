@@ -1,7 +1,5 @@
 var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
-var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var timer = null;
-
 
 // 取消翻译
 function cancel() {
@@ -27,16 +25,6 @@ function showPopup(text) {
     }, 3000);
 }
 
-function getTranslations(result) {
-    if (result.basic) {
-        return result.basic.explains.join('<br/>');
-    } else if (result.translation) {
-        return result.translation.join('<br />');
-    } else {
-        return '<div class="transit-error">未查询到释义</div>';
-    }
-}
-
 function youdaoTranslateCallback() {
     if (this.readyState == 4) {
         var result = JSON.parse(this.responseText);
@@ -46,10 +34,9 @@ function youdaoTranslateCallback() {
 
 // 翻译选中文本
 function translate(text) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = youdaoTranslateCallback;
-    xhr.open('GET', API_URL + encodeURIComponent(text), true);
-    xhr.send();
+    chrome.runtime.sendMessage({ type: 'translation', text: text }, function(response) {
+        showPopup(getTranslation(response.result));
+    });
 }
 
 // 仅翻译英文
@@ -59,7 +46,7 @@ function canTranslate(text) {
 
 function transIt(evt){
 	var selection = window.getSelection();
-	var text = selection && selection.toString().replace(/(^\s+|\s+$)/g, '') || '';
+	var text = selection && strip(selection.toString()) || '';
 	canTranslate(text) && translate(text);
 };
 
