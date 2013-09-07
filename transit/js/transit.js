@@ -35,7 +35,7 @@ function youdaoTranslateCallback() {
 // 翻译选中文本
 function translate(text) {
     chrome.runtime.sendMessage({ type: 'translation', text: text }, function(response) {
-        showPopup(getTranslations(response.result));
+        showPopup(getTranslation(response.result));
     });
 }
 
@@ -46,7 +46,7 @@ function canTranslate(text) {
 
 function transIt(evt){
 	var selection = window.getSelection();
-	var text = selection && selection.toString().replace(/(^\s+|\s+$)/g, '') || '';
+	var text = selection && strip(selection.toString()) || '';
 	canTranslate(text) && translate(text);
 };
 

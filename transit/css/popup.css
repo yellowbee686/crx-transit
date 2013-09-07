@@ -1,4 +1,11 @@
 body { margin: 2px; width: 230px; padding: 5px; }
 #source { width: 170px; }
 #search { width: 52px; }
-#result { background: #f9fff9; min-height: 50px; margin-top: 2px; }
+#result { background: #f9fff9; margin-top: 2px; color: #2B3F29; font-size: 14px; }
+
+.transit-error { 
+	background: #FFF8DC;
+	padding: 3px 5px;
+	color: #888888;
+    border: 1px solid #E0DCBF;
+}
