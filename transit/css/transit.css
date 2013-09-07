@@ -12,8 +12,9 @@
 }
 
 .transit-error { 
-	background: red;
+	background: #FFF8DC;
 	padding: 3px 5px;
 	margin: -3px -5px;
-	color: #ffffff;
+	color: #888888;
+    border: 1px solid #E0DCBF;
 }

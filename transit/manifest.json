@@ -10,7 +10,7 @@
   },
 
   "background": {
-    "scripts": ["js/event.js"],
+    "scripts": ["js/helpers.js", "js/event.js"],
     "persistent": false
   },
 
@@ -23,7 +23,7 @@
     {
       "matches": ["<all_urls>"],
       "css": ["css/transit.css"],
-      "js": ["js/transit.js"]
+      "js": ["js/helpers.js", "js/transit.js"]
     }
   ],
 

@@ -1,7 +1,6 @@
 var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
 var timer = null;
 
-
 // 取消翻译
 function cancel() {
 	var result = this.querySelector('.transit-result');
@@ -24,16 +23,6 @@ function showPopup(text) {
     timer = setTimeout(function() {
         popup.style.display = 'none';
     }, 3000);
-}
-
-function getTranslations(result) {
-    if (result.basic) {
-        return result.basic.explains.join('<br/>');
-    } else if (result.translation) {
-        return result.translation.join('<br />');
-    } else {
-        return '<div class="transit-error">未查询到释义</div>';
-    }
 }
 
 function youdaoTranslateCallback() {
