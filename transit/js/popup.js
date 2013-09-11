@@ -5,8 +5,8 @@ var inputSource = document.getElementById('source'),
 function transit(e) {
     var text = strip(inputSource.value);
 
-    chrome.runtime.sendMessage({ type: 'translation', text: text }, function(response) {
-        textResult.innerHTML = getTranslation(response.result);
+    chrome.runtime.sendMessage({ type: 'translate', text: text }, function(response) {
+        textResult.innerHTML = response.translation;
     });
 
     return false;
