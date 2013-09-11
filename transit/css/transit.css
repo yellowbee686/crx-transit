@@ -9,6 +9,7 @@
     top: 0;
     background: #6ec650;
     padding: 3px 5px;
+    z-index: 2147483647;
 }
 
 .transit-error { 
