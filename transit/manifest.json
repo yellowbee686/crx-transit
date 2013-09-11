@@ -10,7 +10,7 @@
   },
 
   "background": {
-    "scripts": ["js/helpers.js", "js/event.js"],
+    "scripts": ["js/sugar.min.js", "js/helpers.js", "js/event.js"],
     "persistent": false
   },
 
