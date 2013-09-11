@@ -2,14 +2,14 @@
 	line-height: 1.5;
 	font-size: 14px;
 	text-align: left;
-    position: fixed;
-    padding: 3px 4px;
-    display: none;
-    right: 0;
-    top: 0;
-    background: #6ec650;
-    padding: 3px 5px;
-    z-index: 2147483647;
+  position: fixed;
+  padding: 3px 4px;
+  display: none;
+  right: 0;
+  top: 0;
+  background: #6ec650;
+  padding: 3px 5px;
+  z-index: 2147483647;
 }
 
 .transit-error { 
@@ -17,5 +17,5 @@
 	padding: 3px 5px;
 	margin: -3px -5px;
 	color: #888888;
-    border: 1px solid #E0DCBF;
+  border: 1px solid #E0DCBF;
 }
