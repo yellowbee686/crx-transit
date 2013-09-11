@@ -28,7 +28,7 @@
   ],
 
   "permissions": [
-    "tabs", "http://fanyi.youdao.com/openapi.do"
+    "tabs", "http://fanyi.youdao.com/openapi.do", "http://trit.herokuapp.com/api/items"
   ]
 }
 
