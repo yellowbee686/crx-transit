@@ -1,5 +1,6 @@
 var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
 var timer = null;
+var currentLink = null;
 
 // 取消翻译
 function cancel() {
@@ -44,32 +45,46 @@ function canTranslate(text) {
 	return PAT_ENGLISH.test(text);
 }
 
-function transIt(evt){
+function transIt(evt) {
 	var selection = window.getSelection();
 	var text = selection && strip(selection.toString()) || '';
 	canTranslate(text) && translate(text);
 }
 
-function disableLink(evt) {
-    var link = evt.target;
-    if (link.nodeName == 'A' && evt.altKey) {
-        link.setAttribute('data-transit-href', link.getAttribute('href'));
-        link.removeAttribute('href');
+// 复原链接地址
+function enableLink() {
+    if (currentLink && currentLink.hasAttribute('data-transit-href')) {
+        currentLink.setAttribute('href', currentLink.getAttribute('data-transit-href'));
+        currentLink.removeAttribute('data-transit-href');
+        currentLink.removeEventListener('mouseout', enableLink);
+        currentLink = null;
     }
+    currentLink = null;
 }
 
-function enableLink(evt) {
-    if (evt.keyCode == 18) {
-        var links = document.querySelectorAll('[data-transit-href]');
-        for (var i = 0; i < links.length; i++) {
-            var link = links[i];
-            console.log(link);
-            link.setAttribute('href', link.getAttribute('data-transit-href'));
-            link.removeAttribute('data-transit-href');
-        }
+function findLink(element) {
+    if (element.nodeName == 'BODY') return false;
+    if (element.nodeName == 'A') return element;
+    return findLink(element.parentNode);
+}
+
+// 暂时清除链接地址，以便对链接进行划词
+function disableLink(evt) {
+    if (currentLink) return;
+
+    var link = findLink(evt.target);
+    if (link) {
+        currentLink = link;
+        currentLink.addEventListener('mouseout', enableLink, false);
+        setTimeout(function() {
+            if (currentLink && currentLink.hasAttribute('href')) {
+                currentLink.setAttribute('data-transit-href', currentLink.getAttribute('href'));
+                currentLink.removeAttribute('href');
+            }
+        }, 1500);
+        // TODO: 鼠标悬停时间设置为可配置值
     }
 }
 
 document.addEventListener('mouseup', transIt, false);
-document.addEventListener('mousedown', disableLink, false);
-document.addEventListener('keyup', enableLink, false);
+document.addEventListener('mousemove', disableLink, false);
