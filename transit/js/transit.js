@@ -48,6 +48,28 @@ function transIt(evt){
 	var selection = window.getSelection();
 	var text = selection && strip(selection.toString()) || '';
 	canTranslate(text) && translate(text);
-};
+}
 
-document.addEventListener('mouseup', transIt);
+function disableLink(evt) {
+    var link = evt.target;
+    if (link.nodeName == 'A' && evt.altKey) {
+        link.setAttribute('data-transit-href', link.getAttribute('href'));
+        link.removeAttribute('href');
+    }
+}
+
+function enableLink(evt) {
+    if (evt.keyCode == 18) {
+        var links = document.querySelectorAll('[data-transit-href]');
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            console.log(link);
+            link.setAttribute('href', link.getAttribute('data-transit-href'));
+            link.removeAttribute('data-transit-href');
+        }
+    }
+}
+
+document.addEventListener('mouseup', transIt, false);
+document.addEventListener('mousedown', disableLink, false);
+document.addEventListener('keyup', enableLink, false);
