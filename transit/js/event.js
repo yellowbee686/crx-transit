@@ -3,7 +3,7 @@ var PUSH_URL = 'http://trit.herokuapp.com/api/items'
 
 function settings(key, value) {
     if (value == undefined) {
-        return JSON.parse(localStorage['settings_' + key]);
+        return JSON.parse(localStorage['settings_' + key] || null);
     } else {
         localStorage['settings_' + key] = JSON.stringify(value);
     }

@@ -20,7 +20,19 @@ function togglePageSelection() {
 	app.settings(this.name, this.checked);
 }
 
-// 在输入框中按下回车键后进行查询
-source.addEventListener('keypress', transit, false);
-toggle.addEventListener('change', togglePageSelection, false);
-source.focus();
+
+function initialize() {
+	// 事件注册
+	source.addEventListener('keypress', transit, false);
+	toggle.addEventListener('change', togglePageSelection, false);
+
+	// 读取初始配置
+	if (app.settings(toggle.name) == null) {
+		app.settings(toggle.name, true);
+	}
+
+	toggle.checked = app.settings(toggle.name); 
+	source.focus();
+}
+
+initialize();
