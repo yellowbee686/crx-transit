@@ -1,17 +1,17 @@
-var inputSource = document.getElementById('source'),
-    textResult = document.getElementById('result'),
-    formSearch = document.getElementById('form-search');
+var source = document.getElementById('source'),
+    result = document.getElementById('result');
 
-function transit(e) {
-    var text = strip(inputSource.value);
+function transit(evt) {
+	if (evt.keyCode != 13) return;
+	if (source.value.isBlank()) return;
 
-    chrome.runtime.sendMessage({ type: 'translate', text: text }, function(response) {
-        textResult.innerHTML = response.translation;
+    chrome.runtime.sendMessage({ type: 'translate', text: source.value.trim() }, function(response) {
+        result.innerHTML = response.translation;
     });
 
     return false;
 }
 
-inputSource.focus();
-formSearch.onsubmit = transit;
-
+// 在输入框中按下回车键后进行查询
+source.addEventListener('keypress', transit, false)
+source.focus();

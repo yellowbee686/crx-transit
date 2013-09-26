@@ -1,4 +1,8 @@
 // TransIt 通用函数
+var TPLS = {
+    SUCCESS: '<div class="success">{1}</div>',
+    WARNING: '<div class="warning">{1}</div>'
+};
 
 // 去掉字符串首尾空格
 function strip(s) {
@@ -18,6 +22,8 @@ function getTranslation(result) {
         
         if (translation == result.query) {
             translation = null;
+        } else {
+            translation = TPLS.SUCCESS.assign(translation);
         }
     }
 

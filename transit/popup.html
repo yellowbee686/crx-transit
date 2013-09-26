@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8"/>
-    <title>TransIt</title> 
-    <link rel="stylesheet" href="css/popup.css" type="text/css" />
-  </head>
-  <body>
-    <h3>TransIt</h3>
+<head>
+  <meta charset="utf-8"/>
+  <title>TransIt</title> 
+  <link rel="stylesheet" href="css/popup.css" type="text/css" />
+</head>
+<body>
+  <input type="text" id="source" placeholder="输入单词 ..." />
 
-    <form id="form-search" action="jvascript:;">
-      <input type="text" id="source" name="source" placeholder="输入单词" />
-      <input type="submit" id="search" value="查询" />
-    </div>
-    
-    <div id="result"></div>
+  <section id="result"></section>
 
-    <script src="js/helpers.js" type="text/javascript"></script>
-    <script src="js/popup.js" type="text/javascript"></script>
-  </body>
+  <section id="options">
+    <label><input type="checkbox" name="option-page-selection-status" /> 启用页面划词</label>
+  </section>
+
+  <script src="js/sugar.min.js" type="text/javascript"></script>
+  <script src="js/helpers.js" type="text/javascript"></script>
+  <script src="js/popup.js" type="text/javascript"></script>
+</body>
 </html>
 

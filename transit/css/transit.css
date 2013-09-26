@@ -12,7 +12,7 @@
   z-index: 2147483647;
 }
 
-.transit-error { 
+.warning { 
 	background: #FFF8DC;
 	padding: 3px 5px;
 	margin: -3px -5px;

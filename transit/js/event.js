@@ -1,6 +1,5 @@
 var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
-var TRANSIT_ERROR = '<div class="transit-error">未找到释义</div>';
 
 // 推送词条到服务器
 // TODO: 实现用户登录功能，将词条推送到自己的账户下
@@ -35,7 +34,7 @@ function translateHanlder(request, sender, sendResponse) {
             sendResponse({ translation: translation });
             pushItem.delay(100, request.text, translation);
         } else {
-            sendResponse({ translation: TRANSIT_ERROR });
+            sendResponse({ translation: TPLS.WARNING.assign('未找到释义') });
         }
         
     };
