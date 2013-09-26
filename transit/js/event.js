@@ -50,9 +50,14 @@ function translateHanlder(request, sender, sendResponse) {
     xhr.send();
 }
 
+// 获取设置项
+function settingsHandler(request, sender, sendResponse) {
+    sendResponse(settings(request.key));
+}
 
 var dispatcher = {
-    translate: translateHanlder
+    translate: translateHanlder,
+    settings: settingsHandler
 };
 
 // 响应来自页面和弹出层的翻译请求
@@ -62,4 +67,3 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 
     return true;
 });
-

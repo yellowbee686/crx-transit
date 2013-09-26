@@ -46,9 +46,13 @@ function canTranslate(text) {
 }
 
 function transIt(evt) {
-	var selection = window.getSelection();
-	var text = selection && strip(selection.toString()) || '';
-	canTranslate(text) && translate(text);
+    chrome.extension.sendMessage({ type: 'settings', key: 'page_selection_enabled' }, function(response) {
+        if (response) {
+            var selection = window.getSelection();
+            var text = selection && strip(selection.toString()) || '';
+            canTranslate(text) && translate(text);
+        }
+    });
 }
 
 // 复原链接地址
