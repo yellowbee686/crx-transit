@@ -1,6 +1,14 @@
 var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
 
+function settings(key, value) {
+    if (value == undefined) {
+        return JSON.parse(localStorage['settings_' + key]);
+    } else {
+        localStorage['settings_' + key] = JSON.stringify(value);
+    }
+}
+
 // 推送词条到服务器
 // TODO: 实现用户登录功能，将词条推送到自己的账户下
 function pushItem(name, explaination) {
@@ -48,7 +56,7 @@ var dispatcher = {
 };
 
 // 响应来自页面和弹出层的翻译请求
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     var handler = dispatcher[request.type] || noop;
     handler(request, sender, sendResponse);
 

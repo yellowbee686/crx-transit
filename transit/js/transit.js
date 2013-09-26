@@ -35,7 +35,7 @@ function youdaoTranslateCallback() {
 
 // 翻译选中文本
 function translate(text) {
-    chrome.runtime.sendMessage({ type: 'translate', text: text }, function(response) {
+    chrome.extension.sendMessage({ type: 'translate', text: text }, function(response) {
         showPopup(response.translation);
     });
 }
