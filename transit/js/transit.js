@@ -1,14 +1,6 @@
 var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
 var timer = null;
-var currentLink = null;
-
-// 取消翻译
-function cancel() {
-	var result = this.querySelector('.transit-result');
-	result && result.remove();
-	this.className = 'transit';
-	this.removeEventListener('dblclick', cancel);
-}
+var $link = null;
 
 function showPopup(text) {
     var popup = document.getElementById('transit-popup');
@@ -23,14 +15,7 @@ function showPopup(text) {
     timer && clearTimeout(timer);
     timer = setTimeout(function() {
         popup.style.display = 'none';
-    }, 3000);
-}
-
-function youdaoTranslateCallback() {
-    if (this.readyState == 4) {
-        var result = JSON.parse(this.responseText);
-        result.errorCode || showPopup(getTranslations(result));
-    }
+    }, 8000);
 }
 
 // 翻译选中文本
@@ -55,40 +40,48 @@ function transIt(evt) {
     });
 }
 
-// 复原链接地址
-function enableLink() {
-    if (currentLink && currentLink.hasAttribute('data-transit-href')) {
-        currentLink.setAttribute('href', currentLink.getAttribute('data-transit-href'));
-        currentLink.removeAttribute('data-transit-href');
-        currentLink.removeEventListener('mouseout', enableLink);
-        currentLink = null;
-    }
-    currentLink = null;
+
+function focusLink(evt) {
+    evt.stopPropagation();
+
+    $link = $(this);
+    evt.shiftKey && disableLink(evt);
 }
 
-function findLink(element) {
-    if (element.nodeName == 'BODY') return false;
-    if (element.nodeName == 'A') return element;
-    return findLink(element.parentNode);
+function blurLink(evt) {
+    evt.stopPropagation();
+
+    if ($link) {
+        if ($link.hasClass('transit-link')) {
+            enableLink(evt);
+        }
+    }
+
+    $link = null;
 }
 
 // 暂时清除链接地址，以便对链接进行划词
 function disableLink(evt) {
-    if (currentLink) return;
+    if ($link && evt.shiftKey) {
+        $link.data('transit-href', $link.attr('href')).removeAttr('href').addClass('transit-link');
+    };
+}
 
-    var link = findLink(evt.target);
-    if (link) {
-        currentLink = link;
-        currentLink.addEventListener('mouseout', enableLink, false);
-        setTimeout(function() {
-            if (currentLink && currentLink.hasAttribute('href')) {
-                currentLink.setAttribute('data-transit-href', currentLink.getAttribute('href'));
-                currentLink.removeAttribute('href');
-            }
-        }, 1500);
-        // TODO: 鼠标悬停时间设置为可配置值
+// 复原链接地址
+function enableLink(evt) {
+    if ($link && evt.keyCode == 16) {
+        $link.attr('href', $link.data('transit-href')).removeClass('transit-link');
     }
 }
 
-document.addEventListener('mouseup', transIt, false);
-document.addEventListener('mousemove', disableLink, false);
+// 清除选择
+function clearSelection(evt) {
+    window.getSelection().empty();
+}
+
+$(document).on('mouseup', transIt);
+$(document).on('mouseenter', 'a', focusLink);
+$(document).on('mouseleave', 'a', blurLink);
+$(document).on('keydown', disableLink);
+$(document).on('keyup', enableLink);
+$(document).on('mousedown', clearSelection);
