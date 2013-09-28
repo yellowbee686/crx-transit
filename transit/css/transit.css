@@ -3,19 +3,26 @@
 	font-size: 14px;
 	text-align: left;
   position: fixed;
-  padding: 3px 4px;
   display: none;
   right: 0;
   top: 0;
-  background: #6ec650;
-  padding: 3px 5px;
   z-index: 2147483647;
+}
+
+.success { 
+  background: #336721;
+  padding: 3px 6px;
+  color: #EDF8ED;
 }
 
 .warning { 
 	background: #FFF8DC;
-	padding: 3px 5px;
-	margin: -3px -5px;
+	padding: 3px 6px;
 	color: #888888;
-  border: 1px solid #E0DCBF;
+}
+
+a.transit-link {
+  text-decoration: none;
+  cursor: text !important;
+  font-weight: bold;
 }
