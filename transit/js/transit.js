@@ -53,7 +53,7 @@ function blurLink(evt) {
 
     if ($link) {
         if ($link.hasClass('transit-link')) {
-            enableLink(evt);
+            enableLink(evt, true);
         }
     }
 
@@ -68,8 +68,8 @@ function disableLink(evt) {
 }
 
 // 复原链接地址
-function enableLink(evt) {
-    if ($link && evt.keyCode == 16) {
+function enableLink(evt, ignoreKey) {
+    if ($link && (ignoreKey || evt.keyCode == 16)) {
         $link.attr('href', $link.data('transit-href')).removeClass('transit-link');
     }
 }

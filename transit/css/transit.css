@@ -22,7 +22,6 @@
 }
 
 a.transit-link {
-  text-decoration: none;
+  text-decoration: none !important;
   cursor: text !important;
-  font-weight: bold;
 }
