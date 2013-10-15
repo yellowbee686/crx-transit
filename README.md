@@ -10,8 +10,6 @@ Chrome划词翻译扩展
 
 类似有道智能翻译的效果
 
-![截图](https://s.yunio.com/public/getcontent/token/nAe4Rb?r=a.jpg)
-
 ## 参考资料
 
 - [Chrome Extension Document](http://developer.chrome.com/extensions/index.html)
