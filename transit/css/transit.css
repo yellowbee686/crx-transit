@@ -9,13 +9,13 @@
   z-index: 2147483647;
 }
 
-.success { 
+#transit-popup .success { 
   background: #336721;
   padding: 3px 6px;
   color: #EDF8ED;
 }
 
-.warning { 
+#transit-popup .warning { 
 	background: #FFF8DC;
 	padding: 3px 6px;
 	color: #888888;

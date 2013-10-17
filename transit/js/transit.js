@@ -76,9 +76,10 @@ function enableLink(evt, ignoreKey) {
 
 // 清除选择
 function clearSelection(evt) {
-    // 当鼠标点击左键时，清空当前的选择
-    if (evt.button != 0) return;
-    window.getSelection().empty();
+    // 当使用 Shift 作为辅助键时，清空之前的选择
+    if (evt.button == 0 && evt.shiftKey) {
+        window.getSelection().empty();
+    }
 }
 
 $(document).on('mouseup', transIt);
