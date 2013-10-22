@@ -4,16 +4,21 @@ $(function() {
     var $result = $('#result');
     var $toggle = $('#toggle');
 
-    // 查询单词
-    function transit(evt) {
-        var text = $.trim($source.val());
-
-        if (evt.keyCode != 13) return;
+    function translate(text) {
         if (!text) return;
 
         chrome.extension.sendMessage({ type: 'translate', text: text }, function(response) {
             $result.html(response.translation);
         });
+    }
+
+    // 查询单词
+    function transit(evt) {
+        var text = $.trim($source.val());
+
+        if (evt.keyCode != 13) return;
+
+        translate(text);
 
         return false;
     }
@@ -34,4 +39,6 @@ $(function() {
 
     $toggle.prop('checked', app.settings(toggle.name)); 
     $source.focus();
+    $source.val(app.currentText);
+    translate(app.currentText);
 });

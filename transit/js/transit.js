@@ -20,7 +20,7 @@ function showPopup(text) {
 
 // 翻译选中文本
 function translate(text) {
-    chrome.extension.sendMessage({ type: 'translate', text: text }, function(response) {
+    chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
         showPopup(response.translation);
     });
 }
@@ -31,13 +31,9 @@ function canTranslate(text) {
 }
 
 function transIt(evt) {
-    chrome.extension.sendMessage({ type: 'settings', key: 'page_selection_enabled' }, function(response) {
-        if (response) {
-            var selection = window.getSelection();
-            var text = selection && strip(selection.toString()) || '';
-            canTranslate(text) && translate(text);
-        }
-    });
+    var selection = window.getSelection();
+    var text = selection && strip(selection.toString()) || '';
+    canTranslate(text) && translate(text);
 }
 
 

@@ -1,5 +1,6 @@
 var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
+var currentText = null;
 
 function settings(key, value) {
     if (value == undefined) {
@@ -25,6 +26,9 @@ function pushItem(name, explaination) {
 
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
+    currentText = request.text;
+    if (request.from == 'page' && !settings('page_selection_enabled')) return;
+
     console.log('Translating text:', request.text);
 
     var xhr = new XMLHttpRequest();
@@ -39,6 +43,7 @@ function translateHanlder(request, sender, sendResponse) {
         var translation = getTranslation(result);
 
         if (translation) {
+            
             sendResponse({ translation: translation });
             pushItem.delay(100, request.text, translation);
         } else {
@@ -50,14 +55,8 @@ function translateHanlder(request, sender, sendResponse) {
     xhr.send();
 }
 
-// 获取设置项
-function settingsHandler(request, sender, sendResponse) {
-    sendResponse(settings(request.key));
-}
-
 var dispatcher = {
-    translate: translateHanlder,
-    settings: settingsHandler
+    translate: translateHanlder
 };
 
 // 响应来自页面和弹出层的翻译请求
