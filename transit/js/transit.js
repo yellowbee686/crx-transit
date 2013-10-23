@@ -2,31 +2,29 @@ var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
 var timer = null;
 var $link = null;
 
-function showPopup(text, keep) {
-    var popup = document.getElementById('transit-popup');
-    if (!popup) {
-        popup = document.createElement('div');
-        popup.id = 'transit-popup';
-        document.body.appendChild(popup);
-    }
-    popup.innerHTML = text;
-    popup.style.display = 'block';
+// 通知效果
+function notify(text, waitFor) {
+    var $notify = $(this);
 
-    timer && clearTimeout(timer);
-    if (!keep) {
+    if ($notify.is('.transit-notify')) {
+        $notify.html(text);
+    } else {
+        var $last = $('.transit-notify:last');
+        $notify = $(fmt('<div class="transit-notify">%{1}</div>', text));
+        $notify.css('top', $last.size() ? ($last.position().top + $last.height() + 10) : 0); 
+        $notify.appendTo('body');
+    }
+
+    if (waitFor) {
+        waitFor($notify);
+    } else {
         // TODO 翻译消失时间设置为配置项
-        timer = setTimeout(function() {
-            popup.style.display = 'none';
-        }, 5000);
+        $notify.delay(5000).fadeOut(function() {
+            $(this).remove();
+        });
     }
 }
-
-// 翻译选中文本
-function translate(text) {
-    chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
-        showPopup('<h6 class="success">' + text + '</h6>' + response.translation);
-    });
-}
+$.fn.notify = notify;
 
 // 仅翻译英文
 function canTranslate(text) {
@@ -38,8 +36,11 @@ function transIt(evt) {
     var text = selection && strip(selection.toString()) || '';
     
     if (canTranslate(text)) {
-        showPopup('<div class="success">正在翻译...</div>', true);
-        translate(text);
+        notify(fmt(TPLS.SUCCESS, fmt('正在翻译 <strong>%{1} ...</strong>', text)), function($notify) {
+            chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
+                $notify.notify(response.translation);
+            });
+        });
     }
 }
 

@@ -41,13 +41,13 @@ function translateHanlder(request, sender, sendResponse) {
         if (!result || result.errorCode) return;
 
         var translation = getTranslation(result);
+        var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
 
         if (translation) {
-            
-            sendResponse({ translation: translation });
+            sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)) });
             pushItem.delay(100, request.text, translation);
         } else {
-            sendResponse({ translation: TPLS.WARNING.assign('未找到释义') });
+            sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)) });
         }
         
     };
