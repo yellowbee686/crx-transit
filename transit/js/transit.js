@@ -2,7 +2,7 @@ var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
 var timer = null;
 var $link = null;
 
-function showPopup(text) {
+function showPopup(text, keep) {
     var popup = document.getElementById('transit-popup');
     if (!popup) {
         popup = document.createElement('div');
@@ -13,15 +13,18 @@ function showPopup(text) {
     popup.style.display = 'block';
 
     timer && clearTimeout(timer);
-    timer = setTimeout(function() {
-        popup.style.display = 'none';
-    }, 8000);
+    if (!keep) {
+        // TODO 翻译消失时间设置为配置项
+        timer = setTimeout(function() {
+            popup.style.display = 'none';
+        }, 5000);
+    }
 }
 
 // 翻译选中文本
 function translate(text) {
     chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
-        showPopup(response.translation);
+        showPopup('<h6 class="success">' + text + '</h6>' + response.translation);
     });
 }
 
@@ -33,7 +36,11 @@ function canTranslate(text) {
 function transIt(evt) {
     var selection = window.getSelection();
     var text = selection && strip(selection.toString()) || '';
-    canTranslate(text) && translate(text);
+    
+    if (canTranslate(text)) {
+        showPopup('<div class="success">正在翻译...</div>', true);
+        translate(text);
+    }
 }
 
 
