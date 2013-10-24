@@ -3,10 +3,22 @@ var PUSH_URL = 'http://trit.herokuapp.com/api/items'
 var currentText = null;
 
 function settings(key, value) {
-    if (value == undefined) {
-        return JSON.parse(localStorage['settings_' + key] || null);
+    if (key == undefined) {
+        // TODO: 维护一套默认配置，并在初始化时应用该配置
+        var options = {};
+        for (var key in localStorage) {
+            if (/^settings_/.test(key)) {
+                var key_name = key.replace(/^settings_/, '');
+                options[key_name] = settings(key_name); 
+            }
+        }
+        return options;
     } else {
-        localStorage['settings_' + key] = JSON.stringify(value);
+        if (value == undefined) {
+            return JSON.parse(localStorage['settings_' + key] || null);
+        } else {
+            localStorage['settings_' + key] = JSON.stringify(value);
+        }
     }
 }
 
@@ -27,7 +39,7 @@ function pushItem(name, explaination) {
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
     currentText = request.text;
-    if (request.from == 'page' && !settings('page_selection_enabled')) return;
+    if (request.from == 'page' && settings('page_selection_enabled') === false) return;
 
     console.log('Translating text:', request.text);
 
@@ -44,10 +56,10 @@ function translateHanlder(request, sender, sendResponse) {
         var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
 
         if (translation) {
-            sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)) });
+            sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
             pushItem.delay(100, request.text, translation);
         } else {
-            sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)) });
+            sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)), settings: settings });
         }
         
     };

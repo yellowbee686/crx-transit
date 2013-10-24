@@ -15,11 +15,11 @@ function notify(text, waitFor) {
         $notify.appendTo('body');
     }
 
-    if (waitFor) {
+    if ($.isFunction(waitFor)) {
         waitFor($notify);
     } else {
         // TODO 翻译消失时间设置为配置项
-        $notify.delay(5000).fadeOut(function() {
+        $notify.delay(waitFor * 1000).fadeOut(function() {
             $(this).remove();
         });
     }
@@ -38,7 +38,8 @@ function transIt(evt) {
     if (canTranslate(text)) {
         notify(fmt(TPLS.SUCCESS, fmt('正在翻译 <strong>%{1} ...</strong>', text)), function($notify) {
             chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
-                $notify.notify(response.translation);
+                // FIXME: 停留时间默认值使用统一配置
+                $notify.notify(response.translation, response.settings.notify_timeout || 3);
             });
         });
     }

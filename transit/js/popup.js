@@ -47,7 +47,8 @@ $(function() {
     }
 
     $toggle.prop('checked', app.settings($toggle.attr('name'))); 
-    $timeout.get(0).value = parseInt(app.settings($timeout.attr('name')) || 5);
+    // FIXME: 停留时间默认值使用统一配置
+    $timeout.get(0).value = parseInt(app.settings($timeout.attr('name')) || 3);
     $timeout.trigger('change');
     $source.focus();
     $source.val(app.currentText);
