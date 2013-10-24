@@ -11,7 +11,11 @@
   <section id="result"></section>
 
   <section id="options">
-    <label><input type="checkbox" id="toggle" name="page_selection_enabled" />启用页面划词</label>
+    <label><input type="checkbox" id="toggle" name="page_selection_enabled" />启用页面划词</label><br/>
+    <label title="页面划词的翻译结果停留时间">
+      <span>翻译停留时间：</span>
+      <input type="range" min="1" max="10" step="1" id="timeout" name="notify_timeout" />
+      <span>0</span>秒</label>
   </section>
 
   <script src="js/jquery-2.0.3.min.js" type="text/javascript"></script>

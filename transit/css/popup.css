@@ -36,3 +36,11 @@ body {
   border-top: 1px solid #ddd;
   padding: 4px 0;
 }
+
+#options input[type=range] {
+  height: 10px;
+  width: 40px;
+}
+#options input[type=range]::-webkit-slider-thumb {
+  height: 10px;
+}
