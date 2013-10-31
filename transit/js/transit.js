@@ -1,4 +1,5 @@
-var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
+// 页面划词简化，只允许划单词
+var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
 var timer = null;
 var $link = null;
 

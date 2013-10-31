@@ -42,29 +42,35 @@ function translateHanlder(request, sender, sendResponse) {
     if (request.from == 'page' && settings('page_selection_enabled') === false) return;
 
     console.log('Translating text:', request.text);
+    // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
+    // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
+    // TODO 为翻译缓存提供简单统计 @greatghoul
+    var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
+    var translation = localStorage['transit_' + request.text];
+    if (translation) {
+        sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
+    } else {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState != 4) return;
 
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (this.readyState != 4) return;
+            var result = JSON.parse(this.responseText);
+            console.log('==>', result);
 
-        var result = JSON.parse(this.responseText);
-        console.log('==>', result);
-        
-        if (!result || result.errorCode) return;
+            if (!result || result.errorCode) return;
 
-        var translation = getTranslation(result);
-        var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
-
-        if (translation) {
-            sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
-            pushItem.delay(100, request.text, translation);
-        } else {
-            sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)), settings: settings });
-        }
-        
-    };
-    xhr.open('GET', API_URL + encodeURIComponent(request.text), true);
-    xhr.send();
+            translation = getTranslation(result);
+            if (translation) {
+                sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
+                localStorage['transit_' + request.text] = translation;
+                pushItem.delay(100, request.text, translation);
+            } else {
+                sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)), settings: settings() });
+            }
+        };
+        xhr.open('GET', API_URL + encodeURIComponent(request.text), true);
+        xhr.send();
+    }
 }
 
 var dispatcher = {
@@ -78,3 +84,6 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 
     return true;
 });
+
+// TODO 使用更加有效的配置初始化方式
+if (!settings('notify_timeout')) settings('notify_timeout', 3);
