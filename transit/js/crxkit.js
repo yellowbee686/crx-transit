@@ -7,7 +7,7 @@
     var crx = window.crx = {};
 
     // Options
-    crxkit.options = {
+    crx.options = {
         // Get full name of option (with prefix)
         function _name(name) {
             return this.prefix + name;
@@ -42,11 +42,11 @@
 
         // Option getter
         get: function(name, altValue) {
-            var currentValue = localStorage.getItem(_name(name));
-            if (currentValue === null) {
-                currentValue = altValue;
+            var value = localStorage.getItem(_name(name));
+            if (value === null) {
+                value = altValue;
             }
-            return currentValue;
+            return value;
         },
 
         // Option setter
