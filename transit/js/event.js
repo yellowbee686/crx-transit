@@ -1,6 +1,10 @@
 var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
 var currentText = null;
+var defaults = {
+    notify_timeout: 3,
+    page_selection_enabled: true
+};
 
 function settings(key, value) {
     if (key == undefined) {
@@ -87,3 +91,10 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 
 // TODO 使用更加有效的配置初始化方式
 if (!settings('notify_timeout')) settings('notify_timeout', 3);
+
+crx.options.init({ defaults: defaults });
+
+// 扩展新安装时进行配置和初始化等操作
+chrome.runtime.onInstalled.addListener(function(details) {
+    crx.options.reset();
+});
