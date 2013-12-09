@@ -9,7 +9,7 @@
     // FXIEME: Not a good namespace to define this utility function.
     // Get full name of option (with prefix)
     function _name(name) {
-        return this.prefix + name;
+        return crx.options.prefix + name;
     }
 
     // Options
@@ -31,20 +31,19 @@
         // will not override exists options by default, 
         // to override exists options, use `crx.options.reset(true)`
         reset: function(override) {
-            for (var optionName in this.defaults) {
-                var fullOptionName = this.prefix + optionName;
-                var currentOptionValue = localStorage.getItem(fullOptionName);
+            for (var name in this.defaults) {
+                var value = localStorage.getItem(_name(name));
 
                 // Override if exists depents on `override`
-                if (currentOptionValue !== null && !override) continue;
-                localStorage.setItem(fullOptionName, this.defaults[optionName]);
+                if (value !== null && !override) continue;
+                localStorage.setItem(_name(name), this.defaults[name]);
             }  
             return this;
         },
 
         // Option getter
         get: function(name, altValue) {
-            var value = localStorage.getItem(_name(name));
+            var value = JSON.parse(localStorage.getItem(_name(name)));
             if (value === null) {
                 value = altValue;
             }
@@ -58,7 +57,7 @@
             if (typeof(value) === 'function') {
                 localStorage.setItem(_name(name), value(this.get(name)));
             } else {
-                localStorage.setItem(_name(name), value);
+                localStorage.setItem(_name(name), JSON.stringify(value));
             }
             return this;
         }

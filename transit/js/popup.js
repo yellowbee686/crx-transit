@@ -26,14 +26,15 @@ $(function() {
 
     // 启用和禁用页面划词
     function togglePageSelection() {
-        app.settings(this.name, this.checked);
+        console.log(this.checked);
+        app.crx.options.set(this.name, this.checked);
     }
 
     // 更新提示信息保持时间
     function updateNotifyTimeout() {
         var timeout = this.value;
         $(this).next().html(timeout);
-        app.settings(this.name, this.value);
+        app.crx.options.set(this.name, this.value);
     }
 
     // 事件注册
@@ -41,14 +42,8 @@ $(function() {
     $toggle.on('change', togglePageSelection);
     $timeout.on('change', updateNotifyTimeout);
 
-    // 读取初始配置
-    if (app.settings(toggle.name) == null) {
-        app.settings(toggle.name, true);
-    }
-
-    $toggle.prop('checked', app.settings($toggle.attr('name'))); 
-    // FIXME: 停留时间默认值使用统一配置
-    $timeout.get(0).value = parseInt(app.settings($timeout.attr('name')) || 3);
+    $toggle.prop('checked', app.crx.options.get($toggle.attr('name'))); 
+    $timeout.get(0).value = parseInt(app.crx.options.get($timeout.attr('name')));
     $timeout.trigger('change');
     $source.focus();
     $source.val(app.currentText);
