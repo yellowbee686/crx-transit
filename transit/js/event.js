@@ -6,26 +6,6 @@ var defaults = {
     page_selection_enabled: true
 };
 
-function settings(key, value) {
-    if (key == undefined) {
-        // TODO: 维护一套默认配置，并在初始化时应用该配置
-        var options = {};
-        for (var key in localStorage) {
-            if (/^settings_/.test(key)) {
-                var key_name = key.replace(/^settings_/, '');
-                options[key_name] = settings(key_name); 
-            }
-        }
-        return options;
-    } else {
-        if (value == undefined) {
-            return JSON.parse(localStorage['settings_' + key] || null);
-        } else {
-            localStorage['settings_' + key] = JSON.stringify(value);
-        }
-    }
-}
-
 // 推送词条到服务器
 // TODO: 实现用户登录功能，将词条推送到自己的账户下
 function pushItem(name, explaination) {
@@ -43,7 +23,7 @@ function pushItem(name, explaination) {
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
     currentText = request.text;
-    if (request.from == 'page' && settings('page_selection_enabled') === false) return;
+    if (request.from == 'page' && crx.options.get('page_selection_enabled') === false) return;
 
     console.log('Translating text:', request.text);
     // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
@@ -52,6 +32,7 @@ function translateHanlder(request, sender, sendResponse) {
     var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
     var translation = localStorage['transit_' + request.text];
     if (translation) {
+        // TODO 使用 CRXKIT 将配置信息在扩展各页面间同步
         sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
     } else {
         var xhr = new XMLHttpRequest();
@@ -88,9 +69,6 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 
     return true;
 });
-
-// TODO 使用更加有效的配置初始化方式
-if (!settings('notify_timeout')) settings('notify_timeout', 3);
 
 crx.options.init({ defaults: defaults });
 

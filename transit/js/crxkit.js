@@ -22,6 +22,7 @@
         init: function(options) {
             this.defaults = options.defaults || {};
             this.prefix = options.prefix || '_CRX_OPTION_';
+            this.sync = options.sync || false;
          
             return this;
         },
