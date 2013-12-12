@@ -1,10 +1,6 @@
 var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
 var currentText = null;
-var defaults = {
-    notify_timeout: 3,
-    page_selection_enabled: true
-};
 
 // 推送词条到服务器
 // TODO: 实现用户登录功能，将词条推送到自己的账户下
@@ -70,9 +66,8 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 });
 
-crx.options.init({ defaults: defaults });
-
-// 扩展新安装时进行配置和初始化等操作
-chrome.runtime.onInstalled.addListener(function(details) {
-    crx.options.reset();
-});
+initOptions({
+    notifyTimeout: 5,   // 页面划词结果显示时间
+    pageInspect: true,  // 是否启用页面划词
+    pushItem: false     // 是否推送单词到服务端
+}); 

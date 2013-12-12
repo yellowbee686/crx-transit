@@ -5,24 +5,15 @@
 
 (function() {
     var crx = window.crx = {};
-
-    // FXIEME: Not a good namespace to define this utility function.
-    // Get full name of option (with prefix)
-    function _name(name) {
-        return crx.options.prefix + name;
-    }
+    var options = {};
 
     // Options
     crx.options = {
         // Initialize options
         //
         // defaults: default options
-        // prefix: option name prefix in localStorage, default to `_CRX_OPTION_`
-        // sync: Sync options in each extension pages or not(including contentscripts), default to `false`
-        init: function(options) {
-            this.defaults = options.defaults || {};
-            this.prefix = options.prefix || '_CRX_OPTION_';
-            this.sync = options.sync || false;
+        init: function(defaults) {
+            options = defaults || {};
          
             return this;
         },

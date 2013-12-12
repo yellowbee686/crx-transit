@@ -11,7 +11,7 @@
   },
 
   "background": {
-    "scripts": ["js/crxkit.js", "js/helpers.js", "js/event.js"],
+    "scripts": ["js/sugar.min.js", "js/helpers.js", "js/event.js"],
     "persistent": true
   },
 
@@ -29,6 +29,6 @@
   ],
 
   "permissions": [
-    "tabs", "http://fanyi.youdao.com/openapi.do", "http://trit.herokuapp.com/api/items"
+    "tabs", "storage", "http://fanyi.youdao.com/openapi.do", "http://trit.herokuapp.com/api/items"
   ]
 }
