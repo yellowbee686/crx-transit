@@ -1,9 +1,7 @@
 $(function() {
-    var app = chrome.extension.getBackgroundPage();
-	var $source = $('#source');
-    var $result = $('#result');
-    var $toggle = $('#toggle');
-    var $timeout = $('#timeout');
+    var app = chrome.extension.getBackgroundPage(),
+        $source = $('#source'),
+        $result = $('#result');
 
     function translate(text) {
         if (!text) return;
@@ -15,7 +13,7 @@ $(function() {
 
     // 查询单词
     function transit(evt) {
-        var text = $.trim($source.val());
+        var text = $source.val().trim();
 
         if (evt.keyCode != 13) return;
 
@@ -24,28 +22,56 @@ $(function() {
         return false;
     }
 
-    // 启用和禁用页面划词
-    function togglePageSelection() {
-        console.log(this.checked);
-        app.crx.options.set(this.name, this.checked);
+    function setOption() {
+        var $option = $(this),
+            name = $option.attr('id'),
+            option = {};
+
+        if ($option.is('[type=checkbox]')) {
+            option[name] = $option.prop('checked');
+        } else {
+            var value = $option.val();
+            if ($option.is('[type=range]')) {
+                option[name] = parseInt(value);
+            } else {
+                option[name] = value;
+            }
+        }
+
+        chrome.storage.sync.set(option);    
     }
 
     // 更新提示信息保持时间
     function updateNotifyTimeout() {
         var timeout = this.value;
         $(this).next().html(timeout);
-        app.crx.options.set(this.name, this.value);
     }
 
-    // 事件注册
-    $source.on('keypress', transit);
-    $toggle.on('change', togglePageSelection);
-    $timeout.on('change', updateNotifyTimeout);
+    initOptions(null, function(options) {
+        // 事件注册
+        $source.on('keypress', transit);
+        $('.option').on('change', setOption);
+        $('#notifyTimeout').on('change', updateNotifyTimeout);
 
-    $toggle.prop('checked', app.crx.options.get($toggle.attr('name'))); 
-    $timeout.get(0).value = parseInt(app.crx.options.get($timeout.attr('name')));
-    $timeout.trigger('change');
-    $source.focus();
-    $source.val(app.currentText);
-    translate(app.currentText);
+        // 读取配置项
+        for (var name in options) {
+            var $option = $('#' + name),
+                value = options[name]; 
+
+            if ($option.size() == 0) continue;
+            
+            if ($option.is('[type=checkbox]')) {
+                $option.prop('checked', value);
+            } else {
+                $option.val(value);
+            }
+        }
+
+        $('#notifyTimeout').trigger('change');
+
+        $source.focus();
+        $source.val(app.currentText);
+        translate(app.currentText);
+    });
+
 });

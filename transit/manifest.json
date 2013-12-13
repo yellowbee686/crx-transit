@@ -24,7 +24,7 @@
     {
       "matches": ["<all_urls>"],
       "css": ["css/transit.css"],
-      "js": ["js/jquery-2.0.3.min.js", "js/helpers.js", "js/transit.js"]
+      "js": ["js/jquery-2.0.3.min.js", "js/sugar.min.js", "js/helpers.js", "js/transit.js"]
     }
   ],
 

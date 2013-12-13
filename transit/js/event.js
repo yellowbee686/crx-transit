@@ -19,18 +19,17 @@ function pushItem(name, explaination) {
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
     currentText = request.text;
-    if (request.from == 'page' && crx.options.get('page_selection_enabled') === false) return;
 
-    console.log('Translating text:', request.text);
     // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
     // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
     // TODO 为翻译缓存提供简单统计 @greatghoul
-    var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
+    var title = request.from == 'page' ? TPLS.TITLE.assign(request.text) : ''; 
     var translation = localStorage['transit_' + request.text];
     if (translation) {
-        // TODO 使用 CRXKIT 将配置信息在扩展各页面间同步
-        sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
+        console.log('Translating`{1}` from cache '.assign(request.text));
+        sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
     } else {
+        console.log('Translating `{1}` from youdao '.assign(request.text));
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState != 4) return;
@@ -42,11 +41,14 @@ function translateHanlder(request, sender, sendResponse) {
 
             translation = getTranslation(result);
             if (translation) {
-                sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
+                sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
                 localStorage['transit_' + request.text] = translation;
-                pushItem.delay(100, request.text, translation);
+                // 向服务器推送翻译结果
+                if (options.pushItem) {
+                    pushItem.delay(100, request.text, translation);
+                }
             } else {
-                sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)), settings: settings() });
+                sendResponse({ translation: TPLS.WARNING.assign(title + '未找到释义') });
             }
         };
         xhr.open('GET', API_URL + encodeURIComponent(request.text), true);

@@ -2,15 +2,17 @@ var options = {};
 
 // TransIt 通用函数
 var TPLS = {
-    SUCCESS: '<div class="success">%{1}</div>',
-    WARNING: '<div class="warning">%{1}</div>',
-    TITLE: '<h6>%{1}</h6>'
+    SUCCESS: '<div class="success">{1}</div>',
+    WARNING: '<div class="warning">{1}</div>',
+    LOADING: '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
+    TITLE:   '<h6>{1}</h6>'
 };
 
 
 // 从 storage 中读取配置，如果没有配置，则初始化为默认值
-function initOptions(defaults) {
+function initOptions(defaults, callback) {
     var defaults = defaults || {};
+    var callback = callback || function() {};
     chrome.storage.sync.get(null, function(data) {
         // Storage 没有存储设置项，初始化为默认值
         if (Object.isEmpty(data)) {
@@ -23,6 +25,7 @@ function initOptions(defaults) {
         }
 
         console.log('Current options is:', options);
+        callback(options);
     });
 }
 
