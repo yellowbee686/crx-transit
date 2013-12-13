@@ -1,15 +1,42 @@
+var options = {};
+
 // TransIt 通用函数
 var TPLS = {
-    SUCCESS: '<div class="success">%{1}</div>',
-    WARNING: '<div class="warning">%{1}</div>',
-    TITLE: '<h6>%{1}</h6>'
+    SUCCESS: '<div class="success">{1}</div>',
+    WARNING: '<div class="warning">{1}</div>',
+    LOADING: '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
+    TITLE:   '<h6>{1}</h6>'
 };
 
-// 去掉字符串首尾空格
-function strip(s) {
-    return (s || '').replace(/(^\s+|\s+$)/g, '');
+
+// 从 storage 中读取配置，如果没有配置，则初始化为默认值
+function initOptions(defaults, callback) {
+    var defaults = defaults || {};
+    var callback = callback || function() {};
+    chrome.storage.sync.get(null, function(data) {
+        // Storage 没有存储设置项，初始化为默认值
+        if (Object.isEmpty(data)) {
+            chrome.storage.sync.set(defaults, function() {
+                options = defaults;
+                console.log('Initialize options with defaults:', defaults);
+            });
+        } else {
+            options = data;
+        }
+
+        console.log('Current options is:', options);
+        callback(options);
+    });
 }
 
+// 监听设置项的变化
+chrome.storage.onChanged.addListener(function(changes) {
+    for (var name in changes) {
+        var change = changes[name];
+        console.log('Option {1} changed from {2} to {3}'.assign(name, change.oldValue, change.newValue));
+        options[name] = change.newValue;
+    }
+});
 
 // 从查询结果中提取出翻译结果
 function getTranslation(result) {
@@ -27,33 +54,4 @@ function getTranslation(result) {
     }
 
     return translation;
-}
-
-
-// 空方法，用来处理无效的回调
-function noop() {}
-
-// 格式化字符串
-//
-// 用法：
-//
-// var s1 = '%{1} and %{2}!';
-// console.log('source: ' + s1);
-// console.log('target: ' + fmt(s1, 'ask', 'learn'));
-//
-// var s2 = "%{name} is %{age} years old, his son's name is %{sons[0].name}";
-// console.log('source: ' + s2);
-// console.log('target: ' + fmt(s2, { name: 'Lao Ming', age: 32, sons: [{ name: 'Xiao Ming' }]}));
-function fmt() {
-    var args = arguments;
-    return args[0].replace(/%\{(.*?)}/g, function(match, prop) {
-        return function(obj, props) {
-            var prop = /\d+/.test(props[0]) ? parseInt(props[0]) : props[0];
-            if (props.length > 1) {
-                return arguments.callee(obj[prop], props.slice(1));
-            } else {
-                return obj[prop];
-            }
-        }(typeof args[1] === 'object' ? args[1] : args, prop.split(/\.|\[|\]\[|\]\./));
-    });
 }

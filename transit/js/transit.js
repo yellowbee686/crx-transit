@@ -11,7 +11,7 @@ function notify(text, waitFor) {
         $notify.html(text);
     } else {
         var $last = $('.transit-notify:last');
-        $notify = $(fmt('<div class="transit-notify">%{1}</div>', text));
+        $notify = $('<div class="transit-notify">{1}</div>'.assign(text));
         $notify.css('top', $last.size() ? ($last.position().top + $last.height() + 10) : 0); 
         $notify.appendTo('body');
     }
@@ -34,13 +34,12 @@ function canTranslate(text) {
 
 function transIt(evt) {
     var selection = window.getSelection();
-    var text = selection && strip(selection.toString()) || '';
+    var text = selection && (selection.toString() || '').trim();
     
-    if (canTranslate(text)) {
-        notify(fmt(TPLS.SUCCESS, fmt('正在翻译 <strong>%{1} ...</strong>', text)), function($notify) {
+    if (options.pageInspect && canTranslate(text)) {
+        notify(TPLS.LOADING.assign(text), function($notify) {
             chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
-                // FIXME: 停留时间默认值使用统一配置
-                $notify.notify(response.translation, response.settings.notify_timeout || 3);
+                $notify.notify(response.translation, options.notifyTimeout);
             });
         });
     }
@@ -88,9 +87,11 @@ function clearSelection(evt) {
     }
 }
 
-$(document).on('mouseup', transIt);
-$(document).on('mouseenter', 'a', focusLink);
-$(document).on('mouseleave', 'a', blurLink);
-$(document).on('keydown', disableLink);
-$(document).on('keyup', enableLink);
-$(document).on('mousedown', clearSelection);
+initOptions(null, function(options) {
+    $(document).on('mouseup', transIt);
+    $(document).on('mouseenter', 'a', focusLink);
+    $(document).on('mouseleave', 'a', blurLink);
+    $(document).on('keydown', disableLink);
+    $(document).on('keyup', enableLink);
+    $(document).on('mousedown', clearSelection);
+});

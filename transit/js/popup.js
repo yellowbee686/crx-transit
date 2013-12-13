@@ -1,9 +1,7 @@
 $(function() {
-    var app = chrome.extension.getBackgroundPage();
-	var $source = $('#source');
-    var $result = $('#result');
-    var $toggle = $('#toggle');
-    var $timeout = $('#timeout');
+    var app = chrome.extension.getBackgroundPage(),
+        $source = $('#source'),
+        $result = $('#result');
 
     function translate(text) {
         if (!text) return;
@@ -15,7 +13,7 @@ $(function() {
 
     // 查询单词
     function transit(evt) {
-        var text = $.trim($source.val());
+        var text = $source.val().trim();
 
         if (evt.keyCode != 13) return;
 
@@ -24,33 +22,56 @@ $(function() {
         return false;
     }
 
-    // 启用和禁用页面划词
-    function togglePageSelection() {
-        app.settings(this.name, this.checked);
+    function setOption() {
+        var $option = $(this),
+            name = $option.attr('id'),
+            option = {};
+
+        if ($option.is('[type=checkbox]')) {
+            option[name] = $option.prop('checked');
+        } else {
+            var value = $option.val();
+            if ($option.is('[type=range]')) {
+                option[name] = parseInt(value);
+            } else {
+                option[name] = value;
+            }
+        }
+
+        chrome.storage.sync.set(option);    
     }
 
     // 更新提示信息保持时间
     function updateNotifyTimeout() {
         var timeout = this.value;
         $(this).next().html(timeout);
-        app.settings(this.name, this.value);
     }
 
-    // 事件注册
-    $source.on('keypress', transit);
-    $toggle.on('change', togglePageSelection);
-    $timeout.on('change', updateNotifyTimeout);
+    initOptions(null, function(options) {
+        // 事件注册
+        $source.on('keypress', transit);
+        $('.option').on('change', setOption);
+        $('#notifyTimeout').on('change', updateNotifyTimeout);
 
-    // 读取初始配置
-    if (app.settings(toggle.name) == null) {
-        app.settings(toggle.name, true);
-    }
+        // 读取配置项
+        for (var name in options) {
+            var $option = $('#' + name),
+                value = options[name]; 
 
-    $toggle.prop('checked', app.settings($toggle.attr('name'))); 
-    // FIXME: 停留时间默认值使用统一配置
-    $timeout.get(0).value = parseInt(app.settings($timeout.attr('name')) || 3);
-    $timeout.trigger('change');
-    $source.focus();
-    $source.val(app.currentText);
-    translate(app.currentText);
+            if ($option.size() == 0) continue;
+            
+            if ($option.is('[type=checkbox]')) {
+                $option.prop('checked', value);
+            } else {
+                $option.val(value);
+            }
+        }
+
+        $('#notifyTimeout').trigger('change');
+
+        $source.focus();
+        $source.val(app.currentText);
+        translate(app.currentText);
+    });
+
 });

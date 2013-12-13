@@ -2,26 +2,6 @@ var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
 var currentText = null;
 
-function settings(key, value) {
-    if (key == undefined) {
-        // TODO: 维护一套默认配置，并在初始化时应用该配置
-        var options = {};
-        for (var key in localStorage) {
-            if (/^settings_/.test(key)) {
-                var key_name = key.replace(/^settings_/, '');
-                options[key_name] = settings(key_name); 
-            }
-        }
-        return options;
-    } else {
-        if (value == undefined) {
-            return JSON.parse(localStorage['settings_' + key] || null);
-        } else {
-            localStorage['settings_' + key] = JSON.stringify(value);
-        }
-    }
-}
-
 // 推送词条到服务器
 // TODO: 实现用户登录功能，将词条推送到自己的账户下
 function pushItem(name, explaination) {
@@ -39,17 +19,17 @@ function pushItem(name, explaination) {
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
     currentText = request.text;
-    if (request.from == 'page' && settings('page_selection_enabled') === false) return;
 
-    console.log('Translating text:', request.text);
     // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
     // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
     // TODO 为翻译缓存提供简单统计 @greatghoul
-    var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
+    var title = request.from == 'page' ? TPLS.TITLE.assign(request.text) : ''; 
     var translation = localStorage['transit_' + request.text];
     if (translation) {
-        sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
+        console.log('Translating`{1}` from cache '.assign(request.text));
+        sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
     } else {
+        console.log('Translating `{1}` from youdao '.assign(request.text));
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState != 4) return;
@@ -61,11 +41,14 @@ function translateHanlder(request, sender, sendResponse) {
 
             translation = getTranslation(result);
             if (translation) {
-                sendResponse({ translation: fmt(TPLS.SUCCESS, fmt('%{1}%{2}', title, translation)), settings: settings() });
+                sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
                 localStorage['transit_' + request.text] = translation;
-                pushItem.delay(100, request.text, translation);
+                // 向服务器推送翻译结果
+                if (options.pushItem) {
+                    pushItem.delay(100, request.text, translation);
+                }
             } else {
-                sendResponse({ translation: fmt(TPLS.WARNING, fmt('%{1}未找到释义', title)), settings: settings() });
+                sendResponse({ translation: TPLS.WARNING.assign(title + '未找到释义') });
             }
         };
         xhr.open('GET', API_URL + encodeURIComponent(request.text), true);
@@ -85,5 +68,8 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 });
 
-// TODO 使用更加有效的配置初始化方式
-if (!settings('notify_timeout')) settings('notify_timeout', 3);
+initOptions({
+    notifyTimeout: 5,   // 页面划词结果显示时间
+    pageInspect: true,  // 是否启用页面划词
+    pushItem: false     // 是否推送单词到服务端
+}); 
