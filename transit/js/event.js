@@ -71,5 +71,6 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 initOptions({
     notifyTimeout: 5,   // 页面划词结果显示时间
     pageInspect: true,  // 是否启用页面划词
+    linkInspect: true,  // 是否启用链接划词
     pushItem: false     // 是否推送单词到服务端
 }); 

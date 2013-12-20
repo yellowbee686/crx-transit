@@ -47,22 +47,26 @@ function transIt(evt) {
 
 
 function focusLink(evt) {
-    evt.stopPropagation();
+    if (options.linkInspect) {
+        evt.stopPropagation();
 
-    $link = $(this);
-    evt.shiftKey && disableLink(evt);
+        $link = $(this);
+        evt.shiftKey && disableLink(evt);
+    }
 }
 
 function blurLink(evt) {
-    evt.stopPropagation();
+    if (options.linkInspect) {
+        evt.stopPropagation();
 
-    if ($link) {
-        if ($link.hasClass('transit-link')) {
-            enableLink(evt, true);
+        if ($link) {
+            if ($link.hasClass('transit-link')) {
+                enableLink(evt, true);
+            }
         }
-    }
 
-    $link = null;
+        $link = null;
+    }
 }
 
 // 暂时清除链接地址，以便对链接进行划词
@@ -82,7 +86,7 @@ function enableLink(evt, ignoreKey) {
 // 清除选择
 function clearSelection(evt) {
     // 当使用 Shift 作为辅助键时，清空之前的选择
-    if (evt.button == 0 && evt.shiftKey) {
+    if (options.linkInspect && evt.button == 0 && evt.shiftKey) {
         window.getSelection().empty();
     }
 }
