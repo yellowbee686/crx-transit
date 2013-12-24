@@ -44,3 +44,8 @@ body {
 #options input[type=range]::-webkit-slider-thumb {
   height: 10px;
 }
+
+.hint {
+  text-decoration: underline;
+  cursor: help;
+}

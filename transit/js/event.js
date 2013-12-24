@@ -44,9 +44,10 @@ function translateHanlder(request, sender, sendResponse) {
                 sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
                 localStorage['transit_' + request.text] = translation;
                 // 向服务器推送翻译结果
-                if (options.pushItem) {
-                    pushItem.delay(100, request.text, translation);
-                }
+                // 暂时屏蔽掉推送的功能
+                // if (options.pushItem) {
+                //     pushItem.delay(100, request.text, translation);
+                // }
             } else {
                 sendResponse({ translation: TPLS.WARNING.assign(title + '未找到释义') });
             }
