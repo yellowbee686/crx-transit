@@ -1,22 +1,16 @@
 TransIt
 ===========
 
-Chrome划词翻译扩展
+一款简单方便的划词翻译扩展。
 
-操作方法
-----------
+功能列表：
 
-**划词** 或者 **双击单词** （只针对英语，翻译后会在单词旁的括号内显示简单释义，双击单词或者释义可取消）
+ - 页面英文划词翻译 
+ - 连续对多个单词进行划词翻译
+ - 按住 Shift 键可以对超链接中的文本进行划词翻译
+ - 缓存已经查询过的单词的释义，下次查询更快速
+ - 调整页面划词翻译结果显示的时间长短
 
-类似有道智能翻译的效果
+本扩展使用有道翻译API提供翻译支持 http://fanyi.youdao.com/openapi?path=data-mode
+由微酷团队出品 http://veaku.com/products/transit
 
-## 参考资料
-
-- [Chrome Extension Document](http://developer.chrome.com/extensions/index.html)
-- [Javascript - Highlighting Selected Text](http://tech.pro/tutorial/1075/javascript-highlighting-selected-text)
-- [wrapping a selected text node with span](http://stackoverflow.com/questions/6328718/wrapping-a-selected-text-node-with-span)
-- [ChromeExtension_HighlightAll](https://github.com/majgis/ChromeExtension_HighlightAll)
-
-## 翻译支持
-
-- [有道翻译API文档和申请地址](http://fanyi.youdao.com/openapi?path=data-mode)
