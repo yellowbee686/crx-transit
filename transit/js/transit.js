@@ -35,6 +35,8 @@ function canTranslate(text) {
 function transIt(evt) {
     var selection = window.getSelection();
     var text = selection && (selection.toString() || '').trim();
+
+    chrome.extension.sendMessage({ type: 'selection', text: text });
     
     if (options.pageInspect && canTranslate(text)) {
         notify(TPLS.LOADING.assign(text), function($notify) {

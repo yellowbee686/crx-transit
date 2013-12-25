@@ -18,8 +18,6 @@ function pushItem(name, explaination) {
 
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
-    currentText = request.text;
-
     // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
     // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
     // TODO 为翻译缓存提供简单统计 @greatghoul
@@ -36,10 +34,7 @@ function translateHanlder(request, sender, sendResponse) {
 
             var result = JSON.parse(this.responseText);
             console.log('==>', result);
-
-            if (!result || result.errorCode) return;
-
-            translation = getTranslation(result);
+            if (!result || result.errorCode) return; translation = getTranslation(result);
             if (translation) {
                 sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
                 localStorage['transit_' + request.text] = translation;
@@ -57,8 +52,13 @@ function translateHanlder(request, sender, sendResponse) {
     }
 }
 
+function selectionHandler(request, sender, sendResponse) {
+    currentText = request.text;
+}
+
 var dispatcher = {
-    translate: translateHanlder
+    translate: translateHanlder,
+    selection: selectionHandler
 };
 
 // 响应来自页面和弹出层的翻译请求
