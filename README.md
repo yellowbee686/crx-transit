@@ -11,6 +11,7 @@ TransIt
  - 缓存已经查询过的单词的释义，下次查询更快速
  - 调整页面划词翻译结果显示的时间长短
 
-本扩展使用有道翻译API提供翻译支持 http://fanyi.youdao.com/openapi?path=data-mode
-由微酷团队出品 http://veaku.com/products/transit
+技术支持：
 
+ * 产品开发团队 http://veaku.com/
+ * 翻译技术来源 http://fanyi.youdao.com/openapi?path=data-mode
