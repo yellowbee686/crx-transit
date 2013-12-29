@@ -1,29 +1,31 @@
-var PAT_ENGLISH = /^[a-zA-Z-\'\s]+$/img;
+// 页面划词简化，只允许划单词
+var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
 var timer = null;
 var $link = null;
 
-function showPopup(text) {
-    var popup = document.getElementById('transit-popup');
-    if (!popup) {
-        popup = document.createElement('div');
-        popup.id = 'transit-popup';
-        document.body.appendChild(popup);
+// 通知效果
+function notify(text, waitFor) {
+    var $notify = $(this);
+
+    if ($notify.is('.transit-notify')) {
+        $notify.html(text);
+    } else {
+        var $last = $('.transit-notify:last');
+        $notify = $('<div class="transit-notify">{1}</div>'.assign(text));
+        $notify.css('top', $last.size() ? ($last.position().top + $last.height() + 10) : 0); 
+        $notify.appendTo('body');
     }
-    popup.innerHTML = text;
-    popup.style.display = 'block';
 
-    timer && clearTimeout(timer);
-    timer = setTimeout(function() {
-        popup.style.display = 'none';
-    }, 8000);
+    if ($.isFunction(waitFor)) {
+        waitFor($notify);
+    } else {
+        // TODO 翻译消失时间设置为配置项
+        $notify.delay(waitFor * 1000).fadeOut(function() {
+            $(this).remove();
+        });
+    }
 }
-
-// 翻译选中文本
-function translate(text) {
-    chrome.extension.sendMessage({ type: 'translate', text: text }, function(response) {
-        showPopup(response.translation);
-    });
-}
+$.fn.notify = notify;
 
 // 仅翻译英文
 function canTranslate(text) {
@@ -31,33 +33,42 @@ function canTranslate(text) {
 }
 
 function transIt(evt) {
-    chrome.extension.sendMessage({ type: 'settings', key: 'page_selection_enabled' }, function(response) {
-        if (response) {
-            var selection = window.getSelection();
-            var text = selection && strip(selection.toString()) || '';
-            canTranslate(text) && translate(text);
-        }
-    });
+    var selection = window.getSelection();
+    var text = selection && (selection.toString() || '').trim();
+
+    chrome.extension.sendMessage({ type: 'selection', text: text });
+    
+    if (options.pageInspect && canTranslate(text)) {
+        notify(TPLS.LOADING.assign(text), function($notify) {
+            chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
+                $notify.notify(response.translation, options.notifyTimeout);
+            });
+        });
+    }
 }
 
 
 function focusLink(evt) {
-    evt.stopPropagation();
+    if (options.linkInspect) {
+        evt.stopPropagation();
 
-    $link = $(this);
-    evt.shiftKey && disableLink(evt);
+        $link = $(this);
+        evt.shiftKey && disableLink(evt);
+    }
 }
 
 function blurLink(evt) {
-    evt.stopPropagation();
+    if (options.linkInspect) {
+        evt.stopPropagation();
 
-    if ($link) {
-        if ($link.hasClass('transit-link')) {
-            enableLink(evt, true);
+        if ($link) {
+            if ($link.hasClass('transit-link')) {
+                enableLink(evt, true);
+            }
         }
-    }
 
-    $link = null;
+        $link = null;
+    }
 }
 
 // 暂时清除链接地址，以便对链接进行划词
@@ -76,12 +87,17 @@ function enableLink(evt, ignoreKey) {
 
 // 清除选择
 function clearSelection(evt) {
-    window.getSelection().empty();
+    // 当使用 Shift 作为辅助键时，清空之前的选择
+    if (options.linkInspect && evt.button == 0 && evt.shiftKey) {
+        window.getSelection().empty();
+    }
 }
 
-$(document).on('mouseup', transIt);
-$(document).on('mouseenter', 'a', focusLink);
-$(document).on('mouseleave', 'a', blurLink);
-$(document).on('keydown', disableLink);
-$(document).on('keyup', enableLink);
-$(document).on('mousedown', clearSelection);
+initOptions(null, function(options) {
+    $(document).on('mouseup', transIt);
+    $(document).on('mouseenter', 'a', focusLink);
+    $(document).on('mouseleave', 'a', blurLink);
+    $(document).on('keydown', disableLink);
+    $(document).on('keyup', enableLink);
+    $(document).on('mousedown', clearSelection);
+});

@@ -1,38 +1,77 @@
-var app    = chrome.extension.getBackgroundPage(),
-	source = document.getElementById('source'),
-    result = document.getElementById('result'),
-    toggle = document.getElementById('toggle');
+$(function() {
+    var app = chrome.extension.getBackgroundPage(),
+        $source = $('#source'),
+        $result = $('#result');
 
-// 查询单词
-function transit(evt) {
-	if (evt.keyCode != 13) return;
-	if (source.value.isBlank()) return;
+    function translate(text) {
+        if (!text) return;
 
-    chrome.extension.sendMessage({ type: 'translate', text: source.value.trim() }, function(response) {
-        result.innerHTML = response.translation;
+        chrome.extension.sendMessage({ type: 'translate', text: text }, function(response) {
+            $result.html(response.translation);
+        });
+    }
+
+    // 查询单词
+    function transit(evt) {
+        var text = $source.val().trim();
+
+        if (evt.keyCode != 13) return;
+
+        translate(text);
+
+        return false;
+    }
+
+    function setOption() {
+        var $option = $(this),
+            name = $option.attr('id'),
+            option = {};
+
+        if ($option.is('[type=checkbox]')) {
+            option[name] = $option.prop('checked');
+        } else {
+            var value = $option.val();
+            if ($option.is('[type=range]')) {
+                option[name] = parseInt(value);
+            } else {
+                option[name] = value;
+            }
+        }
+
+        chrome.storage.sync.set(option);    
+    }
+
+    // 更新提示信息保持时间
+    function updateNotifyTimeout() {
+        var timeout = this.value;
+        $(this).next().html(timeout);
+    }
+
+    initOptions(null, function(options) {
+        // 事件注册
+        $source.on('keypress', transit);
+        $('.option').on('change', setOption);
+        $('#notifyTimeout').on('change', updateNotifyTimeout);
+
+        // 读取配置项
+        for (var name in options) {
+            var $option = $('#' + name),
+                value = options[name]; 
+
+            if ($option.size() == 0) continue;
+            
+            if ($option.is('[type=checkbox]')) {
+                $option.prop('checked', value);
+            } else {
+                $option.val(value);
+            }
+        }
+
+        $('#notifyTimeout').trigger('change');
+
+        $source.focus();
+        $source.val(app.currentText);
+        translate(app.currentText);
     });
 
-    return false;
-}
-
-// 启用和禁用页面划词
-function togglePageSelection() {
-	app.settings(this.name, this.checked);
-}
-
-
-function initialize() {
-	// 事件注册
-	source.addEventListener('keypress', transit, false);
-	toggle.addEventListener('change', togglePageSelection, false);
-
-	// 读取初始配置
-	if (app.settings(toggle.name) == null) {
-		app.settings(toggle.name, true);
-	}
-
-	toggle.checked = app.settings(toggle.name); 
-	source.focus();
-}
-
-initialize();
+});
