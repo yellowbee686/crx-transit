@@ -1,7 +1,12 @@
 // 页面划词简化，只允许划单词
 var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
+var $notifyList = null;
 var timer = null;
 var $link = null;
+
+function initNotifyEnv() {
+    $notifyList = $(TPLS.NOTIFY_LIST).appendTo('body');
+}
 
 // 通知效果
 function notify(text, waitFor) {
@@ -10,17 +15,14 @@ function notify(text, waitFor) {
     if ($notify.is('.transit-notify')) {
         $notify.html(text);
     } else {
-        var $last = $('.transit-notify:last');
-        $notify = $('<div class="transit-notify">{1}</div>'.assign(text));
-        $notify.css('top', $last.size() ? ($last.position().top + $last.height() + 10) : 0); 
-        $notify.appendTo('body');
+        $notify = $(TPLS.NOTIFY.assign(text));
+        $notify.prependTo($notifyList).slideDown('fast');
     }
 
     if ($.isFunction(waitFor)) {
         waitFor($notify);
     } else {
-        // TODO 翻译消失时间设置为配置项
-        $notify.delay(waitFor * 1000).fadeOut(function() {
+        $notify.delay(waitFor * 1000).slideUp('fast', function() {
             $(this).remove();
         });
     }
@@ -100,4 +102,6 @@ initOptions(null, function(options) {
     $(document).on('keydown', disableLink);
     $(document).on('keyup', enableLink);
     $(document).on('mousedown', clearSelection);
+
+    initNotifyEnv();
 });

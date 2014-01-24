@@ -2,10 +2,12 @@ var options = {};
 
 // TransIt 通用函数
 var TPLS = {
-    SUCCESS: '<div class="success">{1}</div>',
-    WARNING: '<div class="warning">{1}</div>',
-    LOADING: '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
-    TITLE:   '<h6>{1}</h6>'
+    SUCCESS:     '<div class="success">{1}</div>',
+    WARNING:     '<div class="warning">{1}</div>',
+    LOADING:     '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
+    TITLE:       '<h6>{1}</h6>',
+    NOTIFY:      '<li class="transit-notify">{1}</li>',
+    NOTIFY_LIST: '<ul id="transit-notify-list"></ul>'
 };
 
 

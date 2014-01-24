@@ -1,11 +1,24 @@
+#transit-notify-list {
+    background: transparent;
+    position: fixed;
+    z-index: 2147483647;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 250px;
+    right: 5px;
+    top: 5px;
+    text-align: left;
+}
+
 .transit-notify {
+    display: none;
     line-height: 1.5;
     font-size: 14px;
-    text-align: left;
-    position: fixed;
-    right: 0;
-    z-index: 2147483647;
-    width: 250px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #000000;
+    opacity: 0.9;
 }
 
 .transit-notify h6 {
