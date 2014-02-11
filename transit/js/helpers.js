@@ -7,7 +7,9 @@ var TPLS = {
     LOADING:     '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
     TITLE:       '<h6>{1}</h6>',
     NOTIFY:      '<li class="transit-notify">{1}</li>',
-    NOTIFY_LIST: '<ul id="transit-notify-list"></ul>'
+    NOTIFY_LIST: '<ul id="transit-notify-list"></ul>',
+    PHONETIC:    '[<code>{1}</code>]<br/>'
+
 };
 
 
@@ -46,6 +48,9 @@ function getTranslation(result) {
     if (result && !result.errorCode) {
         if (result.basic) {
             translation = result.basic.explains.join('<br/>');
+            if (result.basic.phonetic) {
+                translation = TPLS.PHONETIC.assign(result.basic.phonetic) + translation;
+            }
         } else if (result.translation) {
             translation = result.translation.join('<br />');
         }
