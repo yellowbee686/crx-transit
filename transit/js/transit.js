@@ -3,6 +3,7 @@ var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
 var $notifyList = null;
 var timer = null;
 var $link = null;
+var curr_word = null;
 
 function initNotifyEnv() {
     $notifyList = $(TPLS.NOTIFY_LIST).appendTo('body');
@@ -38,8 +39,16 @@ function transIt(evt) {
     var selection = window.getSelection();
     var text = selection && (selection.toString() || '').trim();
 
+    // 检查这个单词是否在上次查询中已经用过了
+    // 如果是的话, 直接结束这个函数
+    if (curr_word == text) {
+        return;
+    } else {
+        curr_word = text;
+    }
+
     chrome.extension.sendMessage({ type: 'selection', text: text });
-    
+
     if (options.pageInspect && canTranslate(text)) {
         notify(TPLS.LOADING.assign(text), function($notify) {
             chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
