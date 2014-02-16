@@ -55,7 +55,7 @@ function getTranslation(result) {
             translation = result.translation.join('<br />');
         }
         
-        if (translation == result.query) {
+        if (translation.toLowerCase() == result.query.toLowerCase()) {
             translation = null;
         }
     }
