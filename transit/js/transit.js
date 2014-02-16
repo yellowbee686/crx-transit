@@ -9,6 +9,16 @@ function initNotifyEnv() {
     $notifyList = $(TPLS.NOTIFY_LIST).appendTo('body');
 }
 
+// When notify list is out of screen, set its height to fix window height.
+// and enable scroll without showing scrollbar.
+function autoFitNotifyList() {
+    if ($notifyList.find('.transit-list-inner').outerHeight() > $(window).height() + 10) {
+        $notifyList.addClass('transit-list-full');
+    } else {
+        $notifyList.removeClass('transit-list-full');
+    }
+}
+
 // 通知效果
 function notify(text, waitFor) {
     var $notify = $(this);
@@ -19,7 +29,7 @@ function notify(text, waitFor) {
         // Store selection in notify element.
         $notify = $(TPLS.NOTIFY.assign(TPLS.LOADING.assign(text)));
         $notify.data('source', text);
-        $notify.prependTo($notifyList).fadeIn();
+        $notify.prependTo($notifyList.find('.transit-list-inner')).fadeIn(autoFitNotifyList);
     }
 
     if ($.isFunction(waitFor)) {
@@ -27,6 +37,7 @@ function notify(text, waitFor) {
     } else {
         $notify.delay(waitFor * 1000).fadeOut(function() {
             $(this).remove();
+            autoFitNotifyList();
         });
     }
 }
@@ -119,12 +130,13 @@ function clearSelection(evt) {
 }
 
 initOptions(null, function(options) {
+    initNotifyEnv();
+
     $(document).on('mouseup', transIt);
     $(document).on('mouseenter', 'a', focusLink);
     $(document).on('mouseleave', 'a', blurLink);
     $(document).on('keydown', disableLink);
     $(document).on('keyup', enableLink);
     $(document).on('mousedown', clearSelection);
-
-    initNotifyEnv();
+    $(window).on('resize', autoFitNotifyList);
 });

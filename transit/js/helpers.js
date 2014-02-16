@@ -7,7 +7,7 @@ var TPLS = {
     LOADING:     '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
     TITLE:       '<h6>{1}</h6>',
     NOTIFY:      '<li class="transit-notify">{1}</li>',
-    NOTIFY_LIST: '<ul id="transit-notify-list"></ul>',
+    NOTIFY_LIST: '<div id="transit-notify-list"><ul class="transit-list-inner"></ul></div>',
     PHONETIC:    '[<code>{1}</code>]<br/>'
 
 };
