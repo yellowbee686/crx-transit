@@ -16,7 +16,9 @@ function notify(text, waitFor) {
     if ($notify.is('.transit-notify')) {
         $notify.html(text);
     } else {
-        $notify = $(TPLS.NOTIFY.assign(text));
+        // Store selection in notify element.
+        $notify = $(TPLS.NOTIFY.assign(TPLS.LOADING.assign(text)));
+        $notify.data('source', text);
         $notify.prependTo($notifyList).fadeIn();
     }
 
@@ -35,22 +37,34 @@ function canTranslate(text) {
 	return PAT_ENGLISH.test(text);
 }
 
+// Find notify element by selection text `data-source`
+function notifyExists(source) {
+    var exists = false;
+
+    $('.transit-notify').each(function() {
+        if ($(this).data('source') === source) {
+            exists = true;
+            return false;
+        }
+    });
+
+    return exists;
+}
+
 function transIt(evt) {
     var selection = window.getSelection();
     var text = selection && (selection.toString() || '').trim();
 
     // 检查这个单词是否在上次查询中已经用过了
     // 如果是的话, 直接结束这个函数
-    if (curr_word == text) {
+    if (notifyExists(text)) {
         return;
-    } else {
-        curr_word = text;
     }
 
     chrome.extension.sendMessage({ type: 'selection', text: text });
 
     if (options.pageInspect && canTranslate(text)) {
-        notify(TPLS.LOADING.assign(text), function($notify) {
+        notify(text, function($notify) {
             chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
                 $notify.notify(response.translation, options.notifyTimeout);
             });
