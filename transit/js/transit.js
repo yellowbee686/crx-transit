@@ -17,13 +17,13 @@ function notify(text, waitFor) {
         $notify.html(text);
     } else {
         $notify = $(TPLS.NOTIFY.assign(text));
-        $notify.prependTo($notifyList).slideDown('fast');
+        $notify.prependTo($notifyList).fadeIn();
     }
 
     if ($.isFunction(waitFor)) {
         waitFor($notify);
     } else {
-        $notify.delay(waitFor * 1000).slideUp('fast', function() {
+        $notify.delay(waitFor * 1000).fadeOut(function() {
             $(this).remove();
         });
     }
