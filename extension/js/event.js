@@ -23,7 +23,7 @@ function translateHanlder(request, sender, sendResponse) {
     // TODO 为翻译缓存提供简单统计 @greatghoul
     var title = request.from == 'page' ? TPLS.TITLE.assign(request.text) : ''; 
     var translation = localStorage['transit_' + request.text];
-    if (translation) {
+    if (options.cacheResult && translation) {
         console.log('Translating`{1}` from cache '.assign(request.text));
         sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
     } else {
@@ -37,7 +37,10 @@ function translateHanlder(request, sender, sendResponse) {
             if (!result || result.errorCode) return; translation = getTranslation(result);
             if (translation) {
                 sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
-                localStorage['transit_' + request.text] = translation;
+                if (options.cacheResult) {
+                    localStorage['transit_' + request.text] = translation;
+                }
+
                 // 向服务器推送翻译结果
                 // 暂时屏蔽掉推送的功能
                 // if (options.pushItem) {
