@@ -16,6 +16,7 @@ body {
   font-weight: bold;
   border-radius: 3px;
   box-sizing: border-box;
+  background: url(http://www.youdao.com/help/fanyiapi/brand/002.gif) no-repeat right center;
 }
 
 #result .success {
