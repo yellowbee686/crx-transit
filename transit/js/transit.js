@@ -1,7 +1,23 @@
 // 页面划词简化，只允许划单词
 var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
+var $notifyList = null;
 var timer = null;
 var $link = null;
+var curr_word = null;
+
+function initNotifyEnv() {
+    $notifyList = $(TPLS.NOTIFY_LIST).appendTo('body');
+}
+
+// When notify list is out of screen, set its height to fix window height.
+// and enable scroll without showing scrollbar.
+function autoFitNotifyList() {
+    if ($notifyList.find('.transit-list-inner').outerHeight() > $(window).height() + 10) {
+        $notifyList.addClass('transit-list-full');
+    } else {
+        $notifyList.removeClass('transit-list-full');
+    }
+}
 
 // 通知效果
 function notify(text, waitFor) {
@@ -10,18 +26,18 @@ function notify(text, waitFor) {
     if ($notify.is('.transit-notify')) {
         $notify.html(text);
     } else {
-        var $last = $('.transit-notify:last');
-        $notify = $('<div class="transit-notify">{1}</div>'.assign(text));
-        $notify.css('top', $last.size() ? ($last.position().top + $last.height() + 10) : 0); 
-        $notify.appendTo('body');
+        // Store selection in notify element.
+        $notify = $(TPLS.NOTIFY.assign(TPLS.LOADING.assign(text)));
+        $notify.data('source', text);
+        $notify.prependTo($notifyList.find('.transit-list-inner')).fadeIn(autoFitNotifyList);
     }
 
     if ($.isFunction(waitFor)) {
         waitFor($notify);
     } else {
-        // TODO 翻译消失时间设置为配置项
         $notify.delay(waitFor * 1000).fadeOut(function() {
             $(this).remove();
+            autoFitNotifyList();
         });
     }
 }
@@ -32,14 +48,34 @@ function canTranslate(text) {
 	return PAT_ENGLISH.test(text);
 }
 
+// Find notify element by selection text `data-source`
+function notifyExists(source) {
+    var exists = false;
+
+    $('.transit-notify').each(function() {
+        if ($(this).data('source') === source) {
+            exists = true;
+            return false;
+        }
+    });
+
+    return exists;
+}
+
 function transIt(evt) {
     var selection = window.getSelection();
     var text = selection && (selection.toString() || '').trim();
 
+    // 检查这个单词是否在上次查询中已经用过了
+    // 如果是的话, 直接结束这个函数
+    if (notifyExists(text)) {
+        return;
+    }
+
     chrome.extension.sendMessage({ type: 'selection', text: text });
-    
+
     if (options.pageInspect && canTranslate(text)) {
-        notify(TPLS.LOADING.assign(text), function($notify) {
+        notify(text, function($notify) {
             chrome.extension.sendMessage({ type: 'translate', from: 'page', text: text }, function(response) {
                 $notify.notify(response.translation, options.notifyTimeout);
             });
@@ -94,10 +130,13 @@ function clearSelection(evt) {
 }
 
 initOptions(null, function(options) {
+    initNotifyEnv();
+
     $(document).on('mouseup', transIt);
     $(document).on('mouseenter', 'a', focusLink);
     $(document).on('mouseleave', 'a', blurLink);
     $(document).on('keydown', disableLink);
     $(document).on('keyup', enableLink);
     $(document).on('mousedown', clearSelection);
+    $(window).on('resize', autoFitNotifyList);
 });

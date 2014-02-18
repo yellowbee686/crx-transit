@@ -2,10 +2,14 @@ var options = {};
 
 // TransIt 通用函数
 var TPLS = {
-    SUCCESS: '<div class="success">{1}</div>',
-    WARNING: '<div class="warning">{1}</div>',
-    LOADING: '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
-    TITLE:   '<h6>{1}</h6>'
+    SUCCESS:     '<div class="success">{1}</div>',
+    WARNING:     '<div class="warning">{1}</div>',
+    LOADING:     '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
+    TITLE:       '<h6>{1}</h6>',
+    NOTIFY:      '<li class="transit-notify">{1}</li>',
+    NOTIFY_LIST: '<div id="transit-notify-list"><ul class="transit-list-inner"></ul></div>',
+    PHONETIC:    '[<code>{1}</code>]<br/>'
+
 };
 
 
@@ -44,11 +48,14 @@ function getTranslation(result) {
     if (result && !result.errorCode) {
         if (result.basic) {
             translation = result.basic.explains.join('<br/>');
+            if (result.basic.phonetic) {
+                translation = TPLS.PHONETIC.assign(result.basic.phonetic) + translation;
+            }
         } else if (result.translation) {
             translation = result.translation.join('<br />');
         }
         
-        if (translation == result.query) {
+        if (translation.toLowerCase() == result.query.toLowerCase()) {
             translation = null;
         }
     }
