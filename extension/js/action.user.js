@@ -1,4 +1,5 @@
 // 页面划词简化，只允许划单词
+var $$ = top.$ || window.$;
 var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
 var $notifyList = null;
 var timer = null;
@@ -6,7 +7,8 @@ var $link = null;
 var curr_word = null;
 
 function initNotifyEnv() {
-    $notifyList = $(TPLS.NOTIFY_LIST).appendTo('body');
+    console.log($$);
+    $notifyList = $$(TPLS.NOTIFY_LIST).appendTo('body');
 }
 
 // When notify list is out of screen, set its height to fix window height.

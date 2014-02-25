@@ -7,10 +7,15 @@ var TPLS = {
     LOADING:     '<div class="success">正在翻译 <strong>{1} ...</strong></div>',
     TITLE:       '<h6>{1}</h6>',
     NOTIFY:      '<li class="transit-notify">{1}</li>',
-    NOTIFY_LIST: '<div id="transit-notify-list"><ul class="transit-list-inner"></ul></div>',
     PHONETIC:    '[<code>{1}</code>]<br/>'
 
 };
+
+
+function log() {
+    var message = Array.prototype.slice.call(arguments, 0);
+    console.log.apply(console, ['transit:'].concat(message));
+}
 
 
 // 从 storage 中读取配置，如果没有配置，则初始化为默认值
