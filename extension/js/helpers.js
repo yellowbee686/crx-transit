@@ -67,3 +67,14 @@ function getTranslation(result) {
 
     return translation;
 }
+
+function registerMessageDispatcher(dispatcher) {
+    chrome.extension.onMessage.addListener(
+        function(request, sender, sendResponse) {
+            var handler = dispatcher[request.type] || noop;
+            handler(request, sender, sendResponse);
+
+            return true;
+        }
+    );    
+}

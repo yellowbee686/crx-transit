@@ -6,11 +6,6 @@ var timer = null;
 var $link = null;
 var curr_word = null;
 
-function initNotifyEnv() {
-    console.log($$);
-    $notifyList = $$(TPLS.NOTIFY_LIST).appendTo('body');
-}
-
 // When notify list is out of screen, set its height to fix window height.
 // and enable scroll without showing scrollbar.
 function autoFitNotifyList() {
@@ -132,8 +127,6 @@ function clearSelection(evt) {
 }
 
 initOptions(null, function(options) {
-    initNotifyEnv();
-
     $(document).on('mouseup', transIt);
     $(document).on('mouseenter', 'a', focusLink);
     $(document).on('mouseleave', 'a', blurLink);
