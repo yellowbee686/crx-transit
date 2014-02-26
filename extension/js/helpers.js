@@ -14,7 +14,7 @@ var TPLS = {
 
 function log() {
     var message = Array.prototype.slice.call(arguments, 0);
-    console.log.apply(console, ['transit:'].concat(message));
+    console.log.apply(console, ['[transit]'].concat(message));
 }
 
 
@@ -69,7 +69,7 @@ function getTranslation(result) {
 }
 
 function registerMessageDispatcher(dispatcher) {
-    chrome.extension.onMessage.addListener(
+    chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
             var handler = dispatcher[request.type] || noop;
             handler(request, sender, sendResponse);
@@ -77,4 +77,14 @@ function registerMessageDispatcher(dispatcher) {
             return true;
         }
     );    
+}
+
+function talkToPage(tabId, message, callback) {
+    if (tabId) {
+        chrome.tabs.sendMessage(tabId, message, callback);  
+    } else {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            talkToPage(tabs[0].id, message, callback);
+        });
+    }
 }

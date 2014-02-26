@@ -57,19 +57,12 @@ function translateHanlder(request, sender, sendResponse) {
 
 function selectionHandler(request, sender, sendResponse) {
     currentText = request.text;
+    talkToPage(null, request);
 }
 
-var dispatcher = {
+registerMessageDispatcher({
     translate: translateHanlder,
     selection: selectionHandler
-};
-
-// 响应来自页面和弹出层的翻译请求
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    var handler = dispatcher[request.type] || noop;
-    handler(request, sender, sendResponse);
-
-    return true;
 });
 
 initOptions({
