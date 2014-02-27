@@ -82,6 +82,8 @@ function selectionHandler(request) {
     });
 }
 
-prepareNotifyEnviroment();
-registerMessageDispatcher({ selection: selectionHandler });
-log('Initialized notify.user.js')   
+initOptions(function() {
+    prepareNotifyEnviroment();
+    registerMessageDispatcher({ selection: selectionHandler });
+    log('Initialized notify.user.js')   
+});

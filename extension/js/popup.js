@@ -55,7 +55,7 @@ $(function() {
         }
     }
 
-    initOptions(null, function(options) {
+    initOptions(function() {
         // 事件注册
         $source.on('keypress', transit);
         $('.option').on('change', setOption);

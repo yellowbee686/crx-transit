@@ -50,7 +50,7 @@ function clearSelection(evt) {
     }
 }
 
-initOptions(null, function(options) {
+initOptions(function(options) {
     $(document).on('mouseup', transIt);
     $(document).on('mouseenter', 'a', focusLink);
     $(document).on('mouseleave', 'a', blurLink);
