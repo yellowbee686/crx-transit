@@ -1,4 +1,10 @@
-var options = {};
+var options = {
+    notifyTimeout: 5,   // 页面划词结果显示时间
+    pageInspect: true,  // 是否启用页面划词
+    linkInspect: true,  // 是否启用链接划词
+    pushItem: false,    // 是否推送单词到服务端
+    cacheResult: true  // 是否缓存翻译结果
+};
 
 // TransIt 通用函数
 var TPLS = {
@@ -12,6 +18,20 @@ var TPLS = {
 };
 
 
+function fmt() {
+    var args = arguments;
+    return args[0].replace(/#{(.*?)}/g, function(match, prop) {
+        return function(obj, props) {
+            var prop = /\d+/.test(props[0]) ? parseInt(props[0]) : props[0];
+            if (props.length > 1) {
+                return arguments.callee(obj[prop], props.slice(1));
+            } else {
+                return obj[prop];
+            }
+        }(typeof args[1] === 'object' ? args[1] : args, prop.split(/\.|\[|\]\[|\]\./));
+    });
+}
+
 function log() {
     var message = Array.prototype.slice.call(arguments, 0);
     console.log.apply(console, ['[transit]'].concat(message));
@@ -19,22 +39,11 @@ function log() {
 
 
 // 从 storage 中读取配置，如果没有配置，则初始化为默认值
-function initOptions(defaults, callback) {
-    var defaults = defaults || {};
-    var callback = callback || function() {};
+function initOptions(callback) {
     chrome.storage.sync.get(null, function(data) {
-        // Storage 没有存储设置项，初始化为默认值
-        if (Object.isEmpty(data)) {
-            chrome.storage.sync.set(defaults, function() {
-                options = defaults;
-                console.log('Initialize options with defaults:', defaults);
-            });
-        } else {
-            options = data;
-        }
-
-        console.log('Current options is:', options);
-        callback(options);
+        $.extend(options, data);
+        chrome.storage.sync.set(options);
+        callback && callback();
     });
 }
 
@@ -42,8 +51,8 @@ function initOptions(defaults, callback) {
 chrome.storage.onChanged.addListener(function(changes) {
     for (var name in changes) {
         var change = changes[name];
-        console.log('Option {1} changed from {2} to {3}'.assign(name, change.oldValue, change.newValue));
         options[name] = change.newValue;
+        log(fmt('#{1}: #{2} => #{3}', name, change.oldValue, change.newValue));
     }
 });
 

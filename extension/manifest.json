@@ -11,7 +11,12 @@
   },
 
   "background": {
-    "scripts": ["js/sugar.min.js", "js/helpers.js", "js/event.js"],
+    "scripts": [
+      "js/jquery-2.0.3.min.js",
+      "js/sugar.min.js",
+      "js/application.js",
+      "js/event.js"
+    ],
     "persistent": true
   },
 
@@ -26,7 +31,7 @@
       "js": [
         "js/jquery-2.0.3.min.js",
         "js/sugar.min.js",
-        "js/helpers.js",
+        "js/application.js",
         "js/action.user.js"
       ],
       "all_frames": true
@@ -39,6 +44,9 @@
   ],
 
   "permissions": [
-    "tabs", "storage", "http://fanyi.youdao.com/openapi.do", "http://trit.herokuapp.com/api/items"
+    "tabs",
+    "storage",
+    "http://fanyi.youdao.com/openapi.do",
+    "http://trit.herokuapp.com/api/items"
   ]
 }
