@@ -13,7 +13,6 @@
   "background": {
     "scripts": [
       "js/jquery-2.0.3.min.js",
-      "js/sugar.min.js",
       "js/application.js",
       "js/event.js"
     ],
@@ -30,7 +29,6 @@
       "matches": ["<all_urls>"],
       "js": [
         "js/jquery-2.0.3.min.js",
-        "js/sugar.min.js",
         "js/application.js",
         "js/action.user.js"
       ],

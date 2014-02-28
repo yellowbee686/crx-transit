@@ -18,7 +18,7 @@ function notify(text, waitFor) {
         $notify.html(text);
     } else {
         // Store selection in notify element.
-        $notify = $(TPLS.NOTIFY.assign(TPLS.LOADING.assign(text)));
+        $notify = $(fmt(TPLS.NOTIFY, fmt(TPLS.LOADING, text)));
         $notify.data('text', text);
         $notify.prependTo($notifyList.find('.transit-list-inner')).fadeIn(autoFitNotifyList);
     }
