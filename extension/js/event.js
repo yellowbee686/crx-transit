@@ -21,13 +21,13 @@ function translateHanlder(request, sender, sendResponse) {
     // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
     // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
     // TODO 为翻译缓存提供简单统计 @greatghoul
-    var title = request.from == 'page' ? TPLS.TITLE.assign(request.text) : ''; 
+    var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
     var translation = localStorage['transit_' + request.text];
     if (options.cacheResult && translation) {
-        console.log('Translating`{1}` from cache '.assign(request.text));
-        sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
+        log('Translating', request.text, 'from cache')
+        sendResponse({ translation: fmt(TPLS.SUCCESS, title + translation) });
     } else {
-        console.log('Translating `{1}` from youdao '.assign(request.text));
+        log('Translating', request.text, 'from youdao')
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState != 4) return;
@@ -36,7 +36,7 @@ function translateHanlder(request, sender, sendResponse) {
             console.log('==>', result);
             if (!result || result.errorCode) return; translation = getTranslation(result);
             if (translation) {
-                sendResponse({ translation: TPLS.SUCCESS.assign(title + translation) });
+                sendResponse({ translation: fmt(TPLS.SUCCESS, title + translation) });
                 if (options.cacheResult) {
                     localStorage['transit_' + request.text] = translation;
                 }
@@ -47,7 +47,7 @@ function translateHanlder(request, sender, sendResponse) {
                 //     pushItem.delay(100, request.text, translation);
                 // }
             } else {
-                sendResponse({ translation: TPLS.WARNING.assign(title + '未找到释义') });
+                sendResponse({ translation: fmt(TPLS.WARNING, title + '未找到释义') });
             }
         };
         xhr.open('GET', API_URL + encodeURIComponent(request.text), true);
