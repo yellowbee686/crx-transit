@@ -12,7 +12,7 @@
 
   "background": {
     "scripts": [
-      "js/jquery-2.0.3.min.js",
+      "js/jquery-2.1.0.min.js",
       "js/application.js",
       "js/event.js"
     ],
@@ -28,7 +28,7 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "js/jquery-2.0.3.min.js",
+        "js/jquery-2.1.0.min.js",
         "js/application.js",
         "js/action.user.js"
       ],
