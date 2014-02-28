@@ -41,6 +41,10 @@
     }
   ],
 
+  "web_accessible_resources": [
+   "/js/jquery-2.1.0.min.map"
+  ],
+
   "permissions": [
     "tabs",
     "storage",
