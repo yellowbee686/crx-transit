@@ -47,20 +47,12 @@ $(function() {
         $(this).next().html(timeout);
     }
 
-    // 禁用缓存时，清除所有查询缓存
-    function toggleCache() {
-        if (!$(this).prop('checked')) {
-            localStorage.clear();
-            console.log('Translation cache cleaned.');
-        }
-    }
 
     initOptions(function() {
         // 事件注册
         $source.on('keypress', transit);
         $('.option').on('change', setOption);
         $('#notifyTimeout').on('change', updateNotifyTimeout);
-        $('#cacheResult').on('change', toggleCache);
 
         // 读取配置项
         for (var name in options) {

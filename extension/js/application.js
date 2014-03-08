@@ -3,7 +3,6 @@ var options = {
     pageInspect: true,  // 是否启用页面划词
     linkInspect: true,  // 是否启用链接划词
     pushItem: false,    // 是否推送单词到服务端
-    cacheResult: true  // 是否缓存翻译结果
 };
 
 // TransIt 通用函数
