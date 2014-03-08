@@ -44,6 +44,7 @@
     margin: 0;
     padding: 0;
     margin: 0;
+    text-transform: none;
 }
 
 .transit-notify code {

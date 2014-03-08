@@ -1,3 +1,6 @@
+// Chrome disabled contentscript in webstroe.
+// via: http://stackoverflow.com/a/11614440/260793
+
 var $link = null;
 
 function transIt(evt) {

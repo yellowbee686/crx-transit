@@ -1,5 +1,4 @@
 var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
-var $notifyList = null;
 var tpls = $.extend(tpls, {
     NOTIFY_LIST: ''
         + '<div id="transit-notify-list">'
@@ -20,7 +19,8 @@ function notify(text, waitFor) {
         // Store selection in notify element.
         $notify = $(fmt(TPLS.NOTIFY, fmt(TPLS.LOADING, text)));
         $notify.data('text', text);
-        $notify.prependTo($notifyList.find('.transit-list-inner')).fadeIn(autoFitNotifyList);
+        $notify.prependTo(getNotifyList().find('.transit-list-inner'))
+               .fadeIn(autoFitNotifyList);
     }
 
     if ($.isFunction(waitFor)) {
@@ -51,16 +51,19 @@ function notifyExists(text) {
 // When notify list is out of screen, set its height to fix window height.
 // and enable scroll without showing scrollbar.
 function autoFitNotifyList() {
-    var listHeight = $notifyList.find('.transit-list-inner').outerHeight(),
+    var listHeight = getNotifyList().find('.transit-list-inner').outerHeight(),
         windowHeight = $(window).height() + 10;
-    $notifyList.toggleClass('transit-list-full', listHeight > windowHeight);
+    getNotifyList().toggleClass('transit-list-full', listHeight > windowHeight);
 }
 
-function prepareNotifyEnviroment() {
-    log("Generating notification list at:", location.href);
-    $notifyList = $(tpls.NOTIFY_LIST).appendTo('body');
-    $(window).on('resize', autoFitNotifyList);
-    log($notifyList.get(0));
+function getNotifyList() {
+    var $notifyList = $('#transit-notify-list');
+    if ($notifyList.size() === 0) {
+        log("Generating notification list at:", location.href);
+        $notifyList = $(tpls.NOTIFY_LIST).appendTo('body');
+    }
+    
+    return $notifyList;
 }
 
 function selectionHandler(request) {
@@ -83,7 +86,7 @@ function selectionHandler(request) {
 }
 
 initOptions(function() {
-    prepareNotifyEnviroment();
+    $(window).on('resize', autoFitNotifyList);
     registerMessageDispatcher({ selection: selectionHandler });
     log('Initialized notify.user.js')   
 });
