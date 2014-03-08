@@ -69,4 +69,15 @@ registerMessageDispatcher({
     selection: selectionHandler
 });
 
-initOptions(); 
+// Cleanup scripts for release 1.2
+// Will be removed in next release.
+function clearCacheStuff(details) {
+    if (details.reason == 'update') {
+        localStorage.clear();
+        log('Cache cleaned up')
+    };
+}
+
+initOptions(function() {
+    chrome.runtime.onInstalled.addListener(clearCacheStuff);
+}); 
