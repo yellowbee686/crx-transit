@@ -17,7 +17,6 @@ var TPLS = {
 
 };
 
-
 function fmt() {
     var args = arguments;
     return args[0].replace(/#{(.*?)}/g, function(match, prop) {
