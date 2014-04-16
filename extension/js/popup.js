@@ -24,11 +24,14 @@ $(function() {
 
     function setOption() {
         var $option = $(this),
-            name = $option.attr('id'),
+            name = $option.attr('name'),
             option = {};
 
         if ($option.is('[type=checkbox]')) {
             option[name] = $option.prop('checked');
+        } else if ($option.is('[type=radio]')) {
+            var filter = '[name=' + name + ']:checked';
+            option[name] = $(filter).val();
         } else {
             var value = $option.val();
             if ($option.is('[type=range]')) {
@@ -38,7 +41,7 @@ $(function() {
             }
         }
 
-        chrome.storage.sync.set(option);    
+        chrome.storage.sync.set(option);
     }
 
     // 更新提示信息保持时间
@@ -52,23 +55,25 @@ $(function() {
         // 事件注册
         $source.on('keypress', transit);
         $('.option').on('change', setOption);
-        $('#notifyTimeout').on('change', updateNotifyTimeout);
+        $('[name=notifyTimeout]').on('change', updateNotifyTimeout);
 
         // 读取配置项
         for (var name in options) {
-            var $option = $('#' + name),
+            var $option = $('[name=' + name + ']'),
                 value = options[name]; 
 
             if ($option.size() == 0) continue;
             
             if ($option.is('[type=checkbox]')) {
                 $option.prop('checked', value);
+            } else if ($option.is('[type=radio]')) {
+                $option.filter('[value=' + value + ']').prop('checked', true);
             } else {
                 $option.val(value);
             }
         }
 
-        $('#notifyTimeout').trigger('change');
+        $('[name=notifyTimeout]').trigger('change');
 
         $source.focus();
         $source.val(app.currentText);
