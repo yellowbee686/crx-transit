@@ -10,6 +10,19 @@ function canTranslate(text) {
     return PAT_ENGLISH.test(text);
 }
 
+function getSelectionRect() {
+    var rect = document.getSelection().getRangeAt(0).getBoundingClientRect();
+    var left = rect.left + document.body.scrollLeft;
+    var top  = rect.top + document.body.scrollTop;
+
+    if (rect.top >= 50) {
+        var bottom = document.documentElement.clientHeight - top;
+        return { left: left, bottom: bottom };
+    } else {
+        return { left: left, top: top + rect.height + 5 };
+    }
+}
+
 function notify(text, waitFor) {
     var $notify = $(this);
 
@@ -23,7 +36,9 @@ function notify(text, waitFor) {
             $notify.prependTo(getNotifyList().find('.transit-list-inner'))
                    .fadeIn(autoFitNotifyList);
         } else {
-            $notify.appendTo('body').fadeIn();
+            var rect = getSelectionRect();
+            log(rect);
+            $notify.appendTo('body').css({ position: 'absolute' }).css(rect).fadeIn();
         }
     }
 
