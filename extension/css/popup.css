@@ -7,6 +7,10 @@ body {
   color: #555;
 }
 
+label {
+  display: block;
+}
+
 #source {
   color: #555;
   width: 100%;

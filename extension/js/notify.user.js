@@ -2,12 +2,25 @@ var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
 var tpls = $.extend(tpls, {
     NOTIFY_LIST: ''
         + '<div id="transit-notify-list">'
-        + '  <ul class="transit-list-inner"></ul>'
+        + '  <div class="transit-list-inner"></div>'
         + '</div>'
 });
 
 function canTranslate(text) {
     return PAT_ENGLISH.test(text);
+}
+
+function getSelectionRect() {
+    var rect = document.getSelection().getRangeAt(0).getBoundingClientRect();
+    var left = rect.left + document.body.scrollLeft;
+    var top  = rect.top + document.body.scrollTop;
+
+    if (rect.top >= 50) {
+        var bottom = document.documentElement.clientHeight - top;
+        return { left: left, bottom: bottom };
+    } else {
+        return { left: left, top: top + rect.height + 5 };
+    }
 }
 
 function notify(text, waitFor) {
@@ -19,8 +32,14 @@ function notify(text, waitFor) {
         // Store selection in notify element.
         $notify = $(fmt(TPLS.NOTIFY, fmt(TPLS.LOADING, text)));
         $notify.data('text', text);
-        $notify.prependTo(getNotifyList().find('.transit-list-inner'))
-               .fadeIn(autoFitNotifyList);
+        if (options.notifyMode === 'margin') {
+            $notify.prependTo(getNotifyList().find('.transit-list-inner'))
+                   .fadeIn(autoFitNotifyList);
+        } else {
+            var rect = getSelectionRect();
+            log(rect);
+            $notify.appendTo('body').css({ position: 'absolute' }).css(rect).fadeIn();
+        }
     }
 
     if ($.isFunction(waitFor)) {

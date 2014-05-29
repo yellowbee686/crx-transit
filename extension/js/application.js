@@ -1,8 +1,9 @@
 var options = {
-    notifyTimeout: 5,   // 页面划词结果显示时间
-    pageInspect: true,  // 是否启用页面划词
-    linkInspect: true,  // 是否启用链接划词
-    pushItem: false,    // 是否推送单词到服务端
+    notifyTimeout: 5,     // 页面划词结果显示时间
+    pageInspect: true,    // 是否启用页面划词
+    linkInspect: true,    // 是否启用链接划词
+    pushItem: false,      // 是否推送单词到服务端,
+    notifyMode: 'margin', // 结果默认显示在右上角
 };
 
 // TransIt 通用函数
@@ -11,11 +12,10 @@ var TPLS = {
     WARNING:     '<div class="warning">#{1}</div>',
     LOADING:     '<div class="success">正在翻译 <strong>#{1} ...</strong></div>',
     TITLE:       '<h6>#{1}</h6>',
-    NOTIFY:      '<li class="transit-notify">#{1}</li>',
+    NOTIFY:      '<div class="transit-notify">#{1}</div>',
     PHONETIC:    '[<code>#{1}</code>]<br/>'
 
 };
-
 
 function fmt() {
     var args = arguments;
