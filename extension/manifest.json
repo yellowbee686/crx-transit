@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "TransIt",
-  "description": "简单的划词翻译扩展",
+  "description": "让划词翻译更简单",
   "version": "1.2",
   
   "icons": {
