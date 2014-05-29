@@ -1,0 +1,54 @@
+{
+  "manifest_version": 2,
+
+  "name": "TransIt",
+  "description": "简单的划词翻译扩展",
+  "version": "1.2",
+  
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+
+  "background": {
+    "scripts": [
+      "js/jquery-2.1.0.min.js",
+      "js/application.js",
+      "js/event.js"
+    ],
+    "persistent": true
+  },
+
+  "browser_action": {
+    "default_icon": "icon48.png",
+    "default_popup": "popup.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "js/jquery-2.1.0.min.js",
+        "js/application.js",
+        "js/action.user.js"
+      ],
+      "all_frames": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "css": ["css/notify.user.css"],
+      "js": [ "js/notify.user.js" ]
+    }
+  ],
+
+  "web_accessible_resources": [
+   "/js/jquery-2.1.0.min.map"
+  ],
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "http://fanyi.youdao.com/openapi.do",
+    "http://trit.herokuapp.com/api/items"
+  ]
+}

@@ -28,9 +28,11 @@
 
 .transit-notify {
     display: none;
+    max-width: 250px;
     line-height: 1.5;
     font-size: 14px;
     margin-bottom: 5px;
+    text-align: left;
     border-radius: 5px;
     box-shadow: 0px 0px 5px #000000;
     opacity: 0.9;
@@ -44,6 +46,7 @@
     margin: 0;
     padding: 0;
     margin: 0;
+    text-transform: none;
 }
 
 .transit-notify code {
