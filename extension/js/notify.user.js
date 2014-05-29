@@ -2,7 +2,7 @@ var PAT_ENGLISH = /^[a-z]+(\'|\'s)?$/i;
 var tpls = $.extend(tpls, {
     NOTIFY_LIST: ''
         + '<div id="transit-notify-list">'
-        + '  <ul class="transit-list-inner"></ul>'
+        + '  <div class="transit-list-inner"></div>'
         + '</div>'
 });
 
@@ -19,8 +19,12 @@ function notify(text, waitFor) {
         // Store selection in notify element.
         $notify = $(fmt(TPLS.NOTIFY, fmt(TPLS.LOADING, text)));
         $notify.data('text', text);
-        $notify.prependTo(getNotifyList().find('.transit-list-inner'))
-               .fadeIn(autoFitNotifyList);
+        if (options.notifyMode === 'margin') {
+            $notify.prependTo(getNotifyList().find('.transit-list-inner'))
+                   .fadeIn(autoFitNotifyList);
+        } else {
+            $notify.appendTo('body').fadeIn();
+        }
     }
 
     if ($.isFunction(waitFor)) {
