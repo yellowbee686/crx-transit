@@ -25,7 +25,12 @@ function getSelectionRect(evt) {
 function transIt(evt) {
     var text = $.trim(window.getSelection().toString());
     var position = getSelectionRect(evt);
-    text && chrome.runtime.sendMessage({ type: 'selection', text: text, position: position });
+    
+    if (options.notifyMode === 'margin') {
+        text && chrome.runtime.sendMessage({ type: 'selection', text: text, position: position });
+    } else {
+        text && doNotify(text, position);
+    }
 }
 
 function focusLink(evt) {

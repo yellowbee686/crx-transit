@@ -27,17 +27,14 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
+      "css": ["css/notify.user.css"],
       "js": [
         "js/jquery-2.1.0.min.js",
         "js/application.js",
+        "js/notify.user.js",
         "js/action.user.js"
       ],
       "all_frames": true
-    },
-    {
-      "matches": ["<all_urls>"],
-      "css": ["css/notify.user.css"],
-      "js": [ "js/notify.user.js" ]
     }
   ],
 
