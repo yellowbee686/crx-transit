@@ -10,7 +10,7 @@ function pushItem(name, explaination) {
         explaination: explaination
     });
 
-    console.log("  Pushing translation to server:", params);
+    log("  Pushing translation to server:", params);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', PUSH_URL, true);
     xhr.setRequestHeader('Content-Type', 'multipart/form-data');
@@ -26,6 +26,7 @@ function translateHanlder(request, sender, sendResponse) {
     // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
     // TODO 为翻译缓存提供简单统计 @greatghoul
     var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
+    currentText = request.text;
 
     log('Translating', request.text, 'from youdao')
     var xhr = new XMLHttpRequest();
