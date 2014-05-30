@@ -3,9 +3,29 @@
 
 var $link = null;
 
+function getSelectionRect(evt) {
+    var rect = document.getSelection().getRangeAt(0).getBoundingClientRect();
+
+    // 如果是在文本框中，这个坐标返回的会为 0，此时应该取鼠标位置
+    if (rect.left === 0 && rect.top === 0) {
+        rect = { left: evt.clientX, top: evt.clientY, height: 15 };
+    }
+
+    var left = rect.left + document.body.scrollLeft;
+    var top  = rect.top + document.body.scrollTop;
+
+    if (rect.top >= 150) {
+        var bottom = document.documentElement.clientHeight - top;
+        return { left: left, bottom: bottom };
+    } else {
+        return { left: left, top: top + rect.height + 5 };
+    }
+}
+
 function transIt(evt) {
     var text = $.trim(window.getSelection().toString());
-    text && chrome.runtime.sendMessage({ type: 'selection', text: text });
+    var position = getSelectionRect(evt);
+    text && chrome.runtime.sendMessage({ type: 'selection', text: text, position: position });
 }
 
 function focusLink(evt) {

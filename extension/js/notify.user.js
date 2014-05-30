@@ -10,20 +10,7 @@ function canTranslate(text) {
     return PAT_ENGLISH.test(text);
 }
 
-function getSelectionRect() {
-    var rect = document.getSelection().getRangeAt(0).getBoundingClientRect();
-    var left = rect.left + document.body.scrollLeft;
-    var top  = rect.top + document.body.scrollTop;
-
-    if (rect.top >= 50) {
-        var bottom = document.documentElement.clientHeight - top;
-        return { left: left, bottom: bottom };
-    } else {
-        return { left: left, top: top + rect.height + 5 };
-    }
-}
-
-function notify(text, waitFor) {
+function notify(text, waitFor, settings) {
     var $notify = $(this);
 
     if ($notify.is('.transit-notify')) {
@@ -36,9 +23,7 @@ function notify(text, waitFor) {
             $notify.prependTo(getNotifyList().find('.transit-list-inner'))
                    .fadeIn(autoFitNotifyList);
         } else {
-            var rect = getSelectionRect();
-            log(rect);
-            $notify.appendTo('body').css({ position: 'absolute' }).css(rect).fadeIn();
+            $notify.appendTo('body').css({ position: 'absolute' }).css(settings.position).fadeIn();
         }
     }
 
@@ -101,7 +86,7 @@ function selectionHandler(request) {
             log(request.text, 'translated to', response.translation);
             $notify.notify(response.translation, options.notifyTimeout);
         });
-    });
+    }, { position: request.position });
 }
 
 initOptions(function() {
