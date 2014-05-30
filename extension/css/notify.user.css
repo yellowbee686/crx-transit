@@ -28,6 +28,7 @@
 
 .transit-notify {
     display: none;
+    z-index: 2147483647;
     max-width: 250px;
     line-height: 1.5;
     font-size: 14px;

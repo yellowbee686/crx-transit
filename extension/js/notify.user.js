@@ -10,20 +10,7 @@ function canTranslate(text) {
     return PAT_ENGLISH.test(text);
 }
 
-function getSelectionRect() {
-    var rect = document.getSelection().getRangeAt(0).getBoundingClientRect();
-    var left = rect.left + document.body.scrollLeft;
-    var top  = rect.top + document.body.scrollTop;
-
-    if (rect.top >= 50) {
-        var bottom = document.documentElement.clientHeight - top;
-        return { left: left, bottom: bottom };
-    } else {
-        return { left: left, top: top + rect.height + 5 };
-    }
-}
-
-function notify(text, waitFor) {
+function notify(text, waitFor, settings) {
     var $notify = $(this);
 
     if ($notify.is('.transit-notify')) {
@@ -36,9 +23,7 @@ function notify(text, waitFor) {
             $notify.prependTo(getNotifyList().find('.transit-list-inner'))
                    .fadeIn(autoFitNotifyList);
         } else {
-            var rect = getSelectionRect();
-            log(rect);
-            $notify.appendTo('body').css({ position: 'absolute' }).css(rect).fadeIn();
+            $notify.appendTo('body').css({ position: 'absolute' }).css(settings.position).fadeIn();
         }
     }
 
@@ -85,6 +70,17 @@ function getNotifyList() {
     return $notifyList;
 }
 
+function doNotify(text, position) {
+    notify(text, function($notify) {
+        log('Translating:', text);
+        var message = { type: 'translate', from: 'page', text: text }
+        chrome.extension.sendMessage(message, function(response) {
+            log(text, 'translated to', response.translation);
+            $notify.notify(response.translation, options.notifyTimeout);
+        });
+    }, { position: position });
+}
+
 function selectionHandler(request) {
     log('Selected:', request.text);
 
@@ -94,18 +90,14 @@ function selectionHandler(request) {
     // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
     if (!(options.pageInspect && canTranslate(request.text))) return;
 
-    notify(request.text, function($notify) {
-        log('Translating:', request.text);
-        var message = { type: 'translate', from: 'page', text: request.text }
-        chrome.extension.sendMessage(message, function(response) {
-            log(request.text, 'translated to', response.translation);
-            $notify.notify(response.translation, options.notifyTimeout);
-        });
-    });
+    if (options.notifyMode === 'margin') doNotify(request.text, request.position);
 }
 
 initOptions(function() {
-    $(window).on('resize', autoFitNotifyList);
-    registerMessageDispatcher({ selection: selectionHandler });
+    if (window == top) {
+        $(window).on('resize', autoFitNotifyList);
+        registerMessageDispatcher({ selection: selectionHandler });
+    }
+
     log('Initialized notify.user.js')   
 });
