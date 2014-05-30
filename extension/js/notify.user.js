@@ -71,6 +71,12 @@ function getNotifyList() {
 }
 
 function doNotify(text, position) {
+    // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
+    if (!(options.pageInspect && canTranslate(text))) return;
+
+    // 检查这个单词是否在上次查询中已经用过了，如果是的话, 直接结束这个函数
+    if (notifyExists(text)) return;
+
     notify(text, function($notify) {
         log('Translating:', text);
         var message = { type: 'translate', from: 'page', text: text }
@@ -83,12 +89,6 @@ function doNotify(text, position) {
 
 function selectionHandler(request) {
     log('Selected:', request.text);
-
-    // 检查这个单词是否在上次查询中已经用过了，如果是的话, 直接结束这个函数
-    if (notifyExists(request.text)) return;
-
-    // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
-    if (!(options.pageInspect && canTranslate(request.text))) return;
 
     if (options.notifyMode === 'margin') doNotify(request.text, request.position);
 }
