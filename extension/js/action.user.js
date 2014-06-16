@@ -14,8 +14,12 @@ function getSelectionRect(evt) {
     var left = rect.left + document.body.scrollLeft;
     var top  = rect.top + document.body.scrollTop;
 
+    var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+    if (clientHeight === 0) {
+        clientHeight = document.documentElement.clientHeight;
+    }
     if (rect.top >= 150) {
-        var bottom = document.documentElement.clientHeight - top;
+        var bottom = clientHeight - top;
         return { left: left, bottom: bottom };
     } else {
         return { left: left, top: top + rect.height + 5 };
