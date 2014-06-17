@@ -32,7 +32,7 @@ V1.1 - 2014-02-16
 
 ---
 
-TransIt 离不开大家的贡献，如果对 Chrome 扩展开发有兴趣，请了解[如何参与项目]，及[贡献者列表]。
+TransIt 离不开大家的贡献，如果对 Chrome 扩展开发有兴趣，请了解[如何参与项目]及[贡献者列表]。
 
 [如何参与项目]: https://github.com/GDG-Xian/crx-transit/wiki/HowToContribute
 [贡献者列表]: https://github.com/GDG-Xian/crx-transit/wiki/Contributors
