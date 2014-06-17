@@ -3,8 +3,8 @@
 
 var $link = null;
 
-function getSelectionRect(evt) {
-    var rect = document.getSelection().getRangeAt(0).getBoundingClientRect();
+function getSelectionRect(evt, selection) {
+    var rect = selection.getRangeAt(0).getBoundingClientRect();
 
     // 如果是在文本框中，这个坐标返回的会为 0，此时应该取鼠标位置
     if (rect.left === 0 && rect.top === 0) {
@@ -27,10 +27,12 @@ function getSelectionRect(evt) {
 }
 
 function transIt(evt) {
-    var text = $.trim(window.getSelection().toString());
-    var position = getSelectionRect(evt);
-    
+    var selection = window.getSelection();
+    var text = $.trim(selection.toString());
+
     if (text) {
+        var position = getSelectionRect(evt, selection);
+
         chrome.runtime.sendMessage({ type: 'selection', text: text, position: position });
         if (options.notifyMode === 'in-place') {
             doNotify(text, position);
