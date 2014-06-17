@@ -30,24 +30,12 @@ V1.1 - 2014-02-16
 - 更新链接文本划词翻译的描述
 - 解决频繁划词导致翻译结果跑出屏幕的问题（支持使用滚轮滚动）
 
-#### 参与项目
+---
 
-参与项目目前有两种方式: `提交bug`和`参与开发`.
+TransIt 离不开大家的贡献，如果对 Chrome 扩展开发有兴趣，请了解[如何参与项目]，及[贡献者列表]。
 
-1. 提交bug
-
-    任何一个程序, 都会有bug的存在, TransIt也不例外. 如果你发现了任何TransIt的bug, 非常欢迎大家在这里提交issue. 同样的, 如果你觉得TransIt需要什么功能, 同样可以提交一个issue.
-
-2. 参与开发
-
-	TransIt非常欢迎大家参与插件的开发, 目前程序主要由 @greatghoul 完成, 也非常需要大家的帮助.
-
-	怎么参与开发呢?
-
-	1. fork这个项目
-	2. 创建你的branch, 并且在上面提交你的代码
-	3. 提交pull-request到TransIt上
-	4. review合格后, 你的代码将会合并到仓库中
+[如何参与项目]: https://github.com/GDG-Xian/crx-transit/wiki/HowToContribute
+[贡献者列表]: https://github.com/GDG-Xian/crx-transit/wiki/Contributors
 
 ---
 
