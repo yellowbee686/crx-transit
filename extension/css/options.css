@@ -1,0 +1,24 @@
+body {
+  background: #efefe9;
+  margin: 0;
+  padding: 0;
+}
+
+.board {
+  width: 75%;
+  margin: 60px auto;
+  height: 500px;
+  background: #fff;
+}
+
+.borad-header {
+  background: #fafafa url(../img/bg.png);
+  background-size: 30%;
+  min-height: 100px;
+  border-bottom: 1px solid #eeeeee;
+  padding: 10px 30px;
+}
+
+.board-content {
+  padding: 30px;
+}
