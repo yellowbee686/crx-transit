@@ -56,7 +56,7 @@ function notifyExists(text) {
 // and enable scroll without showing scrollbar.
 function autoFitNotifyList() {
     var listHeight = getNotifyList().find('.transit-list-inner').outerHeight(),
-        windowHeight = $(window).height() + 10;
+        windowHeight = $(window).height() + 40;
     getNotifyList().toggleClass('transit-list-full', listHeight > windowHeight);
 }
 
