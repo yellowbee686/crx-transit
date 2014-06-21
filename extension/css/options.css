@@ -2,6 +2,7 @@ body {
   background: #efefe9;
   margin: 0;
   padding: 0;
+  color: #555;
 }
 
 .board {
@@ -17,9 +18,16 @@ body {
   padding: 10px 30px;
 }
 
-.borad-header h2 {
+.borad-header .title {
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 30px;
+  line-height: 48px;
+  display: inline-block;
+}
+
+.borad-header img {
+  vertical-align: top;
 }
 
 .board-content {
