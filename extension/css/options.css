@@ -7,18 +7,30 @@ body {
 .board {
   width: 75%;
   margin: 60px auto;
-  height: 500px;
   background: #fff;
 }
 
 .borad-header {
   background: #fafafa url(../img/bg.png);
   background-size: 30%;
-  min-height: 100px;
   border-bottom: 1px solid #eeeeee;
   padding: 10px 30px;
 }
 
+.borad-header h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .board-content {
   padding: 30px;
+}
+
+input[type=range] {
+  vertical-align: middle;
+}
+
+.form-group .alert {
+   margin-top: 10px;
+   margin-bottom: 0;
 }
