@@ -22,9 +22,31 @@ function transit(evt) {
     return false;
 }
 
+function openOrFocusOptionsPage() {
+   var optionsUrl = chrome.extension.getURL('options.html'); 
+   chrome.tabs.query({}, function(extensionTabs) {
+      var found = false;
+      for (var i=0; i < extensionTabs.length; i++) {
+         if (optionsUrl == extensionTabs[i].url) {
+            found = true;
+            chrome.tabs.reload(extensionTabs[i].id);
+            chrome.tabs.update(extensionTabs[i].id, {highlighted: true});
+         }
+      }
+      if (found == false) {
+          chrome.tabs.create({url: "options.html"});
+      }
+
+      window.close();
+   });
+
+}
+
 $source.on('keypress', transit);
 $source.focus();
 $source.val(app.currentText);
+$('.btn-options').on('click', openOrFocusOptionsPage);
+
 translate(app.currentText);
 
 var app = angular.module('TransitPopupApp', []);
