@@ -67,8 +67,8 @@ input[type=checkbox] + label, .btn-options {
   display: inline-block;
   background-position: top left;
   background-repeat: no-repeat;
-  width: 32px;
-  height: 32px;
+  width: 16px;
+  height: 16px;
   opacity: 0.5;
   cursor: pointer;
 }
