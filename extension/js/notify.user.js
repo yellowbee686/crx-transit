@@ -10,6 +10,22 @@ function canTranslate(text) {
     return PAT_ENGLISH.test(text);
 }
 
+function delayToHide($notify, waitFor) {
+    $notify.delay(waitFor * 1000).fadeOut(function() {
+        $(this).remove();
+        autoFitNotifyList();
+    });
+}
+
+function registerHoverEvents($notify) {
+    $notify.hover(function() {
+        $notify.clearQueue();
+        $notify.stop();
+    }, function() {
+        delayToHide($notify, options.notifyTimeout);
+    });
+}
+
 function notify(text, waitFor, settings) {
     var $notify = $(this);
 
@@ -30,10 +46,8 @@ function notify(text, waitFor, settings) {
     if ($.isFunction(waitFor)) {
         waitFor($notify);
     } else {
-        $notify.delay(waitFor * 1000).fadeOut(function() {
-            $(this).remove();
-            autoFitNotifyList();
-        });
+        registerHoverEvents($notify);
+        delayToHide($notify, waitFor);
     }
 }
 $.fn.notify = notify;

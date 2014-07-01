@@ -64,12 +64,14 @@
 .transit-notify .success { 
     background: #336721;
     padding: 3px 6px;
+    margin: 0;
     color: #EDF8ED;
 }
 
 .transit-notify .warning { 
     background: #FFF8DC;
     padding: 3px 6px;
+    margin: 0;
     color: #888888;
 }
 
