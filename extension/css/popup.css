@@ -7,6 +7,10 @@ body {
   color: #555;
 }
 
+.pull-right {
+  float: right;
+}
+
 label {
   display: block;
 }
@@ -54,3 +58,35 @@ label {
   text-decoration: underline;
   cursor: help;
 }
+
+input[type=checkbox] {
+  display: none;
+}
+
+input[type=checkbox] + label, .btn-options {
+  display: inline-block;
+  background-position: top left;
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+input[type=checkbox]:checked + label {
+  opacity: 0.8;
+}
+
+input[name=pageInspect] + label {
+  background-image: url(../img/inspect-text.png);
+}
+
+input[name=linkInspect] + label {
+  background-image: url(../img/inspect-link.png);
+}
+
+.btn-options {
+  background-image: url(../img/cog.png);
+  opacity: 0.8;
+}
+
