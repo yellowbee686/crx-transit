@@ -42,3 +42,20 @@ input[type=range] {
    margin-top: 10px;
    margin-bottom: 0;
 }
+
+.form-group.notify-mode .radio-inline {
+  text-align: left;
+  padding-left: 0;
+}
+
+
+.form-group.notify-mode .radio-inline input[type=radio] {
+  float: none;
+  margin-left: 0px;
+  vertical-align: top;
+}
+
+
+.form-group.notify-mode .radio-inline img {
+  display: block;
+}
