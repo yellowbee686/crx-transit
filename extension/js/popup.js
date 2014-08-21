@@ -45,6 +45,7 @@ function openOrFocusOptionsPage() {
 $source.on('keypress', transit);
 $source.focus();
 $source.val(app.currentText);
+$source.get(0).select();
 $('.btn-options').on('click', openOrFocusOptionsPage);
 
 translate(app.currentText);
