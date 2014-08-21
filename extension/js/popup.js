@@ -3,8 +3,6 @@ var app = chrome.extension.getBackgroundPage(),
     $result = $('#result');
 
 function translate(text) {
-    if (!text) return;
-
     chrome.extension.sendMessage({ type: 'translate', text: text }, 
         function(response) {
             $result.html(response.translation);
@@ -42,7 +40,15 @@ function openOrFocusOptionsPage() {
 
 }
 
+function reset_source() {
+  if (this.value) return;
+
+  $result.empty();
+  translate('');
+}
+
 $source.on('keypress', transit);
+$source.on('input', reset_source);
 $source.focus();
 $source.val(app.currentText);
 $source.get(0).select();

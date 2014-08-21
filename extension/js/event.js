@@ -28,6 +28,9 @@ function translateHanlder(request, sender, sendResponse) {
     var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
     currentText = request.text;
 
+    // 如果词为空，则不再翻译
+    if (!text) return;
+
     log('Translating', request.text, 'from youdao')
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
