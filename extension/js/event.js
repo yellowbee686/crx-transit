@@ -29,7 +29,7 @@ function translateHanlder(request, sender, sendResponse) {
     currentText = request.text;
 
     // 如果词为空，则不再翻译
-    if (!text) return;
+    if (!currentText) return;
 
     log('Translating', request.text, 'from youdao')
     var xhr = new XMLHttpRequest();
