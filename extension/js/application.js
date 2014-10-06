@@ -13,7 +13,7 @@ var TPLS = {
     LOADING:     '<div class="success">正在翻译 <strong>#{1} ...</strong></div>',
     TITLE:       '<h6>#{1}</h6>',
     NOTIFY:      '<div class="transit-notify">#{1}</div>',
-    PHONETIC:    '[<code>#{1}</code>]<br/>'
+    PHONETIC:    '<code>#{1}</code><br/>'
 
 };
 
@@ -54,27 +54,6 @@ chrome.storage.onChanged.addListener(function(changes) {
         log(fmt('#{1}: #{2} => #{3}', name, change.oldValue, change.newValue));
     }
 });
-
-// 从查询结果中提取出翻译结果
-function getTranslation(result) {
-    var translation = null;
-    if (result && !result.errorCode) {
-        if (result.basic) {
-            translation = result.basic.explains.join('<br/>');
-            if (result.basic.phonetic) {
-                translation = fmt(TPLS.PHONETIC, result.basic.phonetic) + translation;
-            }
-        } else if (result.translation) {
-            translation = result.translation.join('<br />');
-        }
-        
-        if (translation.toLowerCase() == result.query.toLowerCase()) {
-            translation = null;
-        }
-    }
-
-    return translation;
-}
 
 function registerMessageDispatcher(dispatcher) {
     chrome.runtime.onMessage.addListener(

@@ -13,6 +13,7 @@
   "background": {
     "scripts": [
       "js/jquery-2.1.0.min.js",
+      "js/translators/youdao_translator.js",
       "js/application.js",
       "js/event.js"
     ],
