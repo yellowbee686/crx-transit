@@ -1,6 +1,10 @@
 describe('YoudaoTranslator', function() {
   var translator = YoudaoTranslator;
 
+  it('should named youdao', function() {
+    expect(translator.name).toEqual('youdao');
+  });
+
   it('should translate empty text to null', function(done) {
     translator.translate('', function(result) {
       expect(result).toBeNull();
@@ -26,7 +30,7 @@ describe('YoudaoTranslator', function() {
     translator.translate('translate', function(result) {
       expect(result).not.toBeNull();
       expect(result.translation).toContain('vt. 翻译；转化；解释；转变为；调动');
-      expect(result.phonetic).toContain('træns\'leɪt');
+      expect(result.phonetic).toEqual('[træns\'leɪt; trɑːns-; -nz-]');
       done();
     });
   });

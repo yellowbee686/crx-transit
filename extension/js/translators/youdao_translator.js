@@ -1,4 +1,6 @@
 YoudaoTranslator = new function() {
+  this.name = 'youdao';
+
   var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 
   format = function(result) {
@@ -6,12 +8,12 @@ YoudaoTranslator = new function() {
     var response = {};
 
     if (result.basic) {
-      response.translation = result.basic.explains.join('\n');
+      response.translation = result.basic.explains.join('<br/>');
       if (result.basic.phonetic) {
-        response.phonetic = result.basic.phonetic;
+        response.phonetic = '[' + result.basic.phonetic + ']';
       }
     } else if (result.translation) {
-      response.translation = result.translation.join('\n');
+      response.translation = result.translation.join('<br/>');
     }
 
     if (response.translation.toLowerCase() == result.query.toLowerCase()) {
