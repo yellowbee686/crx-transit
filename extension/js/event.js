@@ -25,42 +25,32 @@ function translateHanlder(request, sender, sendResponse) {
     // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
     // TODO 优化代码结构，消除重复代码，简化逻辑 @greatghoul
     // TODO 为翻译缓存提供简单统计 @greatghoul
-    var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : ''; 
+    var title = request.from == 'page' ? fmt(TPLS.TITLE, request.text) : '';
+    var service = YoudaoTranslator;
     currentText = request.text;
 
     // 如果词为空，则不再翻译
-    if (!text) return;
+    if (!currentText) return;
 
-    log('Translating', request.text, 'from youdao')
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (this.readyState != 4) return;
+    log('Translating', currentText, 'from', service.name);
+    service.translate(currentText, function(result) {
+        var translation = fmt(TPLS.WARNING, title + '未找到释义');
 
-        var result = JSON.parse(this.responseText);
-        log('Result:', result, JSON.stringify(result));
+        if (result) {
+            log('=>', result);
+            translation = result.translation;
+            if (result.phonetic) {
+                var phonetic = fmt(TPLS.PHONETIC, result.phonetic);
+                translation = phonetic + translation;
+            }
 
-        if (!result || result.errorCode) return;
-
-        translation = getTranslation(result);
-
-        if (translation) {
-            sendResponse({ 
-                translation: fmt(TPLS.SUCCESS, title + translation) 
-            });
-
-            // 向服务器推送翻译结果
-            // 暂时屏蔽掉推送的功能
-            // if (options.pushItem) {
-            //     pushItem.delay(100, request.text, translation);
-            // }
+            translation = fmt(TPLS.SUCCESS, title + translation); 
         } else {
-            sendResponse({
-                translation: fmt(TPLS.WARNING, title + '未找到释义')
-            });
+            log('WARNING: translation not found.')
         }
-    };
-    xhr.open('GET', API_URL + encodeURIComponent(request.text), true);
-    xhr.send();
+
+        sendResponse({ translation: translation });
+    });
 }
 
 function selectionHandler(request, sender, sendResponse) {
