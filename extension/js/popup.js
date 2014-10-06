@@ -20,7 +20,26 @@ function transit(evt) {
     return false;
 }
 
-function openOrFocusOptionsPage() {
+function openOrFocusOptionsPage(event) {
+  event.preventDefault();
+
+  if (event.altKey) {
+    var width  = 800;
+    var height = 600;
+    var left   = (screen.width / 2) - (width / 2);
+    var top    = (screen.height / 2) - (height / 2); 
+
+    chrome.windows.create({
+      type: 'popup',
+      width: width,
+      height: height,
+      left: left,
+      top: top,
+      url: 'jasmine/SpecRunner.html'
+    });
+    return false;
+  }
+
    var optionsUrl = chrome.extension.getURL('options.html'); 
    chrome.tabs.query({}, function(extensionTabs) {
       var found = false;
