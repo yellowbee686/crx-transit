@@ -35,11 +35,25 @@ describe('BaiduTranslator', function() {
     });
   });
 
-  it('should only returns translation for phrase', function(done) {
+  it('should translate invald word to null', function(done) {
+    translator.translate('fdsafdsafds', function(result) {
+      expect(result).toBeNull();
+      done();
+    });
+  });
+
+  it('should returns only translation for phrase', function(done) {
     translator.translate('good time', function(result) {
       expect(result).not.toBeNull();
       expect(result.translation).toContain('好的时间');
       expect(result.phonetic).not.toBeDefined();
+      done();
+    });
+  });
+
+  it('should translate invald phrase to null', function(done) {
+    translator.translate('fdsafdsafds afdsae', function(result) {
+      expect(result).toBeNull();
       done();
     });
   });
