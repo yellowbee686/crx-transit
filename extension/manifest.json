@@ -49,6 +49,7 @@
     "tabs",
     "storage",
     "http://fanyi.youdao.com/openapi.do",
+    "http://openapi.baidu.com/",
     "http://trit.herokuapp.com/api/items"
   ]
 }
