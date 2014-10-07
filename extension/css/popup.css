@@ -24,7 +24,24 @@ label {
   font-weight: bold;
   border-radius: 3px;
   box-sizing: border-box;
-  background: url(http://www.youdao.com/help/fanyiapi/brand/002.gif) no-repeat right center;
+}
+
+.btn-translator {
+  width: 50px;
+  height: 16px;
+  margin-right: 55px;
+  background-size: 50px 16px;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.btn-translator.youdao {
+  background-image: url(../img/translators/youdao.png);
+}
+
+.btn-translator.baidu {
+  background-size: 50px 12px;
+  background-image: url(../img/translators/baidu.png);
 }
 
 #result .success {
@@ -93,4 +110,8 @@ input[name=linkInspect] + label {
 .btn-options {
   background-image: url(../img/cog.png);
   opacity: 0.8;
+}
+
+.translator-logo {
+  height: 16px; 
 }
