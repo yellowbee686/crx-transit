@@ -1,8 +1,8 @@
-describe('YoudaoTranslator', function() {
-  var translator = YoudaoTranslator;
+describe('BaiduTranslator', function() {
+  var translator = BaiduTranslator;
 
-  it('should named youdao', function() {
-    expect(translator.name).toEqual('youdao');
+  it('should named baidu', function() {
+    expect(translator.name).toEqual('baidu');
   });
 
   it('should translate empty text to null', function(done) {
@@ -29,8 +29,8 @@ describe('YoudaoTranslator', function() {
   it('should returns translation and phonetic for word', function(done) {
     translator.translate('translate', function(result) {
       expect(result).not.toBeNull();
-      expect(result.translation).toContain('vt. 翻译；转化；解释；转变为；调动');
-      expect(result.phonetic).toEqual('[træns\'leɪt; trɑːns-; -nz-]');
+      expect(result.translation).toContain('vt.& vi. 翻译；解释；转化；被翻译');
+      expect(result.phonetic).toEqual('[trænsˈlet, trænz-, ˈtrænsˌlet, ˈtrænz-]');
       done();
     });
   });
@@ -45,7 +45,7 @@ describe('YoudaoTranslator', function() {
   it('should returns only translation for phrase', function(done) {
     translator.translate('good time', function(result) {
       expect(result).not.toBeNull();
-      expect(result.translation).toContain('好时机；繁荣时期');
+      expect(result.translation).toContain('好的时间');
       expect(result.phonetic).not.toBeDefined();
       done();
     });

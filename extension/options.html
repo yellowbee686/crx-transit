@@ -20,6 +20,14 @@
       <form class="form-horizontal" role="form" ng-controller="OptionsCtrl">
 
         <div class="form-group">
+          <label class="col-sm-2 control-label">翻译服务</label>
+          <div class="col-sm-10">
+            <label class="radio-inline"><input type="radio" name="translator" ng-model="options.translator" value="youdao" /> 有道翻译</label>
+            <label class="radio-inline"><input type="radio" name="translator" ng-model="options.translator" value="baidu" /> 百度翻译</label>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="col-sm-2 control-label">启用页面划词</label>
           <div class="col-sm-10">
             <label class="radio-inline"><input type="radio" name="pageInspect" ng-model="options.pageInspect" ng-value="true" />启用</label>

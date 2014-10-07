@@ -3,7 +3,7 @@ YoudaoTranslator = new function() {
 
   var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 
-  format = function(result) {
+  var format = function(result) {
     if (!result || result.errorCode) return null;
     var response = {};
 
@@ -23,7 +23,7 @@ YoudaoTranslator = new function() {
     }
   };
 
-  request = function(text, callback) {
+  var request = function(text, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (this.readyState == 4) {

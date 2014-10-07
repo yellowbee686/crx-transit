@@ -5,13 +5,14 @@
   <title>TransIt</title> 
   <link rel="stylesheet" href="css/popup.css" type="text/css" />
 </head>
-<body>
+<body ng-controller="OptionsCtrl">
   <input type="text" id="source" placeholder="输入单词 ..." />
 
   <section id="result"></section>
 
-  <footer ng-controller="OptionsCtrl" >
+  <footer>
     <a href="#" class="btn-options pull-right" title="偏好设定"></a>
+    <a href="#" class="btn-translator pull-right {{options.translator}}" title="翻译服务提供商"></a>
 
     <input type="checkbox" name="pageInspect" id="optionPageInspect" ng-model="options.pageInspect" />
     <label for="optionPageInspect" title="页面划词"></label>
