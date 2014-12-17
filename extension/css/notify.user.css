@@ -61,21 +61,22 @@
     font-weight: 300;
 }
 
-.transit-notify .success { 
+.transit-notify .success {
     background: #336721;
     padding: 3px 6px;
     margin: 0;
     color: #EDF8ED;
 }
 
-.transit-notify .warning { 
+.transit-notify .warning {
     background: #FFF8DC;
     padding: 3px 6px;
     margin: 0;
     color: #888888;
 }
 
-a.transit-link {
+body.transit-link-inspect-mode a {
     text-decoration: none !important;
     cursor: text !important;
+    pointer-events: none !important;
 }
