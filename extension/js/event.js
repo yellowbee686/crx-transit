@@ -47,6 +47,10 @@ function translateHanlder(request, sender, sendResponse) {
                 var phonetic = fmt(TPLS.PHONETIC, result.phonetic);
                 translation = phonetic + translation;
             }
+            if (result.web) {
+              var web = fmt(TPLS.WEB, result.web);
+              translation = translation + web;
+            }
 
             translation = fmt(TPLS.SUCCESS, title + translation); 
         } else {

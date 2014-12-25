@@ -15,6 +15,11 @@ YoudaoTranslator = new function() {
     } else if (result.translation) {
       response.translation = result.translation.join('<br/>');
     }
+    if (result.web) {
+      response.web = result.web.map(function(kv) {
+        return kv.key + ': ' + kv.value.join('；')
+      }).join('<br/>');
+    }
 
     if (response.translation.toLowerCase() == result.query.toLowerCase()) {
       return null;
