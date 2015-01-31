@@ -2,7 +2,7 @@
 *.sublime-project
 *.sublime-workspace
 /package
-
+/node_modules
 *.patch
 *.diff
 *~
