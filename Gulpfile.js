@@ -27,22 +27,19 @@ gulp.task('copy', function() {
     .pipe(gulp.dest('build/img'));
 });
 
-//run scripts through JSHint
-gulp.task('jshint', function() {
-  return gulp.src('src/js/**.js')
-  .pipe(jshint())
-  .pipe(jshint.reporter('default'));
-});
-
 gulp.task('scripts', function() {
-  gulp.src(['bower_components/jquery/dist/jquery.min.js',
+  gulp.src([
+    'bower_components/jquery/dist/jquery.min.js',
     'bower_components/sugar/release/sugar.min.js',
     'src/js/application.js'])
     .pipe(jshint())
+    .pipe(uglify())
     .pipe(concat('application.js'))
     .pipe(gulp.dest('build/js'));
-  gulp.src(['!src/js/application.js',
-    'src/js/**.js'])
+  gulp.src([
+    'src/js/*/**.js',
+    'src/js/*.js',
+    '!src/js/application.js'])
     .pipe(jshint())
     .pipe(uglify())
     .pipe(gulp.dest('build/js'));
