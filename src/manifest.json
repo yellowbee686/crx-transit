@@ -13,8 +13,7 @@
   "background": {
     "scripts": [
       "js/application.js",
-      "js/translators/youdao_translator.js",
-      "js/translators/baidu_translator.js",
+      "js/translators.js",
       "js/event.js"
     ],
     "persistent": true
@@ -33,8 +32,7 @@
       "css": ["css/contentstyle.css"],
       "js": [
         "js/application.js",
-        "js/notify.user.js",
-        "js/action.user.js"
+        "js/contentscript.js",
       ],
       "all_frames": true
     }

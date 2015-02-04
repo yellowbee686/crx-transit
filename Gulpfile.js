@@ -33,21 +33,25 @@ gulp.task('scripts', function() {
     'bower_components/sugar/release/sugar.min.js',
     'src/js/application.js'])
     .pipe(jshint())
-    .pipe(uglify())
     .pipe(concat('application.js'))
     .pipe(gulp.dest('build/js'));
+  gulp.src('src/js/contentscripts/*.js')
+    .pipe(jshint())
+    .pipe(concat('contentscript.js'))
+    .pipe(gulp.dest('build/js'))
+  gulp.src('src/js/translators/*.js')
+    .pipe(jshint())
+    .pipe(concat('translators.js'))
+    .pipe(gulp.dest('build/js'))
   gulp.src([
-    'src/js/*/**.js',
     'src/js/*.js',
     '!src/js/application.js'])
     .pipe(jshint())
-    .pipe(uglify())
     .pipe(gulp.dest('build/js'));
 });
 
 gulp.task('styles', function() {
   gulp.src('src/css/*.css')
-    .pipe(minifycss())
     .pipe(gulp.dest('build/css'));
 });
 
