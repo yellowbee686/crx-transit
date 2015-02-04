@@ -3,6 +3,7 @@
 //npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml gulp-jshint gulp-strip-debug gulp-zip --save-dev
 
 var gulp       = require('gulp')
+  , watch      = require('gulp-watch')
   , clean      = require('gulp-clean')
   , concat     = require('gulp-concat')
   , cleanhtml  = require('gulp-cleanhtml')
@@ -11,51 +12,84 @@ var gulp       = require('gulp')
   , uglify     = require('gulp-uglify')
   , zip        = require('gulp-zip');
 
-//clean build directory
+var paths = {
+  'static': [
+    'src/manifest.json',
+    'src/*.html',
+    'src/img/**/*'
+  ],
+
+  'js:app': [
+    'bower_components/jquery/dist/jquery.min.js',
+    'bower_components/sugar/release/sugar.min.js',
+    'src/js/application.js'
+  ],
+
+  'js:page': [
+    'src/js/contentscripts/*.js'
+  ],
+
+  'js:trans': [
+    'src/js/translators/*.js'
+  ],
+
+  'js:static': [
+    'src/js/*.js',
+    '!src/js/application.js'
+  ],
+
+  'css': [
+    'src/css/*.css'
+  ],
+
+};
+
 gulp.task('clean', function() {
   return gulp.src('build/*', {read: false})
   .pipe(clean());
 });
 
-//copy static folders to build directory
 gulp.task('copy', function() {
-  gulp.src('src/manifest.json')
+  gulp.src(paths['static'], { base: 'src' })
     .pipe(gulp.dest('build'));
-  gulp.src('src/*.html')
-    .pipe(gulp.dest('build'));
-  gulp.src('src/img/**')
-    .pipe(gulp.dest('build/img'));
 });
 
 gulp.task('scripts', function() {
-  gulp.src([
-    'bower_components/jquery/dist/jquery.min.js',
-    'bower_components/sugar/release/sugar.min.js',
-    'src/js/application.js'])
+  gulp.src(paths['js:app'])
     .pipe(jshint())
     .pipe(concat('application.js'))
     .pipe(gulp.dest('build/js'));
-  gulp.src('src/js/contentscripts/*.js')
+
+  gulp.src(paths['js:page'])
     .pipe(jshint())
     .pipe(concat('contentscript.js'))
-    .pipe(gulp.dest('build/js'))
-  gulp.src('src/js/translators/*.js')
+    .pipe(gulp.dest('build/js'));
+
+  gulp.src(paths['js:trans'])
     .pipe(jshint())
     .pipe(concat('translators.js'))
-    .pipe(gulp.dest('build/js'))
-  gulp.src([
-    'src/js/*.js',
-    '!src/js/application.js'])
+    .pipe(gulp.dest('build/js'));
+
+  gulp.src(paths['js:static'])
     .pipe(jshint())
     .pipe(gulp.dest('build/js'));
 });
 
 gulp.task('styles', function() {
-  gulp.src('src/css/*.css')
+  gulp.src(paths['css'])
     .pipe(gulp.dest('build/css'));
 });
 
 gulp.task('build', ['scripts', 'styles', 'copy']);
+
+gulp.task('watch', function() {
+  gulp.watch(paths['static'], ['copy']);
+  gulp.watch(paths['js:app'], ['scripts']);
+  gulp.watch(paths['js:page'], ['scripts']);
+  gulp.watch(paths['js:trans'], ['scripts']);
+  gulp.watch(paths['js:static'], ['scripts']);
+  gulp.watch(paths['css'], ['styles']);
+});
 
 gulp.task('zip', ['clean', 'build'], function() {
   var manifest = require('./src/manifest');
@@ -67,4 +101,4 @@ gulp.task('zip', ['clean', 'build'], function() {
 });
 
 //run all tasks after build directory has been cleaned
-gulp.task('default', ['build']);
+gulp.task('default', ['watch']);
