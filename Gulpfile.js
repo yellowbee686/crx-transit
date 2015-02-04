@@ -6,6 +6,7 @@ var gulp       = require('gulp')
   , watch      = require('gulp-watch')
   , clean      = require('gulp-clean')
   , concat     = require('gulp-concat')
+  , sass       = require('gulp-sass')
   , cleanhtml  = require('gulp-cleanhtml')
   , minifycss  = require('gulp-minify-css')
   , jshint     = require('gulp-jshint')
@@ -17,6 +18,10 @@ var paths = {
     'src/manifest.json',
     'src/*.html',
     'src/img/**/*'
+  ],
+
+  'styles': [
+    'src/stylesheets/*.scss'
   ],
 
   'js:app': [
@@ -76,6 +81,10 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('styles', function() {
+  gulp.src(paths['styles'])
+    .pipe(sass())
+    .pipe(gulp.dest('build/css'));
+
   gulp.src(paths['css'])
     .pipe(gulp.dest('build/css'));
 });
@@ -89,6 +98,7 @@ gulp.task('watch', function() {
   gulp.watch(paths['js:trans'], ['scripts']);
   gulp.watch(paths['js:static'], ['scripts']);
   gulp.watch(paths['css'], ['styles']);
+  gulp.watch(paths['styles'], ['styles']);
 });
 
 gulp.task('zip', ['clean', 'build'], function() {

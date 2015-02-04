@@ -1,0 +1,76 @@
+body {
+  background: #efefe9;
+  margin: 0;
+  padding: 0;
+  color: #555;
+}
+
+.board {
+  width: 75%;
+  margin: 60px auto;
+  background: #fff;
+}
+
+.borad-header {
+  background: #fafafa url(../img/bg.png);
+  background-size: 30%;
+  border-bottom: 1px solid #eeeeee;
+  padding: 10px 30px;
+}
+
+.borad-header .title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 30px;
+  line-height: 48px;
+  display: inline-block;
+}
+
+.borad-header img {
+  vertical-align: top;
+}
+
+.board-content {
+  padding: 30px;
+}
+
+input[type=range] {
+  vertical-align: middle;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .control-label {
+    margin: 3px 0;
+    float: left;
+    width: 200px;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .controls {
+    margin-left: 200px;
+
+    .radio-inline {
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .hint {
+      color: #aaaaaa;
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+  }
+
+  
+}

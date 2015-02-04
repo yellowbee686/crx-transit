@@ -19,28 +19,28 @@
       <form class="form-horizontal" role="form" ng-controller="OptionsCtrl">
 
         <div class="form-group">
-          <label class="col-sm-2 control-label">翻译服务</label>
-          <div class="col-sm-10">
+          <label class="control-label">翻译服务</label>
+          <div class="controls">
             <label class="radio-inline"><input type="radio" name="translator" ng-model="options.translator" value="youdao" /> 有道翻译</label>
             <label class="radio-inline"><input type="radio" name="translator" ng-model="options.translator" value="baidu" /> 百度翻译</label>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label">启用页面划词</label>
-          <div class="col-sm-10">
+          <label class="control-label">启用页面划词</label>
+          <div class="controls">
             <label class="radio-inline"><input type="radio" name="pageInspect" ng-model="options.pageInspect" ng-value="true" />启用</label>
             <label class="radio-inline"><input type="radio" name="pageInspect" ng-model="options.pageInspect" ng-value="false" /> 停用</label>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label">启用链接划词</label>
-          <div class="col-sm-10">
+          <label class="control-label">启用链接划词</label>
+          <div class="controls">
             <label class="radio-inline"><input type="radio" name="linkInspect" ng-model="options.linkInspect" ng-value="true" />启用</label>
             <label class="radio-inline"><input type="radio" name="linkInspect" ng-model="options.linkInspect" ng-value="false" /> 停用</label>
 
-            <div class="alert alert-info">
+            <div class="hint">
               快速两次敲击 <code>Caps Lock</code>，会禁用页面链接，方便划词，
               再次两次敲击，页面链接将重新恢复为可以点击。
             </div>
@@ -48,22 +48,20 @@
         </div>
 
         <div class="form-group notify-mode">
-          <label class="col-sm-2 control-label">划词翻译结果显示位置</label>
-          <div class="col-sm-10">
+          <label class="control-label">划词翻译结果显示位置</label>
+          <div class="controls">
             <label class="radio-inline">
-              <img src="img/notify-mode-margin.png" alt="">
               <input type="radio" name="notifyMode" ng-model="options.notifyMode" value="margin" /> 在窗口边缘显示
             </label>
             <label class="radio-inline">
-              <img src="img/notify-mode-in-place.png" alt="">
               <input type="radio" name="notifyMode" ng-model="options.notifyMode" value="in-place" /> 在选择的文本附近显示
             </label>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label">划词翻译结果显示位置</label>
-          <div class="col-sm-10" style="padding-top: 7px;">
+          <label class="control-label">划词翻译结果显示位置</label>
+          <div class="controls" style="padding-top: 7px;">
             <input type="range" min="3" max="10" step="1" ng-model="options.notifyTimeout" data-highlight="true" />
             <span class="label label-info">{{ options.notifyTimeout }} 秒</span>
           </div>
