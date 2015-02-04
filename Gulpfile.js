@@ -39,6 +39,7 @@ var paths = {
   ],
 
   'js:static': [
+    'bower_components/angular/angular.js',
     'src/js/*.js',
     '!src/js/application.js'
   ],
