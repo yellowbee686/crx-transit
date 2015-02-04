@@ -1,6 +1,16 @@
 {
   "name": "crx-transit",
   "dependencies": {
-    "gulp": "^3.8.10"
+    "coffee-script": "^1.9.0",
+    "gulp": "^3.8.10",
+    "gulp-clean": "^0.3.1",
+    "gulp-cleanhtml": "^0.1.0",
+    "gulp-coffee": "^2.3.1",
+    "gulp-concat": "^2.4.3",
+    "gulp-jshint": "^1.9.2",
+    "gulp-minify-css": "^0.4.4",
+    "gulp-strip-debug": "^1.0.2",
+    "gulp-uglify": "^1.1.0",
+    "gulp-zip": "^2.0.2"
   }
 }
