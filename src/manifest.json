@@ -32,7 +32,7 @@
       "css": ["css/contentstyle.css"],
       "js": [
         "js/application.js",
-        "js/contentscript.js",
+        "js/contentscript.js"
       ],
       "all_frames": true
     }
@@ -47,5 +47,4 @@
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
-
 }

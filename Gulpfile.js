@@ -6,6 +6,7 @@ var gulp       = require('gulp')
   , watch      = require('gulp-watch')
   , clean      = require('gulp-clean')
   , concat     = require('gulp-concat')
+  , coffee     = require('gulp-coffee')
   , sass       = require('gulp-sass')
   , cleanhtml  = require('gulp-cleanhtml')
   , minifycss  = require('gulp-minify-css')
@@ -44,6 +45,10 @@ var paths = {
     '!src/js/application.js'
   ],
 
+  'coffee': [
+    'src/js/*.coffee'
+  ],
+
   'css': [
     'src/css/*.css'
   ],
@@ -79,6 +84,10 @@ gulp.task('scripts', function() {
   gulp.src(paths['js:static'])
     .pipe(jshint())
     .pipe(gulp.dest('build/js'));
+
+  gulp.src(paths['coffee'])
+    .pipe(coffee())
+    .pipe(gulp.dest('build/js'));
 });
 
 gulp.task('styles', function() {
@@ -92,12 +101,13 @@ gulp.task('styles', function() {
 
 gulp.task('build', ['scripts', 'styles', 'copy']);
 
-gulp.task('watch', function() {
+gulp.task('watch', ['build'], function() {
   gulp.watch(paths['static'], ['copy']);
   gulp.watch(paths['js:app'], ['scripts']);
   gulp.watch(paths['js:page'], ['scripts']);
   gulp.watch(paths['js:trans'], ['scripts']);
   gulp.watch(paths['js:static'], ['scripts']);
+  gulp.watch(paths['coffee'], ['scripts']);
   gulp.watch(paths['css'], ['styles']);
   gulp.watch(paths['styles'], ['styles']);
 });
