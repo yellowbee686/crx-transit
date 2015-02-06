@@ -47,12 +47,7 @@ var paths = {
 
   'coffee': [
     'src/js/*.coffee'
-  ],
-
-  'css': [
-    'src/css/*.css'
-  ],
-
+  ]
 };
 
 gulp.task('clean', function() {
@@ -94,9 +89,6 @@ gulp.task('styles', function() {
   gulp.src(paths['styles'])
     .pipe(sass())
     .pipe(gulp.dest('build/css'));
-
-  gulp.src(paths['css'])
-    .pipe(gulp.dest('build/css'));
 });
 
 gulp.task('build', ['scripts', 'styles', 'copy']);
@@ -108,7 +100,6 @@ gulp.task('watch', ['build'], function() {
   gulp.watch(paths['js:trans'], ['scripts']);
   gulp.watch(paths['js:static'], ['scripts']);
   gulp.watch(paths['coffee'], ['scripts']);
-  gulp.watch(paths['css'], ['styles']);
   gulp.watch(paths['styles'], ['styles']);
 });
 
