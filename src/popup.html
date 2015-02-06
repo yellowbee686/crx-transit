@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html ng-app="TransitPopupApp">
+<html ng-app="TransitPopupApp" ng-csp>
 <head>
   <meta charset="utf-8"/>
   <title>TransIt</title> 
+
   <link rel="stylesheet" href="css/popup.css" type="text/css" />
 </head>
 <body ng-controller="OptionsCtrl">
-  <input type="text" id="source" placeholder="输入单词 ..." />
+  <input type="text" placeholder="输入单词 ..." id="source"
+         ng-enter="translate(source)"
+         ng-model="source" />
 
-  <section id="result"></section>
+  <div id="result" ng-bind-html="output | html_safe"></div>
 
   <footer>
     <a href="#" class="btn-options pull-right" title="偏好设定"></a>
@@ -21,8 +24,7 @@
     <label for="optionLinkInspect" title="链接划词"></label>
   </footer>
   
-  <script src="js/angular.min.js" type="text/javascript"></script>
-  <script src="js/jquery-2.1.0.min.js" type="text/javascript"></script>
+  <script src="js/angular.js" type="text/javascript"></script>
   <script src="js/application.js" type="text/javascript"></script>
   <script src="js/popup.js" type="text/javascript"></script>
 </body>
