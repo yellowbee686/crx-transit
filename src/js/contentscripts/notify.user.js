@@ -18,9 +18,14 @@ function delayToHide($notify, waitFor) {
 }
 
 function registerHoverEvents($notify) {
-    $notify.hover(function() {
+    $notify.hover(function(event) {
         $notify.clearQueue();
         $notify.stop();
+
+        if ($notify.is('.transit-in-place')) {
+            $notify.insertAfter($('.transit-in-place:last'));
+            event.stopPropagation();
+        }
     }, function() {
         delayToHide($notify, options.notifyTimeout);
     });
@@ -35,6 +40,8 @@ function notify(text, waitFor, settings) {
         // Store selection in notify element.
         $notify = $(fmt(TPLS.NOTIFY, fmt(TPLS.LOADING, text)));
         $notify.data('text', text);
+        $notify.addClass('transit-' + options.notifyMode);
+
         if (options.notifyMode === 'margin') {
             $notify.prependTo(getNotifyList().find('.transit-list-inner'))
                    .fadeIn(autoFitNotifyList);
