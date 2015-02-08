@@ -49,8 +49,7 @@ app.controller 'OptionsCtrl', ($scope) ->
   $scope.source = chrome.extension.getBackgroundPage().currentText
 
   $scope.translate = (source) ->
-    $scope.output = '正在查询...'
-    #$scope.$apply()
+    $scope.output = '<div class="loading">正在查询...</div>'
 
     message = type: 'translate', text: source
     chrome.extension.sendMessage message, (response) ->

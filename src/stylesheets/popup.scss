@@ -45,6 +45,11 @@ label {
 }
 
 #result {
+  .loading {
+    margin-bottom: 10px;
+    padding: 3px 6px;
+  }
+
   .success {
     background: #efffef;
     color: #2B3F29;
@@ -55,7 +60,6 @@ label {
   .warning {
     background: #FFF8DC;
     color: #888888;
-    border: 1px solid #E0DCBF;
     margin-bottom: 10px;
     padding: 3px 6px; 
   }
