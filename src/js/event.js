@@ -1,6 +1,6 @@
 var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
 var PUSH_URL = 'http://trit.herokuapp.com/api/items'
-var currentText = null;
+var currentText = '';
 var TRANSLATORS = {
     baidu: BaiduTranslator,
     youdao: YoudaoTranslator

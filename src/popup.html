@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="TransitPopupApp" ng-csp>
+<head>
+  <meta charset="utf-8"/>
+  <title>TransIt</title> 
+
+  <link rel="stylesheet" href="css/popup.css" type="text/css" />
+</head>
+<body ng-controller="OptionsCtrl">
+  <div class="loading" ng-hide="isReady">加载中 ...</div>
+
+  <div class="container" ng-show="isReady">
+    <textarea id="source" placeholder="输入文字进行翻译 ..."
+              ng-model="source"
+              ng-trim="false"
+              ng-keydown="handleKeydown($event)"
+              ng-keyup="handleChange($event)"
+              msd-elastic></textarea>
+
+    <div id="result" ng-bind-html="output | html_safe"></div>
+
+    <footer>
+      <a href="#" class="btn-options pull-right" title="偏好设定"></a>
+      <a href="#" class="btn-translator pull-right {{options.translator}}" title="翻译服务提供商"></a>
+
+      <input type="checkbox" name="pageInspect" id="optionPageInspect" ng-model="options.pageInspect" />
+      <label for="optionPageInspect" title="页面划词"></label>
+
+      <input type="checkbox" name="linkInspect" id="optionLinkInspect" ng-model="options.linkInspect" />
+      <label for="optionLinkInspect" title="链接划词"></label>
+    </footer>
+  </div>
+  
+  <script src="js/application.js" type="text/javascript"></script>
+  <script src="js/angular.js" type="text/javascript"></script>
+  <script src="js/elastic.js" type="text/javascript"></script>
+  <script src="js/popup.js" type="text/javascript"></script>
+</body>
+</html>

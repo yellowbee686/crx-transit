@@ -38,24 +38,39 @@ input[type=range] {
   vertical-align: middle;
 }
 
-.form-group .alert {
-   margin-top: 10px;
-   margin-bottom: 0;
-}
+.form-group {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
 
-.form-group.notify-mode .radio-inline {
-  text-align: left;
-  padding-left: 0;
-}
+  &:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 
+  .control-label {
+    margin: 3px 0;
+    float: left;
+    width: 200px;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
 
-.form-group.notify-mode .radio-inline input[type=radio] {
-  float: none;
-  margin-left: 0px;
-  vertical-align: top;
-}
+  .controls {
+    margin-left: 200px;
 
+    .radio-inline {
+      display: inline-block;
+      margin-right: 5px;
+    }
 
-.form-group.notify-mode .radio-inline img {
-  display: block;
+    .hint {
+      color: #aaaaaa;
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+  }
+
+  
 }

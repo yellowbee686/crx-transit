@@ -6,16 +6,14 @@
   "version": "1.3",
 
   "icons": {
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
   },
 
   "background": {
     "scripts": [
-      "js/jquery-2.1.0.min.js",
-      "js/translators/youdao_translator.js",
-      "js/translators/baidu_translator.js",
       "js/application.js",
+      "js/translators.js",
       "js/event.js"
     ],
     "persistent": true
@@ -24,26 +22,20 @@
   "options_page": "options.html",
 
   "browser_action": {
-    "default_icon": "icon48.png",
+    "default_icon": "img/icon48.png",
     "default_popup": "popup.html"
   },
 
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["css/notify.user.css"],
+      "css": ["css/contentstyle.css"],
       "js": [
-        "js/jquery-2.1.0.min.js",
         "js/application.js",
-        "js/notify.user.js",
-        "js/action.user.js"
+        "js/contentscript.js"
       ],
       "all_frames": true
     }
-  ],
-
-  "web_accessible_resources": [
-   "/js/jquery-2.1.0.min.map"
   ],
 
   "permissions": [
@@ -52,5 +44,7 @@
     "http://fanyi.youdao.com/openapi.do",
     "http://openapi.baidu.com/",
     "http://trit.herokuapp.com/api/items"
-  ]
+  ],
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
