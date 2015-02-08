@@ -39,14 +39,14 @@
     opacity: 0.9;
 
     h6 {
-        border: none;
-        background: none;
-        font-size: 16px;
-        color: inherit;
-        margin: 0;
-        padding: 0;
-        margin: 0;
-        text-transform: none;
+        border: none !important;
+        background: none !important;
+        font-size: 16px !important;
+        line-height: 20px !important;
+        color: inherit !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-transform: none !important;
     }
 
     code {

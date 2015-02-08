@@ -106,4 +106,5 @@ app.controller 'OptionsCtrl', ($scope, $timeout) ->
     # 这个延时是用于处理 OSX 的弹出窗口动画，该动画有时会导致窗口布局损坏 。
     $timeout ->
       $scope.isReady = true
+      angular.element('#source').focus().select()
 
