@@ -59,7 +59,11 @@ label {
 }
 
 #result {
+
   div {
+    max-height: 200px;
+    overflow: auto;
+    
     margin-bottom: 7px;
     padding: 3px 6px;
   }
