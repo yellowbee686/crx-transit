@@ -1,3 +1,5 @@
+background = chrome.extension.getBackgroundPage()
+
 openOrFocusOptionsPage = (event) ->
   event.preventDefault()
 
@@ -31,7 +33,7 @@ openOrFocusOptionsPage = (event) ->
 
 $('.btn-options').on 'click', openOrFocusOptionsPage
 
-app = angular.module('TransitPopupApp', [])
+app = angular.module('TransitPopupApp', ['monospaced.elastic'])
 
 app.directive 'ngEnter', ->
   link: (scope, element, attrs) ->
@@ -44,17 +46,50 @@ app.directive 'ngEnter', ->
 app.filter 'html_safe', ($sce) ->
   return $sce.trustAsHtml
 
-app.controller 'OptionsCtrl', ($scope) ->
+app.controller 'OptionsCtrl', ($scope, $timeout) ->
   $scope.output = ''
-  $scope.source = chrome.extension.getBackgroundPage().currentText
+  $scope.source = background.currentText
+  $scope.rows = 1
+
+  $scope.resetSource = ->
+    $scope.source = ''
+    $scope.output = ''
+    background.currentText = ''
+
+  $scope.handleKeydown = ($event) ->
+    if $event.keyCode == 27
+      
+      # 如果内容不为空，按下 ESC，会清空当前内容，否则，关闭窗口
+      unless $scope.source.isBlank()
+        $event.stopPropagation()
+        $event.preventDefault()
+        $scope.resetSource()
+
+    else if $event.keyCode == 13
+      $event.stopPropagation()
+      $event.preventDefault()
+
+      # 通过 Ctrl+Enter 或者 Cmd+Enter 进行换行
+      # 如果仅按下 Enter，提交翻译
+      if $event.metaKey || $event.ctrlKey
+        document.execCommand('insertText', false, '\n');
+      else
+        $scope.translate($scope.source)
+
+  $scope.handleChange = ($event) ->
+    if $scope.source.isBlank()
+      $scope.resetSource()
 
   $scope.translate = (source) ->
-    $scope.output = '<div class="loading">正在查询...</div>'
+    if source
+      $scope.output = '<div class="loading">正在查询...</div>'
 
-    message = type: 'translate', text: source
-    chrome.extension.sendMessage message, (response) ->
-      $scope.$apply ->
-        $scope.output = response.translation
+      message = type: 'translate', text: source
+      chrome.extension.sendMessage message, (response) ->
+        $scope.$apply ->
+          $scope.output = response.translation
+    else
+      $scope.output = ''
 
   initOptions ->
     $scope.translate($scope.source)
@@ -67,4 +102,8 @@ app.controller 'OptionsCtrl', ($scope) ->
 
     for name of options
       $scope.$watch "options.#{name}", saveOptions
+
+    # 这个延时是用于处理 OSX 的弹出窗口动画，该动画有时会导致窗口布局损坏 。
+    $timeout ->
+      $scope.isReady = true
 
