@@ -13,6 +13,15 @@ body {
   }
 }
 
+section {
+  margin: 20px 0;
+  padding: 20px 0;
+
+  &.alt {
+    background-color: #ECF0F1;
+  }
+}
+
 #splash {
   
   h1 {
@@ -36,5 +45,22 @@ body {
   .btn-lg {
     margin-left: 10px;
     margin-right: 10px;
+  }
+}
+
+#features {
+  .feature {
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    img {
+      border-radius: 85px;
+      border: 1px solid #dbdfe0;
+      height: auto;
+      max-width: 100%;
+      vertical-align: middle;
+      border: 0;
+      -ms-interpolation-mode: bicubic;
+    }
   }
 }

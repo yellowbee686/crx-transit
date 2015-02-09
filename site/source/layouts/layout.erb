@@ -11,10 +11,9 @@
   </head>
   
   <body class="<%= page_classes %>">
-    <div class="container">
-      <%= render_partial 'header' %>
-      <%= yield %>
-    </div>
+    <%= partial 'header' %>
+    
+    <%= yield %>
 
     <%= javascript_include_tag  "all" %>
   </body>
