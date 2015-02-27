@@ -16,4 +16,5 @@ gem "tzinfo-data", platforms: [:mswin, :mingw]
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-bootstrap'
+  gem 'rails-assets-masonry'
 end
