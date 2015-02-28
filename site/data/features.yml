@@ -20,9 +20,13 @@
   content: |
     用户可以自由选择页面划词翻译显示在窗口边缘还是单词附近，
     也可以定制翻译结果在页面中停留的时间（3 至 10 秒）。
-- picture: https://sublimegit.net/static/img/features/keyboard.png
-  title: fdsafdsafdsa
-  content: fdsafdsafdsa
-- picture: https://sublimegit.net/static/img/features/keyboard.png
-  title: fdsafdsafdsa
-  content: fdsafdsafds
+- picture: images/features/6.png
+  title: 自适应高度的查询框
+  content: |
+    向弹出窗口的查询框中粘贴句子或者段落，查询框会自动撑高，如果文本不足一行，
+    则查询框只会保持一行，你可以通过 Alt+Enter 进行换行，而 Enter 键用于执行查询。
+- picture: images/features/7.png
+  title: 页面划词结果避免遮盖
+  content: |
+    如果选择在单词附近显示划词翻译结果，多个结果浮层可能会互相遮盖，只要鼠标移动要显示的
+    浮层上，该结果会自动前置，避免遮盖导致无法阅读。

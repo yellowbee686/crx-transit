@@ -1,4 +1,5 @@
 //= require jquery
 //= require bootstrap
-//= require masonry
+//= require imagesloaded.pkgd.min
+//= require masonry.pkgd.min
 //= require application

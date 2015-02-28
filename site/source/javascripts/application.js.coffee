@@ -1,3 +1,5 @@
 $(document).ready ->
-  $container = $('#features > .container > .row')
-  $container.masonry({ itemSelector: '.feature' })
+  $container = $('#features .list')
+  $container.imagesLoaded ->
+    $container.masonry
+      itemSelector: '.col-md-4'
