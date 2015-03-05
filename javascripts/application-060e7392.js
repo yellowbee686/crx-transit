@@ -1,0 +1,1 @@
+(function(){$(document).ready(function(){var e;return e=$("#features .list"),e.imagesLoaded(function(){return e.masonry({itemSelector:".col-md-4"})})})}).call(this);
