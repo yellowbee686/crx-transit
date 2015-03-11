@@ -15,10 +15,7 @@ TransIt - 让划词翻译更简单
 
 ## 相关资源
 
-- 更新历史 http://goo.gl/Ae2ZsR
-- 如何参与开发 http://goo.gl/1Ewzjz
-- 贡献者列表 http://goo.gl/25iBZ5
-- 安装开发版扩展 http://goo.gl/pkiuhl
+- 宣传网站 http://gdgxian.org/crx-transit/
 - 扩展源代码 https://github.com/GDG-Xian/crx-transit/
 - 问题和反馈 https://github.com/GDG-Xian/crx-transit/issues
 - 扩展维基页 https://github.com/GDG-Xian/crx-transit/wiki
