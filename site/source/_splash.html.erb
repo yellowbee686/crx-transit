@@ -1,0 +1,55 @@
+<section id="splash">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2"></div>
+
+      <div class="col-md-8">
+        <h1>TransIt，让划词翻译更简单</h1>
+
+        <div id="screenshots" class="carousel slide" data-ride="carousel">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+          <% (0..3).each do |i| %>
+            <li data-target="#screenshots" data-slide-to="<%= i %>" class="<%= 'active' if i == 0 %>"></li>
+          <% end %>
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner" role="listbox">
+          <% (0..3).each do |i| %>
+            <div class="item <%= 'active' if i == 0 %>">
+              <%= image_tag "screenshots/screenshot-#{i + 1}.png" %>
+              <div class="carousel-caption">
+                截图  <%= i + 1 %>
+              </div>
+            </div>
+          <% end %>
+          </div>
+
+          <!-- Controls -->
+          <a class="left carousel-control" href="#screenshots" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#screenshots" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div><!-- #screenshots -->
+        
+        <div class="text-center">
+          <a href="https://chrome.google.com/webstore/detail/transit/pfjipfdmbpbkcadkdpmacdcefoohagdc" class="btn btn-primary btn-lg">
+            <span class="icon icon-shop"></span> 从商店安装
+          </a>
+
+          <a href="https://github.com/GDG-Xian/crx-transit/wiki/%E5%AE%89%E8%A3%85%E5%BC%80%E5%8F%91%E7%89%88%E6%89%A9%E5%B1%95" class="btn btn-success btn-lg">
+            <span class="icon icon-github"></span> 从源码安装
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2"></div>
+      
+    </div>
+  </div>
+</section><!-- #splash -->

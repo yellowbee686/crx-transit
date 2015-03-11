@@ -1,0 +1,13 @@
+<section id="features" class="alt">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="row list">
+          <% data.features.each do |feature| %>
+            <%= partial 'feature', locals: { feature: feature } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section><!-- #features -->

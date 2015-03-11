@@ -1,0 +1,32 @@
+- picture: images/features/1.png
+  title: 页面连续划词
+  content: TransIt 支持连续对页面中的多个单词进行划词，翻译结果会逐个显示。
+- picture: images/features/2.png
+  title: 链接划词
+  content: |
+    TransIt 支持临时禁用页面链接，
+    让你可以方便的对链接中的文字进行划词翻译，
+    划词完成后自动恢复。
+- picture: images/features/3.png
+  title: 页面划词到弹窗翻译的平滑过渡
+  content: |
+    对于最后一次在页面中选择的内容，只要你打开扩展窗口，自动会在弹窗中进行翻译。
+    这个特性对于较长文本来说非常方便（页面仅支持单词翻译）。
+- picture: images/features/4.png
+  title: 自由选择翻译服务
+  content: 目前 TransIt 支持有道和百度两种翻译服务，用户可以自动切换。
+- picture: images/features/5.png
+  title: 自由选择页面划词结果的位置和时间
+  content: |
+    用户可以自由选择页面划词翻译显示在窗口边缘还是单词附近，
+    也可以定制翻译结果在页面中停留的时间（3 至 10 秒）。
+- picture: images/features/6.png
+  title: 自适应高度的查询框
+  content: |
+    向弹出窗口的查询框中粘贴句子或者段落，查询框会自动撑高，如果文本不足一行，
+    则查询框只会保持一行，你可以通过 Alt+Enter 进行换行，而 Enter 键用于执行查询。
+- picture: images/features/7.png
+  title: 页面划词结果避免遮盖
+  content: |
+    如果选择在单词附近显示划词翻译结果，多个结果浮层可能会互相遮盖，只要鼠标移动要显示的
+    浮层上，该结果会自动前置，避免遮盖导致无法阅读。

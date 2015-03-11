@@ -107,4 +107,5 @@ app.controller 'OptionsCtrl', ($scope, $timeout) ->
     $timeout ->
       $scope.isReady = true
       angular.element('#source').focus().select()
+    , 200
 

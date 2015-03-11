@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title><%= current_page.data.title || "TranIt" %></title>
+    
+    <%= stylesheet_link_tag "all" %>
+  </head>
+  
+  <body class="<%= page_classes %>">
+    <%= partial 'header' %>
+    
+    <%= yield %>
+
+    <%= javascript_include_tag  "all" %>
+  </body>
+</html>
