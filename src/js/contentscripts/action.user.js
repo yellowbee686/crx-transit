@@ -27,6 +27,8 @@ function getSelectionRect(evt, selection) {
 }
 
 function transIt(evt) {
+    $('body').removeClass('transit-link-inspect-mode');
+
     var selection = window.getSelection();
     var text = $.trim(selection.toString());
 
