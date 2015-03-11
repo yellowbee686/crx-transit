@@ -8,17 +8,14 @@ TransIt - 让划词翻译更简单
 
 - 页面英文划词翻译 
 - 连续对多个单词进行划词翻译
-- 按住 Shift 键可以对超链接中的文本进行划词翻译
+- 对超链接中的文本进行划词翻译
 - 调整页面划词翻译结果显示的时间长短
 - 适应更多的页面，包括 Iframe 嵌套
 - 支持在窗口边缘和选词附近两种方式显示翻译结果
 
 ## 相关资源
 
-- 更新历史 http://goo.gl/Ae2ZsR
-- 如何参与开发 http://goo.gl/1Ewzjz
-- 贡献者列表 http://goo.gl/25iBZ5
-- 安装开发版扩展 http://goo.gl/pkiuhl
+- 宣传网站 http://gdgxian.org/crx-transit/
 - 扩展源代码 https://github.com/GDG-Xian/crx-transit/
 - 问题和反馈 https://github.com/GDG-Xian/crx-transit/issues
 - 扩展维基页 https://github.com/GDG-Xian/crx-transit/wiki
