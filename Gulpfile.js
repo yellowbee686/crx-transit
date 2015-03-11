@@ -52,8 +52,8 @@ var paths = {
 };
 
 gulp.task('clean', function() {
-  return gulp.src('build/*', {read: false})
-  .pipe(clean());
+  return gulp.src('build/*')
+    .pipe(clean({force: true}));
 });
 
 gulp.task('copy', function() {
@@ -104,13 +104,13 @@ gulp.task('watch', ['build'], function() {
   gulp.watch(paths['styles'], ['styles']);
 });
 
-gulp.task('zip', ['clean', 'build'], function() {
+gulp.task('zip', ['build'], function() {
   var manifest = require('./src/manifest');
   var filename = manifest.name + ' v' + manifest.version + '.zip';
 
-  return gulp.src('build/**')
-  .pipe(zip(filename))
-  .pipe(gulp.dest('dist'));
+  return gulp.src('build/**/*')
+    .pipe(zip(filename))
+    .pipe(gulp.dest('dist'));
 });
 
 //run all tasks after build directory has been cleaned
