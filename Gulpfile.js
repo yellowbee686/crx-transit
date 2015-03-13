@@ -26,8 +26,8 @@ var paths = {
   ],
 
   'js:app': [
-    'bower_components/jquery/dist/jquery.min.js',
-    'bower_components/sugar/release/sugar.min.js',
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/sugar/release/sugar.js',
     'src/js/application.js'
   ],
 
