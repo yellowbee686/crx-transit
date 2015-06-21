@@ -1,28 +1,12 @@
-var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q='
-var PUSH_URL = 'http://trit.herokuapp.com/api/items'
+var crxkit           = require('./lib/crxkit.js')
+  , BaiduTranslator  = require('./translators/baidu_translator')
+  , YoudaoTranslator = require('./translators/youdao_translator');
+
 var currentText = '';
 var TRANSLATORS = {
     baidu: BaiduTranslator,
     youdao: YoudaoTranslator
 };
-
-// 推送词条到服务器
-// TODO: 实现用户登录功能，将词条推送到自己的账户下
-function pushItem(name, explaination) {
-    var params = Object.toQueryString({
-        name: name,
-        explaination: explaination
-    });
-
-    log("  Pushing translation to server:", params);
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', PUSH_URL, true);
-    xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-    xhr.setRequestHeader("Content-length", params.length);
-    xhr.setRequestHeader("Connection", "close");
-    xhr.send(params);
-}
-
 
 // 执行翻译动作
 function translateHanlder(request, sender, sendResponse) {
@@ -66,7 +50,7 @@ function selectionHandler(request, sender, sendResponse) {
     talkToPage(null, request);
 }
 
-registerMessageDispatcher({
+crxkit.registerMessageDispatcher({
     translate: translateHanlder,
     selection: selectionHandler
 });

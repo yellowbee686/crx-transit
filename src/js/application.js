@@ -1,10 +1,10 @@
-var options = {
-    notifyTimeout: 5,     // 页面划词结果显示时间
-    pageInspect: true,    // 是否启用页面划词
-    linkInspect: true,    // 是否启用链接划词
-    pushItem: false,      // 是否推送单词到服务端,
-    notifyMode: 'margin', // 结果默认显示在右上角
-    translator: 'baidu',  // 默认的翻译服务
+window.options = {
+  notifyTimeout: 5,     // 页面划词结果显示时间
+  pageInspect: true,    // 是否启用页面划词
+  linkInspect: true,    // 是否启用链接划词
+  pushItem: false,      // 是否推送单词到服务端,
+  notifyMode: 'margin', // 结果默认显示在右上角
+  translator: 'baidu',  // 默认的翻译服务
 };
 
 // TransIt 通用函数
@@ -55,24 +55,3 @@ chrome.storage.onChanged.addListener(function(changes) {
         log(fmt('#{1}: #{2} => #{3}', name, change.oldValue, change.newValue));
     }
 });
-
-function registerMessageDispatcher(dispatcher) {
-    chrome.runtime.onMessage.addListener(
-        function(request, sender, sendResponse) {
-            var handler = dispatcher[request.type] || noop;
-            handler(request, sender, sendResponse);
-
-            return true;
-        }
-    );    
-}
-
-function talkToPage(tabId, message, callback) {
-    if (tabId) {
-        chrome.tabs.sendMessage(tabId, message, callback);  
-    } else {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            talkToPage(tabs[0].id, message, callback);
-        });
-    }
-}

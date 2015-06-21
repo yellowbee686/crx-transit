@@ -12,7 +12,8 @@ var gulp       = require('gulp')
   , minifycss  = require('gulp-minify-css')
   , jshint     = require('gulp-jshint')
   , uglify     = require('gulp-uglify')
-  , zip        = require('gulp-zip');
+  , zip        = require('gulp-zip')
+  , browserify = require('gulp-browserify');
 
 var paths = {
   'static': [
@@ -62,29 +63,15 @@ gulp.task('copy', function() {
 });
 
 gulp.task('scripts', function() {
-  gulp.src(paths['js:app'])
+  gulp.src('src/js/**/*.js')
     .pipe(jshint())
-    .pipe(concat('application.js'))
-    .pipe(gulp.dest('build/js'));
+    .pipe(jshint.reporter('default'));
 
-  gulp.src(paths['js:page'])
-    .pipe(jshint())
-    .pipe(concat('contentscript.js'))
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['js:trans'])
-    .pipe(jshint())
-    .pipe(concat('translators.js'))
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['js:static'])
-    .pipe(jshint())
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['coffee'])
-    .pipe(coffee())
-    .pipe(gulp.dest('build/js'));
+  gulp.src('src/js/event.js')
+    .pipe(browserify())
+    .pipe(gulp.dest('./build/js/'));
 });
+
 
 gulp.task('styles', function() {
   gulp.src(paths['styles'])
