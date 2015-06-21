@@ -29,6 +29,21 @@ function talkToPage(tabId, message, callback) {
   }
 }
 
+function openExtensionPage(filename) {
+  var optionsUrl = chrome.extension.getURL(filename)
+
+  chrome.tabs.query({}, function(tabs) {
+    var optionTab = _.find(tabs, { url: optionsUrl });
+
+    if (optionTab) {
+      chrome.tabs.reload(optionTab.id);
+      chrome.tabs.reload(optionTab.id, { highlighted: true });
+    } else {
+      chrome.tabs.create({ url: optionsUrl });
+    }
+  });
+}
+
 /*
  * 从 storage 中读取配置，如果没有配置，则初始化为默认值
  *

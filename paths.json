@@ -1,0 +1,32 @@
+{
+  "staticFiles": [
+    "src/manifest.json",
+    "src/*.html",
+    "src/img/**/*"
+  ],
+
+  "styles": [
+    "src/styles/*.scss"
+  ],
+
+  "js:app": [
+    "bower_components/jquery/dist/jquery.js",
+    "bower_components/sugar/release/sugar.js",
+    "src/js/application.js"
+  ],
+
+  "js:page": [
+    "src/js/contentscripts/*.js"
+  ],
+
+  "js:trans": [
+    "src/js/translators/*.js"
+  ],
+
+  "js:static": [
+    "bower_components/angular/angular.js",
+    "bower_components/angular-elastic/elastic.js",
+    "src/js/*.js",
+    "!src/js/application.js"
+  ]
+}

@@ -16,56 +16,20 @@ var jshint     = require('gulp-jshint');
 var uglify     = require('gulp-uglify');
 var zip        = require('gulp-zip');
 var browserify = require('gulp-browserify');
-
-var paths = {
-  'static': [
-    'src/manifest.json',
-    'src/*.html',
-    'src/img/**/*'
-  ],
-
-  'styles': [
-    'src/stylesheets/*.scss'
-  ],
-
-  'js:app': [
-    'bower_components/jquery/dist/jquery.js',
-    'bower_components/sugar/release/sugar.js',
-    'src/js/application.js'
-  ],
-
-  'js:page': [
-    'src/js/contentscripts/*.js'
-  ],
-
-  'js:trans': [
-    'src/js/translators/*.js'
-  ],
-
-  'js:static': [
-    'bower_components/angular/angular.js',
-    'bower_components/angular-elastic/elastic.js',
-    'src/js/*.js',
-    '!src/js/application.js'
-  ],
-
-  'coffee': [
-    'src/js/*.coffee'
-  ]
-};
+var paths      = require('./paths');
 
 gulp.task('clean', function() {
-  return gulp.src('build/*')
-    .pipe(clean({force: true}));
+  return gulp.src('build/*', { read: false })
+    .pipe(clean({ force: true }));
 });
 
 gulp.task('copy', function() {
-  gulp.src(paths.static, { base: 'src' })
+  return gulp.src(paths.staticFiles, { base: 'src' })
     .pipe(gulp.dest('build'));
 });
 
 gulp.task('jshint', function() {
-  gulp.src(['Gulpfile.js', 'src/js/**/*.js'])
+  return gulp.src(['Gulpfile.js', 'src/js/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
@@ -77,13 +41,13 @@ gulp.task('scripts', function() {
     .pipe(browserify())
     .pipe(gulp.dest('./build/js/'));
 
-  gulp.src('src/js/*.js')
+  return gulp.src('src/js/*.js')
     .pipe(browserify({ignore: ignore}))
     .pipe(gulp.dest('./build/js/'));
 });
 
 gulp.task('styles', function() {
-  gulp.src(paths.styles)
+  return gulp.src(paths.styles)
     .pipe(sass())
     .pipe(gulp.dest('build/css'));
 });
@@ -110,4 +74,4 @@ gulp.task('zip', ['build'], function() {
 });
 
 //run all tasks after build directory has been cleaned
-gulp.task('default', ['watch']);
+gulp.task('default', ['clean', 'build']);
