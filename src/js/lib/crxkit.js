@@ -4,7 +4,7 @@
  * jshint strict: true
  */
 
-var _ = require('underscore');
+var options = {};
 
 function noop() {}
 
@@ -30,10 +30,10 @@ function talkToPage(tabId, message, callback) {
 }
 
 function openExtensionPage(filename) {
-  var optionsUrl = chrome.extension.getURL(filename)
+  var optionsUrl = chrome.extension.getURL(filename);
 
   chrome.tabs.query({}, function(tabs) {
-    var optionTab = _.find(tabs, { url: optionsUrl });
+    var optionTab = tabs.find({ url: optionsUrl });
 
     if (optionTab) {
       chrome.tabs.reload(optionTab.id);
@@ -51,7 +51,7 @@ function openExtensionPage(filename) {
  */
 function initOptions(callback) {
   chrome.storage.sync.get(null, function(data) {
-    $.extend(options, data);
+    Object.merge(options, data);
     chrome.storage.sync.set(options);
     callback();
   });
@@ -62,7 +62,9 @@ function log() {
   console.log.apply(console, ['[transit]'].concat(message));
 }
 
-module.export = {
+module.exports = {
+  initOptions: initOptions,
   registerMessageDispatcher: registerMessageDispatcher,
   talkToPage: talkToPage,
+  options: options,
 };

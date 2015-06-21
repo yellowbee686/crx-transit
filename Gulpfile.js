@@ -36,7 +36,7 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('scripts', function() {
-  var ignore = ['underscore', 'jquery', 'angular', 'angular-elastic'];
+  var ignore = ['sugar', 'jquery', 'angular', 'angular-elastic'];
 
   gulp.src('src/js/lib/{lib-all,angular-all}.js')
     .pipe(browserify())
@@ -56,18 +56,9 @@ gulp.task('styles', function() {
 gulp.task('build', ['scripts', 'styles', 'copy']);
 
 gulp.task('watch', ['build'], function() {
-  function errorHanlder(error) {
-    console.log(error);
-  }
-
-  gulp.watch(paths.staticFiles, ['copy'])
-    .on('error', errorHandler);
-    
-  gulp.watch('src/js/**/*', ['scripts'])
-    .on('error', errorHandler);
-
-  gulp.watch('src/css/**/*', ['styles'])
-    .on('error', errorHandler);
+  gulp.watch(paths.staticFiles, ['copy']);
+  gulp.watch('src/js/**/*', ['jshint', 'scripts']);
+  gulp.watch('src/css/**/*', ['styles']);
 });
 
 gulp.task('zip', ['build'], function() {

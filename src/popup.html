@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html ng-app="TransitPopupApp" ng-csp>
+<html ng-app="TransitApp" ng-csp>
 <head>
   <meta charset="utf-8"/>
   <title>TransIt</title> 
 
   <link rel="stylesheet" href="css/popup.css" type="text/css" />
 </head>
-<body ng-controller="OptionsCtrl">
-  <div class="loading" ng-hide="isReady">加载中 ...</div>
-
-  <div class="container" ng-show="isReady">
+<body>
+  <div class="translator" ng-controller="TranslateCtrl">
     <textarea id="source" placeholder="输入文字进行翻译 ..."
               ng-model="source"
               ng-trim="false"
@@ -18,18 +16,20 @@
               msd-elastic></textarea>
 
     <div id="result" ng-bind-html="output | html_safe"></div>
-
-    <footer>
-      <a href="#" class="btn-options pull-right" title="偏好设定"></a>
-      <a href="#" class="btn-translator pull-right {{options.translator}}" title="翻译服务提供商"></a>
-
-      <input type="checkbox" name="pageInspect" id="optionPageInspect" ng-model="options.pageInspect" />
-      <label for="optionPageInspect" title="页面划词"></label>
-
-      <input type="checkbox" name="linkInspect" id="optionLinkInspect" ng-model="options.linkInspect" />
-      <label for="optionLinkInspect" title="链接划词"></label>
-    </footer>
   </div>
+
+  <footer ng-controller="OptionsCtrl">
+    <a href="#" class="btn-options pull-right" title="偏好设定"></a>
+    <a href="#" class="btn-translator pull-right {{options.translator}}" title="翻译服务提供商"></a>
+
+    <label class="checkbox-inline" title="页面划词">
+      <input type="checkbox" ng-model="options.pageInspect" />
+    </label>
+
+    <label class="checkbox-inline" title="链接划词">
+      <input type="checkbox" ng-model="options.linkInspect" />  
+    </label>
+  </footer>
   
   <script src="js/lib-all.js" type="text/javascript"></script>
   <script src="js/angular-all.js" type="text/javascript"></script>
