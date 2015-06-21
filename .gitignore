@@ -3,7 +3,7 @@
 *.sublime-workspace
 /package
 /node_modules
-/bower_components
+/src/bower_components
 /build
 /dist
 *.patch

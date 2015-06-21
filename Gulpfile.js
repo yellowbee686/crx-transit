@@ -1,19 +1,21 @@
-'use strict';
+/**
+ * jshint strict:true
+ */
 
 //npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml gulp-jshint gulp-strip-debug gulp-zip --save-dev
 
-var gulp       = require('gulp')
-  , watch      = require('gulp-watch')
-  , clean      = require('gulp-clean')
-  , concat     = require('gulp-concat')
-  , coffee     = require('gulp-coffee')
-  , sass       = require('gulp-sass')
-  , cleanhtml  = require('gulp-cleanhtml')
-  , minifycss  = require('gulp-minify-css')
-  , jshint     = require('gulp-jshint')
-  , uglify     = require('gulp-uglify')
-  , zip        = require('gulp-zip')
-  , browserify = require('gulp-browserify');
+var gulp       = require('gulp');
+var watch      = require('gulp-watch');
+var clean      = require('gulp-clean');
+var concat     = require('gulp-concat');
+var coffee     = require('gulp-coffee');
+var sass       = require('gulp-sass');
+var cleanhtml  = require('gulp-cleanhtml');
+var minifycss  = require('gulp-minify-css');
+var jshint     = require('gulp-jshint');
+var uglify     = require('gulp-uglify');
+var zip        = require('gulp-zip');
+var browserify = require('gulp-browserify');
 
 var paths = {
   'static': [
@@ -58,23 +60,30 @@ gulp.task('clean', function() {
 });
 
 gulp.task('copy', function() {
-  gulp.src(paths['static'], { base: 'src' })
+  gulp.src(paths.static, { base: 'src' })
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('scripts', function() {
-  gulp.src('src/js/**/*.js')
+gulp.task('jshint', function() {
+  gulp.src(['Gulpfile.js', 'src/js/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
+});
 
-  gulp.src('src/js/event.js')
+gulp.task('scripts', function() {
+  var ignore = ['underscore', 'jquery', 'angular', 'angular-elastic'];
+
+  gulp.src('src/js/lib/{lib-all,angular-all}.js')
     .pipe(browserify())
+    .pipe(gulp.dest('./build/js/'));
+
+  gulp.src('src/js/*.js')
+    .pipe(browserify({ignore: ignore}))
     .pipe(gulp.dest('./build/js/'));
 });
 
-
 gulp.task('styles', function() {
-  gulp.src(paths['styles'])
+  gulp.src(paths.styles)
     .pipe(sass())
     .pipe(gulp.dest('build/css'));
 });
@@ -82,13 +91,13 @@ gulp.task('styles', function() {
 gulp.task('build', ['scripts', 'styles', 'copy']);
 
 gulp.task('watch', ['build'], function() {
-  gulp.watch(paths['static'], ['copy']);
+  gulp.watch(paths.static, ['copy']);
   gulp.watch(paths['js:app'], ['scripts']);
   gulp.watch(paths['js:page'], ['scripts']);
   gulp.watch(paths['js:trans'], ['scripts']);
   gulp.watch(paths['js:static'], ['scripts']);
-  gulp.watch(paths['coffee'], ['scripts']);
-  gulp.watch(paths['styles'], ['styles']);
+  gulp.watch(paths.coffee, ['scripts']);
+  gulp.watch(paths.styles, ['styles']);
 });
 
 gulp.task('zip', ['build'], function() {

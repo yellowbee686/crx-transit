@@ -4,6 +4,8 @@
  * jshint strict: true
  */
 
+var _ = require('underscore');
+
 function noop() {}
 
 function registerMessageDispatcher(dispatcher) {
@@ -25,6 +27,24 @@ function talkToPage(tabId, message, callback) {
       talkToPage(tabs[0].id, message, callback);
     });
   }
+}
+
+/*
+ * 从 storage 中读取配置，如果没有配置，则初始化为默认值
+ *
+ * @params {function} callback - Callback after options loaded.
+ */
+function initOptions(callback) {
+  chrome.storage.sync.get(null, function(data) {
+    $.extend(options, data);
+    chrome.storage.sync.set(options);
+    callback();
+  });
+}
+
+function log() {
+  var message = Array.prototype.slice.call(arguments, 0);
+  console.log.apply(console, ['[transit]'].concat(message));
 }
 
 module.export = {
