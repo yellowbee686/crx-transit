@@ -1,10 +1,11 @@
-var crxkit = require('../../lib/crxkit');
+var app = require('../../config/application');
 
 angular
   .module('TransitApp')
   .controller('OptionsCtrl', function($scope) {
-    crxkit.initOptions(function() {
-      $scope.options = crxkit.options;
+    app.initOptions(function() {
+      $scope.options = app.options;
+      app.log('Options Loaded:', app.options);
 
       function saveOptions() {
         chrome.storage.sync.set($scope.options);
@@ -12,7 +13,7 @@ angular
 
       $scope.$apply();
 
-      for (var name in crxkit.options) {
+      for (var name in app.options) {
         $scope.$watch("options." + name, saveOptions);
       }
     });

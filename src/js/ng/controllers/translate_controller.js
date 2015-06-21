@@ -1,4 +1,5 @@
 var background = chrome.extension.getBackgroundPage();
+var app = require('../../config/application');
 
 angular
   .module('TransitApp')
@@ -7,14 +8,9 @@ angular
     $scope.output = '';
 
     $scope.resetSource = function() {
-      $scope.source = ''
-      $scope.output = ''
-      background.currentText = ''
-    };
-
-    $scope.translate = function(source) {
-      $scope.source = source.trim();
-      $scope.output = '翻译结果: <strong>[{1}]</strong>'.assign(source);
+      $scope.source = '';
+      $scope.output = '';
+      background.currentText = '';
     };
 
     $scope.translate = function(source) {
@@ -25,8 +21,9 @@ angular
 
         var message = { type: 'translate', text: $scope.source };
         chrome.extension.sendMessage(message, function(response) {
+          app.log("Translate:", response);
           $scope.$apply(function() {
-            $scope.output = response.translation;
+            $scope.output = JSON.stringify(response);
           });
         });
       } else {

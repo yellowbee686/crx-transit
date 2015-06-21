@@ -5,6 +5,7 @@
  */
 
 var options = {};
+var name = 'crxkit';
 
 function noop() {}
 
@@ -52,14 +53,31 @@ function openExtensionPage(filename) {
 function initOptions(callback) {
   chrome.storage.sync.get(null, function(data) {
     Object.merge(options, data);
+    
     chrome.storage.sync.set(options);
-    callback();
+
+    chrome.storage.onChanged.addListener(function(changes) {
+      for (var name in changes) {
+        var change = changes[name];
+        options[name] = change.newValue;
+      }
+    });
+
+    if (Object.isFunction(callback)) {
+      callback();
+    }
   });
 }
 
 function log() {
   var message = Array.prototype.slice.call(arguments, 0);
-  console.log.apply(console, ['[transit]'].concat(message));
+  var pefix = '[{1}]'.assign(name);
+  console.log.apply(console, [pefix].concat(message));
+}
+
+function setup(settings) {
+  Object.merge(options, settings.options);
+  name = settings.name;
 }
 
 module.exports = {
@@ -67,4 +85,6 @@ module.exports = {
   registerMessageDispatcher: registerMessageDispatcher,
   talkToPage: talkToPage,
   options: options,
+  setup: setup,
+  log: log,
 };

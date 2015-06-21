@@ -36,7 +36,9 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('scripts', function() {
-  var ignore = ['sugar', 'jquery', 'angular', 'angular-elastic'];
+  var ignore = [
+    'sugar', 'jquery', 'angular', 'angular-elastic', './lib/crxkit'
+  ];
 
   gulp.src('src/js/lib/{lib-all,angular-all}.js')
     .pipe(browserify())

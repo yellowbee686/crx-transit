@@ -55,4 +55,4 @@ YoudaoTranslator.translate = function(text, callback) {
   }
 };
 
-module.export = YoudaoTranslator;
+module.exports = YoudaoTranslator;
