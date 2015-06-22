@@ -5,28 +5,32 @@
     "src/img/**/*"
   ],
 
+  "vendorScripts": [
+    "src/js/lib/{lib-all,angular-all}.js"
+  ],
+
+  "scripts": [
+    "src/js/*.js"
+  ],
+
+  "allScripts": [
+    "Gulpfile.js",
+    "src/js/**/*"
+  ],
+
   "styles": [
-    "src/styles/*.scss"
+    "src/css/*.scss"
   ],
 
-  "js:app": [
-    "bower_components/jquery/dist/jquery.js",
-    "bower_components/sugar/release/sugar.js",
-    "src/js/application.js"
+  "allStyles": [
+    "src/css/**/*"
   ],
 
-  "js:page": [
-    "src/js/contentscripts/*.js"
-  ],
-
-  "js:trans": [
-    "src/js/translators/*.js"
-  ],
-
-  "js:static": [
-    "bower_components/angular/angular.js",
-    "bower_components/angular-elastic/elastic.js",
-    "src/js/*.js",
-    "!src/js/application.js"
+  "ignoreScripts": [
+    "sugar",
+    "jquery",
+    "angular",
+    "angular-elastic",
+    "./lib/crxkit"
   ]
 }

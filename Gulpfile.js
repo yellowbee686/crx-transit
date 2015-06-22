@@ -30,22 +30,18 @@ gulp.task('copy', function() {
 });
 
 gulp.task('jshint', function() {
-  return gulp.src(['Gulpfile.js', 'src/js/**/*.js'])
+  return gulp.src(paths.allScripts)
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
 
 gulp.task('scripts', function() {
-  var ignore = [
-    'sugar', 'jquery', 'angular', 'angular-elastic', './lib/crxkit'
-  ];
-
-  gulp.src('src/js/lib/{lib-all,angular-all}.js')
+  gulp.src(paths.vendorScripts)
     .pipe(browserify())
     .pipe(gulp.dest('./build/js/'));
 
-  return gulp.src('src/js/*.js')
-    .pipe(browserify({ignore: ignore}))
+  gulp.src('src/js/*.js')
+    .pipe(browserify({ignore: paths.ignoreScripts}))
     .pipe(gulp.dest('build/js/'));
 });
 
@@ -59,8 +55,8 @@ gulp.task('build', ['scripts', 'styles', 'copy']);
 
 gulp.task('watch', ['build'], function() {
   gulp.watch(paths.staticFiles, ['copy']);
-  gulp.watch('src/js/**/*', ['jshint', 'scripts']);
-  gulp.watch('src/css/**/*', ['styles']);
+  gulp.watch(paths.allScripts,  ['jshint', 'scripts']);
+  gulp.watch(paths.allStyles,    ['styles']);
 });
 
 gulp.task('zip', ['build'], function() {
