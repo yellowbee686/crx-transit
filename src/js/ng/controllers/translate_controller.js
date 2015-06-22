@@ -1,5 +1,6 @@
 var background = chrome.extension.getBackgroundPage();
 var app = require('../../config/application');
+var utils = require('../../lib/utils');
 
 angular
   .module('TransitApp')
@@ -23,7 +24,7 @@ angular
         chrome.extension.sendMessage(message, function(response) {
           app.log("Translate:", response);
           $scope.$apply(function() {
-            $scope.output = JSON.stringify(response);
+            $scope.output = utils.renderTranslation($scope.source, response);
           });
         });
       } else {

@@ -1,3 +1,5 @@
+@import 'includes/transit_result';
+
 body {
   width: 200px;
   margin: 0;
@@ -61,23 +63,24 @@ label {
   }
 }
 
-#result {
+.transit-result {
+  max-height: 200px;
+  overflow: auto;
+  margin-bottom: 7px;
+  padding: 3px 6px;
 
-  div {
-    max-height: 200px;
-    overflow: auto;
-    margin-bottom: 7px;
-    padding: 3px 6px;
-  }
-
-  .success {
+  &.transit-success {
     background: #efffef;
     color: #2B3F29;
   }
 
-  .warning {
+  &.transit-warning {
     background: #FFF8DC;
     color: #888888;
+  }
+
+  h6 {
+    display: none;
   }
 }
 

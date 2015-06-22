@@ -1,0 +1,43 @@
+.transit-result {
+  &.transit-success {
+    background: #336721;
+    padding: 3px 6px;
+    margin: 0;
+    color: #EDF8ED;
+  }
+
+  &.transit-warning {
+    background: #FFF8DC;
+    padding: 3px 6px;
+    margin: 0;
+    color: #888888;
+  }
+
+  h6 {
+    border: none;
+    background: none;
+    font-size: 16px;
+    line-height: 20px;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    text-transform: none;
+  }
+
+  code {
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+}

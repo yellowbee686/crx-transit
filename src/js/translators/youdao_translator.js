@@ -20,6 +20,7 @@ function format(result) {
   } else if (result.translation) {
     response.translation = result.translation.join('<br/>');
   }
+  
   if (result.web) {
     response.web = result.web.map(function(kv) {
       return kv.key + ': ' + kv.value.join('；');
