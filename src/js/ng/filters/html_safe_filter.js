@@ -1,3 +1,5 @@
+var angular = require('angular');
+
 angular
   .module('TransitApp', [])
   .filter('html_safe', function($sce) {

@@ -2,8 +2,6 @@
  * jshint strict:true
  */
 
-//npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml gulp-jshint gulp-strip-debug gulp-zip --save-dev
-
 var gulp       = require('gulp');
 var gulpif     = require('gulp-if');
 var watch      = require('gulp-watch');

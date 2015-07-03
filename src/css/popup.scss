@@ -1,4 +1,5 @@
 @import 'includes/transit_result';
+@import 'includes/sprite';
 
 body {
   width: 200px;
@@ -18,10 +19,6 @@ body {
 
 .pull-right {
   float: right;
-}
-
-label {
-  display: block;
 }
 
 #source {
@@ -65,9 +62,10 @@ label {
 
 .transit-result {
   max-height: 200px;
-  overflow: auto;
-  margin-bottom: 7px;
+  margin-top: 7px;
   padding: 3px 6px;
+  overflow-y: auto;
+  white-space: pre-line;
 
   &.transit-success {
     background: #efffef;
@@ -86,37 +84,20 @@ label {
 
 footer {
   height: 16px;
+  margin-top: 7px;
 }
 
-input[type=checkbox] {
-  display: none;
-}
-
-input[type=checkbox] + label, .btn-options {
+.checkbox-inline {
   display: inline-block;
-  background-position: top left;
-  background-repeat: no-repeat;
-  width: 16px;
-  height: 16px;
-  opacity: 0.5;
   cursor: pointer;
-}
 
-input[type=checkbox]:checked + label {
-  opacity: 0.8;
-}
+  input {
+    display: none;
+  }
 
-input[name=pageInspect] + label {
-  background-image: url(../img/inspect-text.png);
-}
-
-input[name=linkInspect] + label {
-  background-image: url(../img/inspect-link.png);
-}
-
-.btn-options {
-  background-image: url(../img/cog.png);
-  opacity: 0.8;
+  input:not(:checked) + .icon {
+    opacity: 0.3;
+  }
 }
 
 .translator-logo {

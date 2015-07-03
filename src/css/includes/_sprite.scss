@@ -1,0 +1,21 @@
+.icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-image: url(../img/sprite.svg);
+  opacity: 0.6;
+}
+.icon-cog {
+  width: 16px;
+  height: 16px;
+  background-position: 0 0;
+}
+.icon-text {
+  width: 15px;
+  height: 16px;
+  background-position: -32px 0;
+}
+.icon-link {
+  width: 15px;
+  height: 16px;
+  background-position: -64px 0;
+}

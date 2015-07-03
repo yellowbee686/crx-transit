@@ -20,18 +20,22 @@
 
   <footer ng-controller="OptionsCtrl">
     <a href="#" title="偏好设定"
-       class="btn-options pull-right"
-       ng-click="openExtensionPage()"></a>
+       class="pull-right"
+       ng-click="openExtensionPage()">
+       <span class="icon icon-cog"></span>
+    </a>
 
     <a href="#" title="翻译服务提供商"
        class="btn-translator pull-right {{options.translator}}"></a>
 
     <label class="checkbox-inline" title="页面划词">
       <input type="checkbox" ng-model="options.pageInspect" />
+      <span class="icon icon-text"></span>
     </label>
 
     <label class="checkbox-inline" title="链接划词">
-      <input type="checkbox" ng-model="options.linkInspect" />  
+      <input type="checkbox" ng-model="options.linkInspect" /> 
+      <span class="icon icon-link"></span>
     </label>
   </footer>
   
