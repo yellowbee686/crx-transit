@@ -1,3 +1,9 @@
+/*
+ * TransIt Event
+ * 
+ * jshint strict: true
+ */
+
 var translators = require('./translators');
 var app = require('./config/application');
 

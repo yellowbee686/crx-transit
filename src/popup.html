@@ -19,8 +19,11 @@
   </div>
 
   <footer ng-controller="OptionsCtrl">
-    <a href="#" class="btn-options pull-right" title="偏好设定"></a>
-    <a href="#" class="btn-translator pull-right {{options.translator}}" title="翻译服务提供商"></a>
+    <a href="javascript:;" title="偏好设定"
+       class="btn-options pull-right"></a>
+
+    <a href="#" title="翻译服务提供商"
+       class="btn-translator pull-right {{options.translator}}"></a>
 
     <label class="checkbox-inline" title="页面划词">
       <input type="checkbox" ng-model="options.pageInspect" />
