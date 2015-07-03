@@ -4,11 +4,7 @@
     "src/*.html",
     "src/img/**/*"
   ],
-
-  "vendorScripts": [
-    "src/js/lib/{lib-all,angular-all}.js"
-  ],
-
+  
   "scripts": [
     "src/js/*.js"
   ],
@@ -24,13 +20,5 @@
 
   "allStyles": [
     "src/css/**/*"
-  ],
-
-  "ignoreScripts": [
-    "sugar",
-    "jquery",
-    "angular",
-    "angular-elastic",
-    "./lib/crxkit"
   ]
 }

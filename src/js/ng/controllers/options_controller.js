@@ -1,8 +1,15 @@
 var app = require('../../config/application');
+var angular = require('angular');
+var crxkit = require('../../lib/crxkit');
 
 angular
   .module('TransitApp')
   .controller('OptionsCtrl', function($scope) {
+    $scope.openExtensionPage = function() {
+      crxkit.openExtensionPage('options.html');
+      window.close();
+    };
+
     app.initOptions(function() {
       $scope.options = app.options;
       app.log('Options Loaded:', app.options);

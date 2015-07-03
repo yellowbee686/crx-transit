@@ -4,6 +4,8 @@
  * jshint strict: true
  */
 
+require('sugar');
+
 var options = {};
 var name = 'crxkit';
 
@@ -38,7 +40,7 @@ function openExtensionPage(filename) {
 
     if (optionTab) {
       chrome.tabs.reload(optionTab.id);
-      chrome.tabs.reload(optionTab.id, { highlighted: true });
+      chrome.tabs.update(optionTab.id, { highlighted: true });
     } else {
       chrome.tabs.create({ url: optionsUrl });
     }
@@ -83,6 +85,7 @@ function setup(settings) {
 module.exports = {
   initOptions: initOptions,
   registerMessageDispatcher: registerMessageDispatcher,
+  openExtensionPage: openExtensionPage,
   talkToPage: talkToPage,
   options: options,
   setup: setup,

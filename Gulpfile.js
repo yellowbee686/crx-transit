@@ -5,23 +5,25 @@
 //npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml gulp-jshint gulp-strip-debug gulp-zip --save-dev
 
 var gulp       = require('gulp');
+var gulpif     = require('gulp-if');
 var watch      = require('gulp-watch');
 var clean      = require('gulp-clean');
-var concat     = require('gulp-concat');
-var coffee     = require('gulp-coffee');
 var sass       = require('gulp-sass');
-var cleanhtml  = require('gulp-cleanhtml');
 var minifycss  = require('gulp-minify-css');
 var jshint     = require('gulp-jshint');
 var uglify     = require('gulp-uglify');
 var zip        = require('gulp-zip');
 var browserify = require('gulp-browserify');
 var paths      = require('./paths');
+var production = true;
 
-gulp.task('clean', function(cb) {
+gulp.task('dev', function() {
+  production = false;
+});
+
+gulp.task('clean', function() {
   return gulp.src('build/*', { read: false })
-    .pipe(clean({ force: true }))
-    .on('end', cb);
+    .pipe(clean({ force: true }));
 });
 
 gulp.task('copy', function() {
@@ -36,24 +38,22 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('scripts', function() {
-  gulp.src(paths.vendorScripts)
-    .pipe(browserify())
-    .pipe(gulp.dest('./build/js/'));
-
   gulp.src('src/js/*.js')
-    .pipe(browserify({ignore: paths.ignoreScripts}))
+    .pipe(browserify({ debug: !production }))
+    .pipe(gulpif(production, uglify()))
     .pipe(gulp.dest('build/js/'));
 });
 
 gulp.task('styles', function() {
   return gulp.src(paths.styles)
     .pipe(sass())
+    .pipe(gulpif(production, minifycss()))
     .pipe(gulp.dest('build/css/'));
 });
 
 gulp.task('build', ['scripts', 'styles', 'copy']);
 
-gulp.task('watch', ['build'], function() {
+gulp.task('watch', ['dev', 'build'], function() {
   gulp.watch(paths.staticFiles, ['copy']);
   gulp.watch(paths.allScripts,  ['jshint', 'scripts']);
   gulp.watch(paths.allStyles,    ['styles']);
