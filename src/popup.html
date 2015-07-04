@@ -25,8 +25,9 @@
        <span class="icon icon-cog"></span>
     </a>
 
-    <a href="#" title="翻译服务提供商"
-       class="btn-translator pull-right {{options.translator}}"></a>
+    <a href="#" title="点击切换翻译服务"
+       class="btn-translator pull-right {{options.translator}}"
+       ng-click="nextTranslator()"></a>
 
     <label class="checkbox-inline" title="页面划词">
       <input type="checkbox" ng-model="options.pageInspect" />

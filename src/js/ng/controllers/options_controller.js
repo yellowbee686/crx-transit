@@ -1,5 +1,6 @@
 var app = require('../../config/application');
 var angular = require('angular');
+var translators = ['baidu', 'youdao'];
 
 angular
   .module('TransitApp')
@@ -7,6 +8,14 @@ angular
     $scope.openExtensionPage = function() {
       app.openExtensionPage('options.html');
       window.close();
+    };
+
+    $scope.nextTranslator = function() {
+      if ($scope.options.translator == 'baidu') {
+        $scope.options.translator = 'youdao'
+      } else {
+        $scope.options.translator = 'baidu';
+      }
     };
 
     app.initOptions(function() {
