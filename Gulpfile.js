@@ -1,107 +1,60 @@
-'use strict';
+/**
+ * jshint strict:true
+ */
 
-//npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml gulp-jshint gulp-strip-debug gulp-zip --save-dev
+var gulp       = require('gulp');
+var gulpif     = require('gulp-if');
+var watch      = require('gulp-watch');
+var clean      = require('gulp-clean');
+var sass       = require('gulp-sass');
+var minifycss  = require('gulp-minify-css');
+var jshint     = require('gulp-jshint');
+var uglify     = require('gulp-uglify');
+var zip        = require('gulp-zip');
+var browserify = require('gulp-browserify');
+var paths      = require('./paths');
+var production = true;
 
-var gulp       = require('gulp')
-  , watch      = require('gulp-watch')
-  , clean      = require('gulp-clean')
-  , concat     = require('gulp-concat')
-  , coffee     = require('gulp-coffee')
-  , sass       = require('gulp-sass')
-  , cleanhtml  = require('gulp-cleanhtml')
-  , minifycss  = require('gulp-minify-css')
-  , jshint     = require('gulp-jshint')
-  , uglify     = require('gulp-uglify')
-  , zip        = require('gulp-zip');
-
-var paths = {
-  'static': [
-    'src/manifest.json',
-    'src/*.html',
-    'src/img/**/*'
-  ],
-
-  'styles': [
-    'src/stylesheets/*.scss'
-  ],
-
-  'js:app': [
-    'bower_components/jquery/dist/jquery.js',
-    'bower_components/sugar/release/sugar.js',
-    'src/js/application.js'
-  ],
-
-  'js:page': [
-    'src/js/contentscripts/*.js'
-  ],
-
-  'js:trans': [
-    'src/js/translators/*.js'
-  ],
-
-  'js:static': [
-    'bower_components/angular/angular.js',
-    'bower_components/angular-elastic/elastic.js',
-    'src/js/*.js',
-    '!src/js/application.js'
-  ],
-
-  'coffee': [
-    'src/js/*.coffee'
-  ]
-};
+gulp.task('dev', function() {
+  production = false;
+});
 
 gulp.task('clean', function() {
-  return gulp.src('build/*')
-    .pipe(clean({force: true}));
+  return gulp.src('build/*', { read: false })
+    .pipe(clean({ force: true }));
 });
 
 gulp.task('copy', function() {
-  gulp.src(paths['static'], { base: 'src' })
-    .pipe(gulp.dest('build'));
+  return gulp.src(paths.staticFiles, { base: 'src' })
+    .pipe(gulp.dest('build/'));
+});
+
+gulp.task('jshint', function() {
+  return gulp.src(paths.allScripts)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
 gulp.task('scripts', function() {
-  gulp.src(paths['js:app'])
-    .pipe(jshint())
-    .pipe(concat('application.js'))
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['js:page'])
-    .pipe(jshint())
-    .pipe(concat('contentscript.js'))
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['js:trans'])
-    .pipe(jshint())
-    .pipe(concat('translators.js'))
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['js:static'])
-    .pipe(jshint())
-    .pipe(gulp.dest('build/js'));
-
-  gulp.src(paths['coffee'])
-    .pipe(coffee())
-    .pipe(gulp.dest('build/js'));
+  gulp.src('src/js/*.js')
+    .pipe(browserify({ debug: !production }))
+    .pipe(gulpif(production, uglify({ mangle: false })))
+    .pipe(gulp.dest('build/js/'));
 });
 
 gulp.task('styles', function() {
-  gulp.src(paths['styles'])
+  return gulp.src(paths.styles)
     .pipe(sass())
-    .pipe(gulp.dest('build/css'));
+    .pipe(gulpif(production, minifycss()))
+    .pipe(gulp.dest('build/css/'));
 });
 
 gulp.task('build', ['scripts', 'styles', 'copy']);
 
-gulp.task('watch', ['build'], function() {
-  gulp.watch(paths['static'], ['copy']);
-  gulp.watch(paths['js:app'], ['scripts']);
-  gulp.watch(paths['js:page'], ['scripts']);
-  gulp.watch(paths['js:trans'], ['scripts']);
-  gulp.watch(paths['js:static'], ['scripts']);
-  gulp.watch(paths['coffee'], ['scripts']);
-  gulp.watch(paths['styles'], ['styles']);
+gulp.task('watch', ['dev', 'build'], function() {
+  gulp.watch(paths.staticFiles, ['copy']);
+  gulp.watch(paths.allScripts,  ['jshint', 'scripts']);
+  gulp.watch(paths.allStyles,    ['styles']);
 });
 
 gulp.task('zip', ['build'], function() {
@@ -114,4 +67,4 @@ gulp.task('zip', ['build'], function() {
 });
 
 //run all tasks after build directory has been cleaned
-gulp.task('default', ['watch']);
+gulp.task('default', ['clean', 'build']);

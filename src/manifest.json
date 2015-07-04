@@ -12,8 +12,6 @@
 
   "background": {
     "scripts": [
-      "js/application.js",
-      "js/translators.js",
       "js/event.js"
     ],
     "persistent": true
@@ -31,7 +29,6 @@
       "matches": ["<all_urls>"],
       "css": ["css/contentstyle.css"],
       "js": [
-        "js/application.js",
         "js/contentscript.js"
       ],
       "all_frames": true
