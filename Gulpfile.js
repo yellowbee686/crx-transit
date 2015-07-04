@@ -38,7 +38,7 @@ gulp.task('jshint', function() {
 gulp.task('scripts', function() {
   gulp.src('src/js/*.js')
     .pipe(browserify({ debug: !production }))
-    .pipe(uglify())
+    .pipe(gulpif(production, uglify({ mangle: false })))
     .pipe(gulp.dest('build/js/'));
 });
 

@@ -69,14 +69,18 @@ function transIt(evt) {
     } else {
       notify(text, {
         mode: 'in-place',
-        position: getPosition(evt, selection)
+        position: getPosition(evt, selection),
+        timeout: app.options.notifyTimeout,
       });
     }
   }
 }
 
 function selectionHandler(request) {
-  notify(request.text, { mode: 'margin' });
+  notify(request.text, {
+    mode: 'margin',
+    timeout: app.options.notifyTimeout,
+  });
 }
 
 app.initOptions(function(options) {
