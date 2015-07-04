@@ -3,6 +3,10 @@
 
 var $link = null;
 
+function canTranslate(text) {
+    return /^[a-z]+(\'|\'s)?$/i.test(text);
+}
+
 function getSelectionRect(evt, selection) {
     var rect = selection.getRangeAt(0).getBoundingClientRect();
 

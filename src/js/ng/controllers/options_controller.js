@@ -1,12 +1,11 @@
 var app = require('../../config/application');
 var angular = require('angular');
-var crxkit = require('../../lib/crxkit');
 
 angular
   .module('TransitApp')
   .controller('OptionsCtrl', function($scope) {
     $scope.openExtensionPage = function() {
-      crxkit.openExtensionPage('options.html');
+      app.openExtensionPage('options.html');
       window.close();
     };
 
