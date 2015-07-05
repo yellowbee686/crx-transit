@@ -5,8 +5,9 @@
  */
 
 var angular = require('angular');
+var elastic = require('angular-elastic');
 
-angular.module('TransitApp', []);
+angular.module('TransitApp', ['monospaced.elastic']);
 
 require('./ng/filters/html_safe_filter');
 require('./ng/controllers/translate_controller');
