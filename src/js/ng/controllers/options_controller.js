@@ -12,7 +12,7 @@ angular
 
     $scope.nextTranslator = function() {
       if ($scope.options.translator == 'baidu') {
-        $scope.options.translator = 'youdao'
+        $scope.options.translator = 'youdao';
       } else {
         $scope.options.translator = 'baidu';
       }

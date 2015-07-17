@@ -26,9 +26,21 @@ function translateHanlder(request, sender, sendResponse) {
   getTranslator().translate(currentText, sendResponse);
 }
 
+// 划词翻译只翻译单词
+function canTranslate(text) {
+  return /^[a-z]+(\'|\'s)?$/i.test(text);
+}
+
 function selectionHandler(request, sender, sendResponse) {
   currentText = request.text;
-  app.talkToPage(null, request);
+
+  if (app.options.pageInspect && canTranslate(currentText)) {
+    if (request.mode == 'margin') {
+      app.talkToPage(null, request);
+    } else {
+      sendResponse();
+    }
+  }
 }
 
 app.registerMessageDispatcher({

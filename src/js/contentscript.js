@@ -10,10 +10,6 @@ var notify = require('./lib/notify');
 
 var capslockEvents = [];
 
-function canTranslate(text) {
-  return /^[a-z]+(\'|\'s)?$/i.test(text);
-}
-
 function getPosition(evt, selection) {
   var rect = selection.getRangeAt(0).getBoundingClientRect();
 
@@ -60,23 +56,24 @@ function transIt(evt) {
   var text = $.trim(selection.toString());
 
   // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
-  if (app.options.pageInspect && canTranslate(text)) {
-    if (app.options.notifyMode == 'margin') {
-      chrome.runtime.sendMessage({
-        type: 'selection',
-        text: text
-      });
-    } else {
-      notify(text, {
-        mode: 'in-place',
-        position: getPosition(evt, selection),
-        timeout: app.options.notifyTimeout,
-      });
-    }
-  }
+  var message = {
+    type: 'selection',
+    mode: app.options.notifyMode,
+    text: text
+  };
+
+  chrome.runtime.sendMessage(message, function() {
+    if (message.mode == 'margin') return;
+
+    notify(text, {
+      mode: 'in-place',
+      position: getPosition(evt, selection),
+      timeout: app.options.notifyTimeout,
+    });
+  });
 }
 
-function selectionHandler(request) {
+function selectionlateHandler(request) {
   notify(request.text, {
     mode: 'margin',
     timeout: app.options.notifyTimeout,
@@ -90,7 +87,7 @@ app.initOptions(function(options) {
   // 仅在顶层页面接受 margin 显示结果
   if (window == top) {
     app.registerMessageDispatcher({
-      selection: selectionHandler
+      selection: selectionlateHandler
     });
   }
 });
