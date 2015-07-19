@@ -55,6 +55,8 @@ function transIt(evt) {
   var selection = window.getSelection();
   var text = $.trim(selection.toString());
 
+  if (!text) return;
+
   // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
   var message = {
     type: 'selection',
@@ -63,8 +65,6 @@ function transIt(evt) {
   };
 
   chrome.runtime.sendMessage(message, function() {
-    if (message.mode == 'margin') return;
-
     notify(text, {
       mode: 'in-place',
       position: getPosition(evt, selection),

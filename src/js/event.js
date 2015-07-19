@@ -33,6 +33,7 @@ function canTranslate(text) {
 
 function selectionHandler(request, sender, sendResponse) {
   currentText = request.text;
+  app.log('Selection from page:', request.text);
 
   if (app.options.pageInspect && canTranslate(currentText)) {
     if (request.mode == 'margin') {
