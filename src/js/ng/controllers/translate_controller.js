@@ -8,6 +8,7 @@ angular
     $scope.source = '';
     $scope.output = '';
 
+
     $scope.resetSource = function() {
       $scope.source = '';
       $scope.output = '';
@@ -59,4 +60,6 @@ angular
         return $scope.resetSource();
       }
     };
+
+    $scope.translate(background.currentText);
   });
