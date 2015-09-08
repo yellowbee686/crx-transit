@@ -4,7 +4,7 @@ var utils = require('../../lib/utils');
 
 angular
   .module('TransitApp')
-  .controller('TranslateCtrl', function($scope) {
+  .controller('TranslateCtrl', function($scope, $timeout) {
     $scope.source = '';
     $scope.output = '';
 
@@ -62,4 +62,10 @@ angular
     };
 
     $scope.translate(background.currentText);
+
+    $timeout(function() {
+      var source = document.querySelector('#source');
+      source.focus();
+      source.select();
+    }, 200);
   });
