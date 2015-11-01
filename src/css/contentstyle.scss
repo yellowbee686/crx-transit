@@ -1,4 +1,18 @@
-#transit-notify-list {
+[class*='transit-'], [class*='transit-'] * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  text-align: left;
+}
+
+.transit-notify-list {
   background: transparent;
   position: fixed;
   margin: 0;

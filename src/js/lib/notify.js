@@ -5,7 +5,7 @@ var utils = require('./utils');
 var notifyList = [];
 var tpls = {
   notify: '<div class="transit-notify transit-{1}">{2}</div>',
-  list: '<div id="transit-notify-list">' +
+  list: '<div class="transit-notify-list">' +
         '  <div class="transit-list-inner"></div>' +
         '</div>',
   success: '<div class="transit-result transit-success">{1}</div>',
@@ -15,7 +15,7 @@ var tpls = {
 };
 
 function getNotifyList() {
-  var $notifyList = $('#transit-notify-list');
+  var $notifyList = $('.transit-notify-list');
   if ($notifyList.size() === 0) {
     $notifyList = $(tpls.list).appendTo('body');
   }
