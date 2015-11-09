@@ -53,9 +53,7 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('build/css/'));
 });
 
-gulp.task('build', function() {
-  sequence('clean', ['scripts', 'styles', 'copy']);
-});
+gulp.task('build', ['scripts', 'styles', 'copy']);
 
 gulp.task('watch', ['dev', 'build'], function() {
   gulp.watch(paths.staticFiles, ['copy']);
@@ -73,4 +71,4 @@ gulp.task('zip', ['build'], function() {
 });
 
 //run all tasks after build directory has been cleaned
-gulp.task('default', ['clean', 'build']);
+gulp.task('default', ['build']);
