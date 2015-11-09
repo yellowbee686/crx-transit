@@ -3,6 +3,8 @@
  */
 
 var gulp       = require('gulp');
+var plumber    = require('gulp-plumber');
+var sequence   = require('run-sequence');
 var gulpif     = require('gulp-if');
 var watch      = require('gulp-watch');
 var clean      = require('gulp-clean');
@@ -20,12 +22,12 @@ gulp.task('dev', function() {
 });
 
 gulp.task('clean', function() {
-  return gulp.src('build/*', { read: false })
+  gulp.src('build/*', { read: false })
     .pipe(clean({ force: true }));
 });
 
 gulp.task('copy', function() {
-  return gulp.src(paths.staticFiles, { base: 'src' })
+  gulp.src(paths.staticFiles, { base: 'src' })
     .pipe(gulp.dest('build/'));
 });
 
@@ -37,6 +39,7 @@ gulp.task('jshint', function() {
 
 gulp.task('scripts', function() {
   gulp.src('src/js/*.js')
+    .pipe(plumber())
     .pipe(browserify({ debug: !production }))
     .pipe(gulpif(production, uglify({ mangle: false })))
     .pipe(gulp.dest('build/js/'));
@@ -44,7 +47,8 @@ gulp.task('scripts', function() {
 
 gulp.task('styles', function() {
   return gulp.src(paths.styles)
-    .pipe(sass())
+    .pipe(plumber())
+    .pipe(sass({ debugInfo: true }))
     .pipe(gulpif(production, minifycss()))
     .pipe(gulp.dest('build/css/'));
 });
@@ -67,4 +71,4 @@ gulp.task('zip', ['build'], function() {
 });
 
 //run all tasks after build directory has been cleaned
-gulp.task('default', ['clean', 'build']);
+gulp.task('default', ['build']);
