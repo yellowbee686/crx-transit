@@ -34,6 +34,7 @@ var Notify = function(text, options) {
   this.request();
 };
 
+// Render the notify onto the page.
 Notify.prototype.render = function() {
   var loading = tpls.loading.assign(this.text);
   this.$el = $(tpls.notify.assign(this.options.mode, loading));
@@ -49,6 +50,7 @@ Notify.prototype.render = function() {
   }
 };
 
+// Request for translation.
 Notify.prototype.request = function() {
   var self = this;
   var message = { type: 'translate', text: self.text };
@@ -61,6 +63,7 @@ Notify.prototype.request = function() {
   });
 };
 
+// Mouse over to stop the auto hide timeout.
 Notify.prototype.mouseover = function() {
   var $notify = this.$el;
   $notify.clearQueue();
@@ -72,18 +75,33 @@ Notify.prototype.mouseover = function() {
   }
 };
 
+// Setup event binding
 Notify.prototype.bind = function() {
   this.$el.hover(
     $.proxy(this.mouseover, this),
     $.proxy(this.hide, this)
   );
+
+  var $close = this.$el.find('.transit-notify-close');
+  $close.click($.proxy(this.close, this));
+
+  // Prevent trigger transit event.
+  $close.mouseup(utils.stopPropagation);
 };
 
+// Hide the notify after configured seconds.
 Notify.prototype.hide = function() {
   this.$el.delay(this.options.timeout * 1000)
           .fadeOut($.proxy(this.destroy, this));
 };
 
+// Close the notify immediately
+Notify.prototype.close = function(event) {
+  utils.clearSelection();
+  this.$el.fadeOut($.proxy(this.destroy, this));
+};
+
+// Destroy the notify and remove it from the page.
 Notify.prototype.destroy = function() {
   notifyList.remove({ text: this.text });
   this.$el.remove();
