@@ -4,7 +4,10 @@ var utils = require('./utils');
 
 var notifyList = [];
 var tpls = {
-  notify: '<div class="transit-notify transit-{1}">{2}</div>',
+  notify: '<div class="transit-notify transit-{1}">' +
+          ' <a href="javascript:;" class="transit-notify-close">&times;</a>' +
+          ' <div class="transit-notify-content">{2}</div>' +
+          '</div>',
   list: '<div class="transit-notify-list">' +
         '  <div class="transit-list-inner"></div>' +
         '</div>',
@@ -31,6 +34,7 @@ var Notify = function(text, options) {
   this.request();
 };
 
+// Render the notify onto the page.
 Notify.prototype.render = function() {
   var loading = tpls.loading.assign(this.text);
   this.$el = $(tpls.notify.assign(this.options.mode, loading));
@@ -46,18 +50,20 @@ Notify.prototype.render = function() {
   }
 };
 
+// Request for translation.
 Notify.prototype.request = function() {
   var self = this;
   var message = { type: 'translate', text: self.text };
 
   chrome.extension.sendMessage(message, function(response) {
     var result = utils.renderTranslation(self.text, response);
-    self.$el.html(result);
+    self.$el.find('.transit-notify-content').html(result);
     self.bind();
     self.hide();
   });
 };
 
+// Mouse over to stop the auto hide timeout.
 Notify.prototype.mouseover = function() {
   var $notify = this.$el;
   $notify.clearQueue();
@@ -69,18 +75,33 @@ Notify.prototype.mouseover = function() {
   }
 };
 
+// Setup event binding
 Notify.prototype.bind = function() {
   this.$el.hover(
     $.proxy(this.mouseover, this),
     $.proxy(this.hide, this)
   );
+
+  var $close = this.$el.find('.transit-notify-close');
+  $close.click($.proxy(this.close, this));
+
+  // Prevent trigger transit event.
+  $close.mouseup(utils.stopPropagation);
 };
 
+// Hide the notify after configured seconds.
 Notify.prototype.hide = function() {
   this.$el.delay(this.options.timeout * 1000)
           .fadeOut($.proxy(this.destroy, this));
 };
 
+// Close the notify immediately
+Notify.prototype.close = function(event) {
+  utils.clearSelection();
+  this.$el.fadeOut($.proxy(this.destroy, this));
+};
+
+// Destroy the notify and remove it from the page.
 Notify.prototype.destroy = function() {
   notifyList.remove({ text: this.text });
   this.$el.remove();
