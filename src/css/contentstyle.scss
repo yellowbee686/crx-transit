@@ -1,3 +1,5 @@
+@import "includes/link-colors";
+
 [class*='transit-'], [class*='transit-'] * {
   margin: 0;
   padding: 0;
@@ -53,6 +55,14 @@
   opacity: 0.9;
 
   @import 'includes/_transit_result';
+}
+
+a.transit-notify-close {
+  float: right;
+  text-decoration: none;
+  margin-right: 3px;
+  font-size: .8em;
+  @include link-colors(#aaa, #999, #999, #aaa);
 }
 
 .transit-link-inspect-mode a {

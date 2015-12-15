@@ -4,7 +4,10 @@ var utils = require('./utils');
 
 var notifyList = [];
 var tpls = {
-  notify: '<div class="transit-notify transit-{1}">{2}</div>',
+  notify: '<div class="transit-notify transit-{1}">' +
+          ' <a href="javascript:;" class="transit-notify-close">&times;</a>' +
+          ' <div class="transit-notify-content">{2}</div>' +
+          '</div>',
   list: '<div class="transit-notify-list">' +
         '  <div class="transit-list-inner"></div>' +
         '</div>',
@@ -52,7 +55,7 @@ Notify.prototype.request = function() {
 
   chrome.extension.sendMessage(message, function(response) {
     var result = utils.renderTranslation(self.text, response);
-    self.$el.html(result);
+    self.$el.find('.transit-notify-content').html(result);
     self.bind();
     self.hide();
   });
