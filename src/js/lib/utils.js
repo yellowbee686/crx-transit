@@ -37,7 +37,9 @@ function renderTranslation(query, result) {
 
 function clearSelection() {
   var selection = window.getSelection();
-  selection && selection.empty();
+  if (selection) {
+    selection.empty();
+  }
 }
 
 function stopPropagation(event) {

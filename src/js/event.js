@@ -50,3 +50,10 @@ app.registerMessageDispatcher({
 });
 
 app.initOptions();
+
+// Listen to extension update and show update notes
+chrome.runtime.onInstalled.addListener(function(details) {
+  if (details.reason == 'update') {
+    app.showUpdateNotes();
+  }
+});
