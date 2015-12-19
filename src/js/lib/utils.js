@@ -35,7 +35,18 @@ function renderTranslation(query, result) {
     '</div>', locals);
 }
 
+function clearSelection() {
+  var selection = window.getSelection();
+  selection && selection.empty();
+}
+
+function stopPropagation(event) {
+  event.stopPropagation();
+}
+
 module.exports = {
   fmt: fmt,
   renderTranslation: renderTranslation,
+  clearSelection: clearSelection,
+  stopPropagation: stopPropagation
 }; 
