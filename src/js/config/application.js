@@ -15,13 +15,13 @@ app.setup({
 app.showUpdateNotes = function() {
   chrome.notifications.create("update_notes", {
       type: "list",
-      title: "TransIt V1.4 更新记录",
+      title: "TransIt V1.4.2 更新记录",
       message: "",
       iconUrl: "img/icon48.png",
       items: [
         {
-          title: '新增',
-          message: '页面划词翻译的面板可以手动关闭'
+          title: '修正',
+          message: '百度词典API已经停止服务，移除百度翻译'
         }
       ]
   }, function () {});
