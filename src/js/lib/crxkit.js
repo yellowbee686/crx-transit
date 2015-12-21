@@ -55,6 +55,7 @@ function openExtensionPage(filename) {
 function initOptions(callback) {
   chrome.storage.sync.get(null, function(data) {
     Object.merge(options, data);
+    options.translator = 'youdao'; // Force to youdao
     
     chrome.storage.sync.set(options);
 
