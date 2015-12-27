@@ -5,26 +5,34 @@
  * 
  * jshint strict:true
  */
-
-var md5 = require('blueimp-md5').md5;
-var crxkit = require('../lib/crxkit');
+var sugar = require('sugar');
 var $ = require('jquery');
+var utils = require('../lib/utils');
 
-var API_URL = 'http://api.fanyi.baidu.com/api/trans/vip/translate';
-var APP_ID  = '20151216000007851';
-var APP_KEY = 'WdE6aTkJySOYyyEVTFGI';
+// TODO: Auth detect word
+var WORD_URL = 'http://dict.baidu.com/s?wd=';
+var PHRASE_URL = 'http://openapi.baidu.com/public/2.0/bmt/translate?client_id=hXxOZlP7bsOYFS6EFRmGTOe5&from=en&to=zh&q=';
+
+var SEL_WORD = '.en-simple-means';
+var SEL_WORD_MEANS = '.en-simple-means .en-content > div > p';
+var SEL_WORD_PHONETIC = '.pronounce [lang="EN-US"]:last';
 
 function formatWord(result) {
-  if (!result || result.errno || result.data.length === 0) return null;
+  var $result = $(result);
+
+  if (!$result.find(SEL_WORD).length) return null;
+
   var response = {};
   
-  var symbol = result.data.symbols[0];
-  if (symbol.ph_am) {
-    response.phonetic = '[' + symbol.ph_am + ']';
+  var $phonetic = $result.find(SEL_WORD_PHONETIC);
+  if ($phonetic.length) {
+    response.phonetic = $phonetic.text()
   }
-  response.translation = symbol.parts.map(function(part) {
-    return part.part + ' ' + part.means.join('；');
-  }).join('<br/>');
+  
+  var $means = $result.find(SEL_WORD_MEANS);
+  response.translation = $means.map(function() {
+    return $(this).text();
+  }).toArray().join('<br />')
 
   return response;
 }
@@ -42,41 +50,40 @@ function formatPhrase(result) {
   return response;
 }
 
-function requestPayload(text) {
-  var salt = new Date().getTime();
-  var sign = md5(APP_ID + text + salt + APP_KEY);
+function requestWord(text, callback) {
+  var request = $.get(WORD_URL + encodeURIComponent(text));
 
-  return {
-    q: text,
-    appid: APP_ID,
-    salt: salt,
-    from: 'auto',
-    to: 'zh',
-    sign: sign
-  };
-}
+  request.done(function(html) {
+    callback(formatWord(utils.sanitizeHTML(html)));
+  });
 
-function request(text, callback) {
-  $.ajax({
-    url: API_URL,
-    type: 'POST',
-    dataType: 'json',
-    data: requestPayload(text),
-    success: function(data) {
-      crxkit.log(result);
-      callback(format(result));
-    } 
+  request.fail(function() {
+    // TODO: Raise Error instead
+    callback(null);
   });
 }
 
+function requestPhrase(text, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4) {
+      var result = JSON.parse(this.responseText);
+      callback(formatPhrase(result));
+    }
+  };
+  xhr.open('GET', PHRASE_URL + encodeURIComponent(text), true);
+  xhr.send();
+}
 
 var BaiduTranslator = { name: 'baidu' };
 
 BaiduTranslator.translate = function(text, callback) {
   if (/^\s*$/.test(text)) {
     callback(null);
+  } else if (/^[a-zA-Z]+$/.test(text)) {
+    requestWord(text, callback);
   } else {
-    request(text, callback);
+    requestPhrase(text, callback);
   }
 };
 

@@ -42,6 +42,11 @@ function clearSelection() {
   }
 }
 
+function sanitizeHTML(html) {
+  var match = html.match(/<body[\s\S]*<\/body>/img);
+  return match[0].replace(/<script([\s\S]*?)<\/script>/img, '');
+}
+
 function stopPropagation(event) {
   event.stopPropagation();
 }
@@ -50,5 +55,6 @@ module.exports = {
   fmt: fmt,
   renderTranslation: renderTranslation,
   clearSelection: clearSelection,
-  stopPropagation: stopPropagation
+  stopPropagation: stopPropagation,
+  sanitizeHTML: sanitizeHTML
 }; 
