@@ -26,13 +26,13 @@ function formatWord(result) {
   
   var $phonetic = $result.find(SEL_WORD_PHONETIC);
   if ($phonetic.length) {
-    response.phonetic = $phonetic.text()
+    response.phonetic = $phonetic.text();
   }
   
   var $means = $result.find(SEL_WORD_MEANS);
   response.translation = $means.map(function() {
     return $(this).text();
-  }).toArray().join('<br />')
+  }).toArray().join('<br />');
 
   return response;
 }
