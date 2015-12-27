@@ -5,21 +5,34 @@
  * 
  * jshint strict:true
  */
+var sugar = require('sugar');
+var $ = require('jquery');
+var utils = require('../lib/utils');
 
-var WORD_URL = 'http://openapi.baidu.com/public/2.0/translate/dict/simple?client_id=hXxOZlP7bsOYFS6EFRmGTOe5&from=en&to=zh&q=';
+// TODO: Auth detect word
+var WORD_URL = 'http://dict.baidu.com/s?wd=';
 var PHRASE_URL = 'http://openapi.baidu.com/public/2.0/bmt/translate?client_id=hXxOZlP7bsOYFS6EFRmGTOe5&from=en&to=zh&q=';
 
+var SEL_WORD = '.en-simple-means';
+var SEL_WORD_MEANS = '.en-simple-means .en-content > div > p';
+var SEL_WORD_PHONETIC = '.pronounce [lang="EN-US"]:last';
+
 function formatWord(result) {
-  if (!result || result.errno || result.data.length === 0) return null;
+  var $result = $(result);
+
+  if (!$result.find(SEL_WORD).length) return null;
+
   var response = {};
   
-  var symbol = result.data.symbols[0];
-  if (symbol.ph_am) {
-    response.phonetic = '[' + symbol.ph_am + ']';
+  var $phonetic = $result.find(SEL_WORD_PHONETIC);
+  if ($phonetic.length) {
+    response.phonetic = $phonetic.text()
   }
-  response.translation = symbol.parts.map(function(part) {
-    return part.part + ' ' + part.means.join('；');
-  }).join('<br/>');
+  
+  var $means = $result.find(SEL_WORD_MEANS);
+  response.translation = $means.map(function() {
+    return $(this).text();
+  }).toArray().join('<br />')
 
   return response;
 }
@@ -38,15 +51,16 @@ function formatPhrase(result) {
 }
 
 function requestWord(text, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-    if (this.readyState == 4) {
-      var result = JSON.parse(this.responseText);
-      callback(formatWord(result));
-    }
-  };
-  xhr.open('GET', WORD_URL + encodeURIComponent(text), true);
-  xhr.send();
+  var request = $.get(WORD_URL + encodeURIComponent(text));
+
+  request.done(function(html) {
+    callback(formatWord(utils.sanitizeHTML(html)));
+  });
+
+  request.fail(function() {
+    // TODO: Raise Error instead
+    callback(null);
+  });
 }
 
 function requestPhrase(text, callback) {
