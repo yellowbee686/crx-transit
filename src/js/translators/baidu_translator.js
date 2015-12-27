@@ -6,13 +6,8 @@
  * jshint strict:true
  */
 
-var md5 = require('blueimp-md5').md5;
-var crxkit = require('../lib/crxkit');
-var $ = require('jquery');
-
-var API_URL = 'http://api.fanyi.baidu.com/api/trans/vip/translate';
-var APP_ID  = '20151216000007851';
-var APP_KEY = 'WdE6aTkJySOYyyEVTFGI';
+var WORD_URL = 'http://openapi.baidu.com/public/2.0/translate/dict/simple?client_id=hXxOZlP7bsOYFS6EFRmGTOe5&from=en&to=zh&q=';
+var PHRASE_URL = 'http://openapi.baidu.com/public/2.0/bmt/translate?client_id=hXxOZlP7bsOYFS6EFRmGTOe5&from=en&to=zh&q=';
 
 function formatWord(result) {
   if (!result || result.errno || result.data.length === 0) return null;
@@ -42,41 +37,39 @@ function formatPhrase(result) {
   return response;
 }
 
-function requestPayload(text) {
-  var salt = new Date().getTime();
-  var sign = md5(APP_ID + text + salt + APP_KEY);
-
-  return {
-    q: text,
-    appid: APP_ID,
-    salt: salt,
-    from: 'auto',
-    to: 'zh',
-    sign: sign
+function requestWord(text, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4) {
+      var result = JSON.parse(this.responseText);
+      callback(formatWord(result));
+    }
   };
+  xhr.open('GET', WORD_URL + encodeURIComponent(text), true);
+  xhr.send();
 }
 
-function request(text, callback) {
-  $.ajax({
-    url: API_URL,
-    type: 'POST',
-    dataType: 'json',
-    data: requestPayload(text),
-    success: function(data) {
-      crxkit.log(result);
-      callback(format(result));
-    } 
-  });
+function requestPhrase(text, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4) {
+      var result = JSON.parse(this.responseText);
+      callback(formatPhrase(result));
+    }
+  };
+  xhr.open('GET', PHRASE_URL + encodeURIComponent(text), true);
+  xhr.send();
 }
-
 
 var BaiduTranslator = { name: 'baidu' };
 
 BaiduTranslator.translate = function(text, callback) {
   if (/^\s*$/.test(text)) {
     callback(null);
+  } else if (/^[a-zA-Z]+$/.test(text)) {
+    requestWord(text, callback);
   } else {
-    request(text, callback);
+    requestPhrase(text, callback);
   }
 };
 
