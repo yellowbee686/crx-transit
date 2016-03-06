@@ -43,14 +43,14 @@ function toggleLinkInspectMode(evt) {
         clearTimeout(timer);
       }, 500);
     } else {
-      $('body').toggleClass('transit-link-inspect-mode');
+      $('body').toggleClass('translt-link-inspect-mode');
       capslockEvents = [];
     }
   }
 }
 
 function transIt(evt) {
-  $('body').removeClass('transit-link-inspect-mode');
+  $('body').removeClass('translt-link-inspect-mode');
 
   var selection = window.getSelection();
   var text = $.trim(selection.toString());
