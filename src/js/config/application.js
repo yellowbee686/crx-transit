@@ -15,13 +15,13 @@ app.setup({
 app.showUpdateNotes = function() {
   chrome.notifications.create("update_notes", {
       type: "list",
-      title: "TransIt V1.5 更新记录",
+      title: "TransIt V1.5.1 更新记录",
       message: "",
       iconUrl: "img/icon48.png",
       items: [
         {
           title: '',
-          message: '使用黑科技让百度词典翻译又回来了'
+          message: '解决开启链接划词模式会破坏某些网页布局的问题'
         }
       ]
   }, function () {});
