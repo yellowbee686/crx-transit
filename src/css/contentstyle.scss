@@ -65,7 +65,8 @@ a.transit-notify-close {
   @include link-colors(#aaa, #999, #999, #aaa);
 }
 
-.transit-link-inspect-mode a {
+// typo `translt` to ignore style reset.
+.translt-link-inspect-mode a {
   text-decoration: none !important;
   cursor: text !important;
   pointer-events: none !important;
