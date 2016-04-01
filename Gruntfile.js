@@ -1,4 +1,6 @@
 module.exports = function(grunt) {
+  var manifest = require('./src/manifest');
+  var filename = manifest.name + ' v' + manifest.version + '.zip';
 
   grunt.initConfig({
     browserify: {
@@ -15,6 +17,9 @@ module.exports = function(grunt) {
       files: ['src/js/**/*.js']
     },
     uglify: {
+      options: {
+        mangle: false
+      },
       default: {
         files: [{
           expand: true,
@@ -44,7 +49,6 @@ module.exports = function(grunt) {
           expand: true,
           cwd: 'src/',
           src: [
-            'fonts/*',
             'img/**/*',
             '*.html',
             'manifest.json'
@@ -67,13 +71,24 @@ module.exports = function(grunt) {
           expand: true,
           cwd: 'src/',
           src: [
-            'fonts/*',
             'img/**/*',
             '*.html',
             'manifest.json'
           ]
         },
         tasks: ['copy']
+      }
+    },
+    compress: {
+      dist: {
+        options: {
+          archive: 'dist/' + filename
+        },
+        files: [{
+          expand: true,
+          cwd: 'build/',
+          src: '**/*',
+        }]
       }
     }
   });
@@ -84,6 +99,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('default', ['jshint', 'browserify', 'sass', 'copy']);
+  grunt.registerTask('build', ['jshint', 'browserify', 'sass', 'copy']);
+  grunt.registerTask('dist', ['build', 'uglify', 'compress'])
+  grunt.registerTask('default', ['build', 'watch'])
 };
