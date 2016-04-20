@@ -11,7 +11,7 @@ var utils = require('../lib/utils');
 
 // TODO: Auth detect word
 var WORD_URL = 'http://dict.baidu.com/s?wd=';
-var PHRASE_URL = 'http://openapi.baidu.com/public/2.0/bmt/translate?client_id=hXxOZlP7bsOYFS6EFRmGTOe5&from=en&to=zh&q=';
+var PHRASE_URL = 'http://fanyi.baidu.com/v2transapi';
 
 var SEL_WORD = '.en-simple-means';
 var SEL_WORD_MEANS = '.en-simple-means .en-content > div > p';
@@ -41,7 +41,7 @@ function formatPhrase(result) {
   if (!result) return null;
 
   var response = {};
-  var trans_result = result.trans_result[0];
+  var trans_result = result.trans_result.data[0];
 
   if (trans_result.src == trans_result.dst) return null;
 
@@ -64,15 +64,23 @@ function requestWord(text, callback) {
 }
 
 function requestPhrase(text, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-    if (this.readyState == 4) {
-      var result = JSON.parse(this.responseText);
-      callback(formatPhrase(result));
-    }
+  var payload = {
+    from: 'en',
+    to: 'zh',
+    query: text,
+    transtype: 'translang',
+    simple_means_flag: 3
   };
-  xhr.open('GET', PHRASE_URL + encodeURIComponent(text), true);
-  xhr.send();
+
+  var request = $.post(PHRASE_URL, payload);
+  request.done(function(result) {
+    callback(formatPhrase(result));
+  });
+
+  request.fail(function() {
+    // TODO: Raise Error instead
+    callback(null);
+  });
 }
 
 var BaiduTranslator = { name: 'baidu' };

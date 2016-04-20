@@ -6,6 +6,7 @@
 /src/bower_components
 /build
 /dist
+/.sass-cache
 *.patch
 *.diff
 *~
