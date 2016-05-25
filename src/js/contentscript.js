@@ -6,32 +6,10 @@
 
 var $ = require('jquery');
 var app = require('./config/application');
-var notify = require('./lib/notify');
+import notify from './lib/notify';
+import getSelection from './lib/selection';
 
 var capslockEvents = [];
-
-function getPosition(evt, selection) {
-  var rect = selection.getRangeAt(0).getBoundingClientRect();
-
-  // 如果是在文本框中，这个坐标返回的会为 0，此时应该取鼠标位置
-  if (rect.left === 0 && rect.top === 0) {
-    rect = { left: evt.clientX, top: evt.clientY, height: 15 };
-  }
-
-  var left = rect.left + document.body.scrollLeft;
-  var top  = rect.top + document.body.scrollTop;
-
-  var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
-  if (clientHeight === 0) {
-    clientHeight = document.documentElement.clientHeight;
-  }
-  if (rect.top >= 150) {
-    var bottom = clientHeight - top;
-    return { left: left, bottom: bottom };
-  } else {
-    return { left: left, top: top + rect.height + 5 };
-  }
-}
 
 function toggleLinkInspectMode(evt) {
   if (app.options.linkInspect && evt.keyCode == 20) {
@@ -52,29 +30,26 @@ function toggleLinkInspectMode(evt) {
 function transIt(evt) {
   $('body').removeClass('translt-link-inspect-mode');
 
-  var selection = window.getSelection();
-  var text = $.trim(selection.toString());
+  const selection = getSelection(evt);
+  
+  if (selection) {
+    const message = {
+      type: 'selection',
+      selection: selection
+    };
 
-  if (!text) return;
-
-  // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
-  var message = {
-    type: 'selection',
-    mode: app.options.notifyMode,
-    text: text
-  };
-
-  chrome.runtime.sendMessage(message, function() {
-    notify(text, {
-      mode: 'in-place',
-      position: getPosition(evt, selection),
-      timeout: app.options.notifyTimeout,
+    chrome.runtime.sendMessage(message, () => {
+      notify(message.text, {
+        mode: 'in-place',
+        position: message.position,
+        timeout: app.options.notifyTimeout,
+      });
     });
-  });
+  }
 }
 
 function selectionlateHandler(request) {
-  notify(request.text, {
+  notify(request.selection.text, {
     mode: 'margin',
     timeout: app.options.notifyTimeout,
   });

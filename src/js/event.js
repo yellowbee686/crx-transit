@@ -7,37 +7,45 @@
 var translators = require('./translators');
 var app = require('./config/application');
 
-window.currentText = '';
+// Key name to store current text in local storage
+const CURRENT_TEXT_KEY = 'transit_current_text';
+
+// Setter / Getter for current text
+// 
+// If text if passed, update `current_text` in local storage,
+// otherwise, read from local storage.
+function currentText(text) {
+  if (text) {
+    localStorage.setItem(CURRENT_TEXT_KEY, text);
+    return text;
+  } else {
+    return localStorage.getItem(CURRENT_TEXT_KEY);
+  }
+}
 
 function getTranslator() {
   return translators[app.options.translator];
 }
 
-// 执行翻译动作
+// Translate text and send result back
+// 
+// TODO: 为翻译缓存提供简单统计 @greatghoul
 function translateHanlder(request, sender, sendResponse) {
-  // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
-  // TODO 为翻译缓存提供简单统计 @greatghoul
-  currentText = request.text;
-
-  // 如果词为空，则不再翻译
-  if (!currentText) return;
-
-  // log('Translating', currentText, 'from', service.name);
-  getTranslator().translate(currentText, sendResponse);
+  getTranslator().translate(request.text, sendResponse);
 }
 
-// 划词翻译只翻译单词
+// Inspect translation works only on word
 function canTranslate(text) {
   return /^[a-z]+(\'|\'s)?$/i.test(text);
 }
 
-function selectionHandler(request, sender, sendResponse) {
-  currentText = request.text;
-  app.log('Selection from page:', request.text);
+function selectionHandler(message, sender, sendResponse) {
+  const text = currentText(message.selection.text);
 
-  if (app.options.pageInspect && canTranslate(currentText)) {
-    if (request.mode == 'margin') {
-      app.talkToPage(null, request);
+  app.log('Page selection:', text);
+  if (app.options.pageInspect && canTranslate(text)) {
+    if (app.options.notifyMode == 'margin') {
+      app.talkToPage(null, message);
     } else {
       sendResponse();
     }

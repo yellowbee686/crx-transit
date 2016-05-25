@@ -4,6 +4,9 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     browserify: {
+      options: {
+        transform: [['babelify', { 'presets': ['es2015'] }]]
+      },
       default: {
         files: [{
           expand: true,
@@ -14,6 +17,9 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
+      options: {
+        jshintrc: true
+      },
       files: ['src/js/**/*.js']
     },
     uglify: {
