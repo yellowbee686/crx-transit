@@ -50,6 +50,8 @@ angular
           document.execCommand('insertText', false, '\n');
         } else {
           $scope.translate($scope.source);
+          
+          chrome.runtime.sendMessage({ type: 'selection', text: $scope.source });
         }
       }
     };
@@ -60,11 +62,13 @@ angular
       }
     };
 
-    chrome.runtime.sendMessage({ type: 'currentText' }, $scope.translate);
+    chrome.runtime.sendMessage({ type: 'currentText' }, (text) => {
+      $scope.translate(text);
 
-    $timeout(function() {
-      var source = document.querySelector('#source');
-      source.focus();
-      source.select();
-    }, 200);
+      $timeout(function() {
+        var source = document.querySelector('#source');
+        source.focus();
+        source.select();
+      }, 500);
+    });
   });
