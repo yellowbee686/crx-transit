@@ -30,8 +30,8 @@ function getTranslator() {
 // Translate text and send result back
 // 
 // TODO: 为翻译缓存提供简单统计 @greatghoul
-function translateHanlder(request, sender, sendResponse) {
-  getTranslator().translate(request.text, sendResponse);
+function translateHanlder(message, sender, sendResponse) {
+  getTranslator().translate(message.text, sendResponse);
 }
 
 // Inspect translation works only on word
@@ -39,17 +39,9 @@ function canTranslate(text) {
   return /^[a-z]+(\'|\'s)?$/i.test(text);
 }
 
+// Save current selection to localStorage
 function selectionHandler(message, sender, sendResponse) {
-  const text = currentText(message.selection.text);
-
-  app.log('Page selection:', text);
-  if (app.options.pageInspect && canTranslate(text)) {
-    if (app.options.notifyMode == 'margin') {
-      app.talkToPage(null, message);
-    } else {
-      sendResponse();
-    }
-  }
+  currentText(message.text);
 }
 
 app.registerMessageDispatcher({

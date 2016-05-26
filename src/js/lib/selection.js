@@ -30,6 +30,7 @@ function getPosition(evt, selection) {
   }
 }
 
+
 export default function getSelection(evt) {
   const selection = window.getSelection();
   const text = selection.toString().trim();

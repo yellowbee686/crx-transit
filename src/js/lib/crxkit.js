@@ -13,18 +13,16 @@ function noop() {}
 
 function registerMessageDispatcher(dispatcher) {
   chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      var handler = dispatcher[request.type] || noop;
-      handler(request, sender, sendResponse);
-
-      return true;
+    function(message, sender, sendResponse) {
+      var handler = dispatcher[message.type] || noop;
+      return handler(message, sender, sendResponse);
     }
   );
 }
 
 function talkToPage(tabId, message, callback) {
   if (tabId) {
-    chrome.tabs.sendMessage(tabId, message, callback);  
+    chrome.tabs.sendMessage(tabId, message, callback);
   } else {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       talkToPage(tabs[0].id, message, callback);

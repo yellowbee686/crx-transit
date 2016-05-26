@@ -107,8 +107,11 @@ Notify.prototype.destroy = function() {
   this.$el.remove();
 };
 
-export default function(text, mode, handler) {
+const notify = function(text, options) {
   if (!notifyList.find({ text: text })) {
-    notifyList.push(new Notify(text, mode, handler));
+    notifyList.push(new Notify(text, options));
   }
-}
+};
+
+window.notify = notify;
+export default notify;
