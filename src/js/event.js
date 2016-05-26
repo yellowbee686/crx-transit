@@ -23,15 +23,12 @@ function currentText(text) {
   }
 }
 
-function getTranslator() {
-  return translators[app.options.translator];
-}
-
 // Translate text and send result back
 // 
-// TODO: 为翻译缓存提供简单统计 @greatghoul
+// TODO: Cache translated result to speed up querying.
 function translateHanlder(message, sender, sendResponse) {
-  getTranslator().translate(message.text, sendResponse);
+  const translator = translators[app.options.translator];
+  translator.translate(message.text, sendResponse);
 }
 
 // Inspect translation works only on word
@@ -44,9 +41,14 @@ function selectionHandler(message, sender, sendResponse) {
   currentText(message.text);
 }
 
+function currentTextHandler(message, sender, sendResponse) {
+  sendResponse(currentText());
+}
+
 app.registerMessageDispatcher({
   translate: translateHanlder,
-  selection: selectionHandler
+  selection: selectionHandler,
+  currentText: currentTextHandler
 });
 
 app.initOptions();

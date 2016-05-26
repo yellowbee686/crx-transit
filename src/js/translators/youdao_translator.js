@@ -6,7 +6,7 @@
  * jshint strict:true
  */
 
-var API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q=';
+const API_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=TransIt&key=597592531&type=data&doctype=json&version=1.1&q=';
 
 function format(result) {
   if (!result || result.errorCode) return null;

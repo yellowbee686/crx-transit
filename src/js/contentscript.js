@@ -7,7 +7,7 @@
 import $ from 'jquery';
 import app from './config/application';
 import notify from './lib/notify';
-import getSelection from './lib/selection';
+import { getSelection } from './lib/utils';
 
 let capslockEvents = [];
 
@@ -68,11 +68,4 @@ function selectionHandler(evt) {
 app.initOptions(function(options) {
   $(document).on('keyup keydown', toggleLinkInspectMode);
   $(document).on('mouseup', selectionHandler);
-
-  // // 仅在顶层页面接受 margin 显示结果
-  // if (window == top) {
-  //   app.registerMessageDispatcher({
-  //     marginNotify: marginNotifyHandler
-  //   });
-  // }
 });

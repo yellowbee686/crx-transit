@@ -4,18 +4,20 @@
  * jshint strict: true
  */
 
-require('sugar');
+import sugar from 'sugar';
 
-var options = {};
-var name = 'crxkit';
+let options = {};
+let name = 'crxkit';
 
 function noop() {}
 
 function registerMessageDispatcher(dispatcher) {
   chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-      var handler = dispatcher[message.type] || noop;
-      return handler(message, sender, sendResponse);
+      const handler = dispatcher[message.type] || noop;
+      handler(message, sender, sendResponse);
+
+      return true;
     }
   );
 }
