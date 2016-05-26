@@ -73,16 +73,12 @@ module.exports = function(grunt) {
         tasks: ['sass'],
       },
       static: {
-        files: {
-          expand: true,
-          cwd: 'src/',
-          src: [
-            'img/**/*',
-            '*.html',
-            'manifest.json'
-          ]
-        },
-        tasks: ['copy']
+        files: [
+          'src/img/**/*',
+          'src/*.html',
+          'src/manifest.json'
+        ],
+        tasks: ['copy'],
       }
     },
     compress: {
