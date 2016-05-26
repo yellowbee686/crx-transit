@@ -1,6 +1,8 @@
 {
   "name": "crx-transit",
   "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "latest",
     "grunt": "^0.4.5",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-compress": "^1.1.1",
@@ -15,8 +17,19 @@
     "angular-elastic": "^2.3.5",
     "jquery": "^2.1.4",
     "sugar": "^1.4.1",
-    "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.1.0",
     "blueimp-md5": "^1.1.1"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
   }
 }

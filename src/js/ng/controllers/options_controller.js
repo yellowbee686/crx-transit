@@ -1,6 +1,5 @@
-var app = require('../../config/application');
-var angular = require('angular');
-var translators = ['youdao', 'baidu'];
+import app from '../../config/application';
+import angular from 'angular';
 
 angular
   .module('TransitApp')

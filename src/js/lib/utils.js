@@ -1,60 +1,75 @@
-function fmt() {
-  var args = arguments;
-  return args[0].replace(/#{(.*?)}/g, function(match, prop) {
-    return function(obj, props) {
-      var prop = /\d+/.test(props[0]) ? parseInt(props[0]) : props[0];
-      if (props.length > 1) {
-        return arguments.callee(obj[prop], props.slice(1));
-      } else {
-        return obj[prop] || '';
-      }
-    }(typeof args[1] === 'object' ? args[1] : args, prop.split(/\.|\[|\]\[|\]\./));
-  });
-}
-
-function renderTranslation(query, result) {
-  var locals = {
-    className: 'transit-warning',
-    query: query,
-    result: {
-      phonetic: '',
-      translation: '未找到释义'
-    },
-  };
+export function renderTranslation(query, result) {
+  let phonetic = '';
+  let translation = '未找到释义';
+  let className = 'transit-warning';
 
   if (result) {
-    locals.className = 'transit-success';
-    locals.result = result;
+    phonetic = result.phonetic;
+    translation = result.translation;
+    className = 'transit-success';
   }
 
-  return fmt(
-    '<div class="transit-result #{className}">' +
-    '  <h6>#{query}</h6>' +
-    '  <code>#{result.phonetic}</code>' +
-    '  <pre>#{result.translation}</pre>' +
-    '</div>', locals);
+  return `` +
+    `<div class="transit-result ${className}">` +
+    `  <h6>${query}</h6>` +
+    `  <code>${phonetic || ''}</code>` +
+    `  <pre>${translation}</pre>` +
+    `</div>`;
 }
 
-function clearSelection() {
-  var selection = window.getSelection();
+function getClientHeight() {
+  const bodyHeight = document.body.clientHeight;
+  const docHeight  = document.documentElement.clientHeight;
+
+  let clientHeight = bodyHeight < docHeight ?  bodyHeight: docHeight;
+  if (clientHeight === 0) {
+    clientHeight = docHeight;
+  }
+
+  return clientHeight;
+}
+
+function getPosition(evt, selection) {
+  let rect = selection.getRangeAt(0).getBoundingClientRect();
+
+  // Use mouse position if selection range position invalid (in text field)
+  if (rect.left === 0 && rect.top === 0) {
+    rect = { left: evt.clientX, top: evt.clientY, height: 15 };
+  }
+
+  const left = rect.left + document.body.scrollLeft;
+  const top  = rect.top + document.body.scrollTop;
+
+  if (rect.top >= 150) {
+    return { left: left, bottom: getClientHeight() - top };
+  } else {
+    return { left: left, top: top + rect.height + 5 };
+  }
+}
+
+export function getSelection(evt) {
+  const selection = window.getSelection();
+  const text = selection.toString().trim();
+
+  if (text) {
+    return { text: text, position: getPosition(evt, selection) };
+  } else {
+    return null;
+  }
+}
+
+export function clearSelection() {
+  const selection = window.getSelection();
   if (selection) {
     selection.empty();
   }
 }
 
-function sanitizeHTML(html) {
+export function sanitizeHTML(html) {
   var match = html.match(/<body[\s\S]*<\/body>/img);
   return match[0].replace(/<script([\s\S]*?)<\/script>/img, '');
 }
 
-function stopPropagation(event) {
+export function stopPropagation(event) {
   event.stopPropagation();
 }
-
-module.exports = {
-  fmt: fmt,
-  renderTranslation: renderTranslation,
-  clearSelection: clearSelection,
-  stopPropagation: stopPropagation,
-  sanitizeHTML: sanitizeHTML
-}; 

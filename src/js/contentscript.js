@@ -4,33 +4,15 @@
  * jshint strict: true
  */
 
-var $ = require('jquery');
-var app = require('./config/application');
-var notify = require('./lib/notify');
+import $ from 'jquery';
+import app from './config/application';
+import notify from './lib/notify';
+import { getSelection } from './lib/utils';
 
-var capslockEvents = [];
+let capslockEvents = [];
 
-function getPosition(evt, selection) {
-  var rect = selection.getRangeAt(0).getBoundingClientRect();
-
-  // 如果是在文本框中，这个坐标返回的会为 0，此时应该取鼠标位置
-  if (rect.left === 0 && rect.top === 0) {
-    rect = { left: evt.clientX, top: evt.clientY, height: 15 };
-  }
-
-  var left = rect.left + document.body.scrollLeft;
-  var top  = rect.top + document.body.scrollTop;
-
-  var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
-  if (clientHeight === 0) {
-    clientHeight = document.documentElement.clientHeight;
-  }
-  if (rect.top >= 150) {
-    var bottom = clientHeight - top;
-    return { left: left, bottom: bottom };
-  } else {
-    return { left: left, top: top + rect.height + 5 };
-  }
+function isInFrameset() {
+  return !!window.top.document.querySelector('frameset');
 }
 
 function toggleLinkInspectMode(evt) {
@@ -49,45 +31,41 @@ function toggleLinkInspectMode(evt) {
   }
 }
 
-function transIt(evt) {
-  $('body').removeClass('translt-link-inspect-mode');
-
-  var selection = window.getSelection();
-  var text = $.trim(selection.toString());
-
-  if (!text) return;
-
-  // 如果页面划词开启，并且选中的文本符合划词的 PATTERN 才进行翻译
-  var message = {
-    type: 'selection',
-    mode: app.options.notifyMode,
-    text: text
-  };
-
-  chrome.runtime.sendMessage(message, function() {
-    notify(text, {
-      mode: 'in-place',
-      position: getPosition(evt, selection),
-      timeout: app.options.notifyTimeout,
-    });
-  });
+function toggleLinkInspectMode(flag) {
+  $('body').toggleClass('translt-link-inspect-mode', flag);
 }
 
-function selectionlateHandler(request) {
-  notify(request.text, {
-    mode: 'margin',
-    timeout: app.options.notifyTimeout,
-  });
+// Inspect translation works only on word
+function canTranslate(text) {
+  return /^[a-z]+(\'|\'s)?$/i.test(text);
+}
+
+function selectionHandler(evt) {
+  toggleLinkInspectMode(false);
+
+  const selection = getSelection(evt);
+
+  if (selection) {
+    chrome.runtime.sendMessage({ type: 'selection', text: selection.text });
+
+    if (app.options.pageInspect && canTranslate(selection.text)) {
+      if (app.options.notifyMode == 'in-place' || isInFrameset()) {
+        notify(selection.text, {
+          mode: 'in-place',
+          position: selection.position,
+          timeout: app.options.notifyTimeout
+        });
+      } else {
+        top.notify(selection.text, {
+          mode: 'margin',
+          timeout: app.options.notifyTimeout
+        });
+      }
+    }
+  }
 }
 
 app.initOptions(function(options) {
   $(document).on('keyup keydown', toggleLinkInspectMode);
-  $(document).on('mouseup', transIt);
-
-  // 仅在顶层页面接受 margin 显示结果
-  if (window == top) {
-    app.registerMessageDispatcher({
-      selection: selectionlateHandler
-    });
-  }
+  $(document).on('mouseup', selectionHandler);
 });

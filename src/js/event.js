@@ -7,46 +7,48 @@
 var translators = require('./translators');
 var app = require('./config/application');
 
-window.currentText = '';
+// Key name to store current text in local storage
+const CURRENT_TEXT_KEY = 'transit_current_text';
 
-function getTranslator() {
-  return translators[app.options.translator];
+// Setter / Getter for current text
+// 
+// If text if passed, update `current_text` in local storage,
+// otherwise, read from local storage.
+function currentText(text) {
+  if (text) {
+    localStorage.setItem(CURRENT_TEXT_KEY, text);
+    return text;
+  } else {
+    return localStorage.getItem(CURRENT_TEXT_KEY);
+  }
 }
 
-// 执行翻译动作
-function translateHanlder(request, sender, sendResponse) {
-  // 如果翻译已经缓存起来了，则直接取缓存中的结果，不再向服务器发请求
-  // TODO 为翻译缓存提供简单统计 @greatghoul
-  currentText = request.text;
-
-  // 如果词为空，则不再翻译
-  if (!currentText) return;
-
-  // log('Translating', currentText, 'from', service.name);
-  getTranslator().translate(currentText, sendResponse);
+// Translate text and send result back
+// 
+// TODO: Cache translated result to speed up querying.
+function translateHanlder(message, sender, sendResponse) {
+  const translator = translators[app.options.translator];
+  translator.translate(message.text, sendResponse);
 }
 
-// 划词翻译只翻译单词
+// Inspect translation works only on word
 function canTranslate(text) {
   return /^[a-z]+(\'|\'s)?$/i.test(text);
 }
 
-function selectionHandler(request, sender, sendResponse) {
-  currentText = request.text;
-  app.log('Selection from page:', request.text);
+// Save current selection to localStorage
+function selectionHandler(message, sender, sendResponse) {
+  currentText(message.text);
+}
 
-  if (app.options.pageInspect && canTranslate(currentText)) {
-    if (request.mode == 'margin') {
-      app.talkToPage(null, request);
-    } else {
-      sendResponse();
-    }
-  }
+function currentTextHandler(message, sender, sendResponse) {
+  sendResponse(currentText());
 }
 
 app.registerMessageDispatcher({
   translate: translateHanlder,
-  selection: selectionHandler
+  selection: selectionHandler,
+  currentText: currentTextHandler
 });
 
 app.initOptions();

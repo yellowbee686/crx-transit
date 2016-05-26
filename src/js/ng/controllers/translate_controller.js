@@ -1,6 +1,6 @@
-var background = chrome.extension.getBackgroundPage();
-var app = require('../../config/application');
-var utils = require('../../lib/utils');
+import sugar from 'sugar';
+import app from '../../config/application';
+import { renderTranslation } from '../../lib/utils';
 
 angular
   .module('TransitApp')
@@ -12,11 +12,10 @@ angular
     $scope.resetSource = function() {
       $scope.source = '';
       $scope.output = '';
-      background.currentText = '';
     };
 
     $scope.translate = function(source) {
-      $scope.source = source.trim();
+      $scope.source = (source || '').trim();
 
       if ($scope.source) {
         $scope.output = '<div class="loading">正在查询...</div>';
@@ -25,7 +24,7 @@ angular
         chrome.extension.sendMessage(message, function(response) {
           app.log("Translate:", response);
           $scope.$apply(function() {
-            $scope.output = utils.renderTranslation($scope.source, response);
+            $scope.output = renderTranslation($scope.source, response);
           });
         });
       } else {
@@ -51,6 +50,8 @@ angular
           document.execCommand('insertText', false, '\n');
         } else {
           $scope.translate($scope.source);
+          
+          chrome.runtime.sendMessage({ type: 'selection', text: $scope.source });
         }
       }
     };
@@ -61,11 +62,13 @@ angular
       }
     };
 
-    $scope.translate(background.currentText);
+    chrome.runtime.sendMessage({ type: 'currentText' }, (text) => {
+      $scope.translate(text);
 
-    $timeout(function() {
-      var source = document.querySelector('#source');
-      source.focus();
-      source.select();
-    }, 200);
+      $timeout(function() {
+        var source = document.querySelector('#source');
+        source.focus();
+        source.select();
+      }, 500);
+    });
   });

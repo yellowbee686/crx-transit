@@ -4,6 +4,9 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     browserify: {
+      options: {
+        transform: [['babelify', { 'presets': ['es2015'] }]]
+      },
       default: {
         files: [{
           expand: true,
@@ -14,6 +17,9 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
+      options: {
+        jshintrc: true
+      },
       files: ['src/js/**/*.js']
     },
     uglify: {
@@ -67,16 +73,12 @@ module.exports = function(grunt) {
         tasks: ['sass'],
       },
       static: {
-        files: {
-          expand: true,
-          cwd: 'src/',
-          src: [
-            'img/**/*',
-            '*.html',
-            'manifest.json'
-          ]
-        },
-        tasks: ['copy']
+        files: [
+          'src/img/**/*',
+          'src/*.html',
+          'src/manifest.json'
+        ],
+        tasks: ['copy'],
       }
     },
     compress: {

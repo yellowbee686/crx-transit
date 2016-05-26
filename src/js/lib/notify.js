@@ -1,6 +1,10 @@
-var $ = require('jquery');
-var sugar = require('sugar');
-var utils = require('./utils');
+import $ from 'jquery';
+import sugar from 'sugar';
+import {
+  stopPropagation,
+  clearSelection,
+  renderTranslation
+} from './utils';
 
 var notifyList = [];
 var tpls = {
@@ -56,7 +60,7 @@ Notify.prototype.request = function() {
   var message = { type: 'translate', text: self.text };
 
   chrome.extension.sendMessage(message, function(response) {
-    var result = utils.renderTranslation(self.text, response);
+    var result = renderTranslation(self.text, response);
     self.$el.find('.transit-notify-content').html(result);
     self.bind();
     self.hide();
@@ -86,7 +90,7 @@ Notify.prototype.bind = function() {
   $close.click($.proxy(this.close, this));
 
   // Prevent trigger transit event.
-  $close.mouseup(utils.stopPropagation);
+  $close.mouseup(stopPropagation);
 };
 
 // Hide the notify after configured seconds.
@@ -97,7 +101,7 @@ Notify.prototype.hide = function() {
 
 // Close the notify immediately
 Notify.prototype.close = function(event) {
-  utils.clearSelection();
+  clearSelection();
   this.$el.fadeOut($.proxy(this.destroy, this));
 };
 
@@ -107,8 +111,11 @@ Notify.prototype.destroy = function() {
   this.$el.remove();
 };
 
-module.exports = function(text, mode, handler) {
+const notify = function(text, options) {
   if (!notifyList.find({ text: text })) {
-    notifyList.push(new Notify(text, mode, handler));
+    notifyList.push(new Notify(text, options));
   }
 };
+
+window.notify = notify;
+export default notify;

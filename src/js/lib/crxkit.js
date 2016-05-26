@@ -4,18 +4,18 @@
  * jshint strict: true
  */
 
-require('sugar');
+import sugar from 'sugar';
 
-var options = {};
-var name = 'crxkit';
+let options = {};
+let name = 'crxkit';
 
 function noop() {}
 
 function registerMessageDispatcher(dispatcher) {
   chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      var handler = dispatcher[request.type] || noop;
-      handler(request, sender, sendResponse);
+    function(message, sender, sendResponse) {
+      const handler = dispatcher[message.type] || noop;
+      handler(message, sender, sendResponse);
 
       return true;
     }
@@ -24,7 +24,7 @@ function registerMessageDispatcher(dispatcher) {
 
 function talkToPage(tabId, message, callback) {
   if (tabId) {
-    chrome.tabs.sendMessage(tabId, message, callback);  
+    chrome.tabs.sendMessage(tabId, message, callback);
   } else {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       talkToPage(tabs[0].id, message, callback);
