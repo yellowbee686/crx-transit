@@ -15,29 +15,26 @@ function isInFrameset() {
   return !!window.top.document.querySelector('frameset');
 }
 
-function toggleLinkInspectMode(evt) {
-  if (app.options.linkInspect && evt.keyCode == 20) {
-    capslockEvents.push(evt.keyCode);
+// Ctrl + Shift + L
+function isLinkInspectKeymap(evt) {
+  return evt.ctrlKey && evt.shiftKey && evt.which == 12;
+}
 
-    if (capslockEvents.length == 1) {
-      var timer = setTimeout(function() {
-        capslockEvents = [];
-        clearTimeout(timer);
-      }, 500);
-    } else {
-      $('body').toggleClass('translt-link-inspect-mode');
-      capslockEvents = [];
-    }
+function shortcutHandler(evt) {
+  if (app.options.linkInspect && isLinkInspectKeymap(evt)) {
+    toggleLinkInspectMode();
   }
 }
 
 function toggleLinkInspectMode(flag) {
   $('body').toggleClass('translt-link-inspect-mode', flag);
+  const enabled = $('body').is('.translt-link-inspect-mode');
+  chrome.runtime.sendMessage({ type: 'linkInspect', enabled: enabled });
 }
 
 // Inspect translation works only on word
 function canTranslate(text) {
-  return /^[a-z]+(\'|\'s)?$/i.test(text);
+  return /^[a-z]+(\'|\'s)?$/i.test(text);S
 }
 
 function selectionHandler(evt) {
@@ -66,6 +63,6 @@ function selectionHandler(evt) {
 }
 
 app.initOptions(function(options) {
-  $(document).on('keyup keydown', toggleLinkInspectMode);
+  $(document).on('keypress', shortcutHandler);
   $(document).on('mouseup', selectionHandler);
 });
