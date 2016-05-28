@@ -15,13 +15,17 @@ app.setup({
 app.showUpdateNotes = function() {
   chrome.notifications.create("update_notes", {
       type: "list",
-      title: "TransIt V1.5.3 更新记录",
+      title: "TransIt V1.5.4 更新记录",
       message: "",
       iconUrl: "img/icon48.png",
       items: [
         {
           title: '',
-          message: '解决有时会冒出一大堆翻译结果的 bug'
+          message: '解决链接划词模式劫持全局快捷键导致页面链接点击异常的问题'
+        },
+        {
+          title: '',
+          message: '链接划词的快捷键更新为 Ctrl+Shift+L'
         }
       ]
   }, function () {});
