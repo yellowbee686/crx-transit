@@ -31,11 +31,6 @@ function translateHanlder(message, sender, sendResponse) {
   translator.translate(message.text, sendResponse);
 }
 
-// Inspect translation works only on word
-function canTranslate(text) {
-  return /^[a-z]+(\'|\'s)?$/i.test(text);
-}
-
 // Save current selection to localStorage
 function selectionHandler(message, sender, sendResponse) {
   currentText(message.text);
