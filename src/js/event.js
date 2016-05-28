@@ -45,10 +45,20 @@ function currentTextHandler(message, sender, sendResponse) {
   sendResponse(currentText());
 }
 
+function linkInspectHandler(message, sender, sendResponse) {
+  app.log(message);
+  if (message.enabled) {
+    chrome.browserAction.setIcon({ path: 'img/icon48-link.png' });
+  } else {
+    chrome.browserAction.setIcon({ path: 'img/icon48.png' });
+  }
+}
+
 app.registerMessageDispatcher({
   translate: translateHanlder,
   selection: selectionHandler,
-  currentText: currentTextHandler
+  currentText: currentTextHandler,
+  linkInspect: linkInspectHandler
 });
 
 app.initOptions();
