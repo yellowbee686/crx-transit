@@ -1,4 +1,4 @@
-var app = require('../lib/crxkit');
+import app from '../lib/crxkit';
 
 app.setup({
   name: 'transit',

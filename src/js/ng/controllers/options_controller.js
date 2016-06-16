@@ -10,11 +10,10 @@ angular
     };
 
     $scope.nextTranslator = function() {
-      if ($scope.options.translator == 'baidu') {
-        $scope.options.translator = 'youdao';
-      } else {
-        $scope.options.translator = 'baidu';
-      }
+      const translators = ['baidu', 'youdao', 'bing'];
+      
+      let index = translators.indexOf($scope.options.translator) + 1;
+      $scope.options.translator = translators[index % translators.length];
     };
 
     app.initOptions(function() {
