@@ -43,20 +43,24 @@ body {
 }
 
 .btn-translator {
-  width: 50px;
+  width: 29px;
   height: 16px;
-  margin-right: 55px;
-  background-size: 50px 16px;
+  margin-right: 69px;
+  background-size: 16px 16px;
   background-repeat: no-repeat;
-  background-position: right center;
+  background-position: center center;
 
   &.youdao {
+    background-size: 29px 16px;
     background-image: url(../img/translators/youdao.png);
   }
 
   &.baidu {
-    background-size: 50px 12px;
     background-image: url(../img/translators/baidu.png);
+  }
+
+  &.bing {
+    background-image: url(../img/translators/bing.png);
   }
 }
 

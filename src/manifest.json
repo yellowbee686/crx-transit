@@ -3,7 +3,7 @@
 
   "name": "TransIt",
   "description": "让划词翻译更简单",
-  "version": "1.5.4",
+  "version": "1.6",
 
   "icons": {
     "48": "img/icon48.png",
@@ -40,8 +40,10 @@
     "storage",
     "notifications",
     "http://fanyi.youdao.com/openapi.do",
-    "http://openapi.baidu.com/",
-    "http://trit.herokuapp.com/api/items"
+    "http://dict.baidu.com/s",
+    "http://fanyi.baidu.com/v2transapi",
+    "http://cn.bing.com/dict/search",
+    "http://cn.bing.com/translator/api/Translate/TranslateArray"
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

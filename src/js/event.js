@@ -4,8 +4,8 @@
  * jshint strict: true
  */
 
-var translators = require('./translators');
-var app = require('./config/application');
+import translators from './translators';
+import app from './config/application';
 
 // Key name to store current text in local storage
 const CURRENT_TEXT_KEY = 'transit_current_text';
