@@ -1,7 +1,5 @@
 /*
  * TransIt ContentScript
- * 
- * jshint strict: true
  */
 
 import $ from 'jquery';

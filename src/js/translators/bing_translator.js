@@ -13,10 +13,22 @@ export default class BingTranslator {
     this.name = 'bing';
   }
 
+  _parseMean(index, meanNode) {
+    const $mean = $(meanNode);
+    const def = $mean.find('.def').text();
+    let   pos = $mean.find('.pos').text();
+
+    if (pos == '网络') {
+      pos = index > 0 ? '<br/><strong>网络：</strong><br/>' : '';
+    } else {
+      pos = `${pos} `;
+    }
+
+    return `${pos}${def}`;
+  }
+
   _parse(page) {
     var $result = $(sanitizeHTML(page));
-
-    // if (!$result.find('.lf_area').length) return;
 
     if ($result.find('.qdef').length) {
       var response = {};
@@ -27,12 +39,8 @@ export default class BingTranslator {
       }
       
       var $means = $result.find('.hd_area + ul > li');
-      response.translation = $means.map(function() {
-        const pos = $(this).find('.pos').text();
-        const def = $(this).find('.def').text();
-
-        return `${pos} ${def}`;
-      }).toArray().join('<br/>');
+      response.translation =
+        $means.map(this._parseMean).toArray().join('<br/>');
 
       return response;
     } else if ($result.find('.p1-11')) {
