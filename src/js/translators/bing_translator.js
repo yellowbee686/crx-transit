@@ -5,7 +5,8 @@ import sugar from 'sugar';
 import $ from 'jquery';
 import { sanitizeHTML } from '../lib/utils';
 
-const API_URL = 'http://cn.bing.com/dict/search';
+const DICT_URL = 'http://cn.bing.com/dict/search';
+const TRANSLATE_URL = 'http://cn.bing.com/translator/api/Translate/TranslateArray?from=-&to=zh-CHS';
 const REFERER = 'http://cn.bing.com/dict/?mkt=zh-cn&setlang=zh';
 
 export default class BingTranslator {
@@ -27,7 +28,7 @@ export default class BingTranslator {
     return `${pos}${def}`;
   }
 
-  _parse(page) {
+  _parseWord(page) {
     var $result = $(sanitizeHTML(page));
 
     if ($result.find('.qdef').length) {
@@ -50,9 +51,15 @@ export default class BingTranslator {
     }
   }
 
-  _request(text, callback) {
+  _parseText(data) {
+    const translation = data.items.map(item => item.text).join('<br/><br/>');
+
+    return { translation: translation };
+  }
+
+  _requestWord(text, callback) {
     const settings = {
-      url: API_URL,
+      url: DICT_URL,
       data: { q: text },
       headers: {
         'Accept-Language': 'zh-CN,zh;q=0.8'
@@ -60,15 +67,48 @@ export default class BingTranslator {
     };
 
     $.ajax(settings)
-      .done(page => callback(this._parse(page)))
+      .done(page => callback(this._parseWord(page)))
+      .fail(() => callback(null));
+  }
+
+  _buildLine(text, index) {
+    console.log(text, index);
+    const timestamp = new Date().getTime();
+    
+    return {
+      id: timestamp + index,
+      text: text
+    };
+  }
+
+  _splitLines(text) {
+    return text.split(/\s*\n\s*/mg).map(this._buildLine);
+  }
+
+  _requestText(text, callback) {
+    const settings = {
+      url: TRANSLATE_URL,
+      type: 'POST',
+      data: JSON.stringify(this._splitLines(text)),
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      headers: {
+        'Accept-Language': 'zh-CN,zh;q=0.8'
+      }
+    };
+
+    $.ajax(settings)
+      .done(data => callback(this._parseText(data)))
       .fail(() => callback(null));
   }
 
   translate(text, callback) {
     if (/^\s*$/.test(text)) {
       callback(null);
+    } else if (/^[a-zA-Z]+$/.test(text)) {
+      this._requestWord(text, callback);
     } else {
-      this._request(text, callback);
+      this._requestText(text, callback);
     }
   }
 }
