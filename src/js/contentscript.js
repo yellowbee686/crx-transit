@@ -32,7 +32,8 @@ function toggleLinkInspectMode(flag) {
 
 // Inspect translation works only on word
 function canTranslate(text) {
-  return /^[a-z]+(\'|\'s)?$/i.test(text);
+  //return /^[a-z]+(\'|\'s)?$/i.test(text);
+  return true;
 }
 
 function selectionHandler(evt) {
