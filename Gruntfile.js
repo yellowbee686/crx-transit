@@ -63,10 +63,28 @@ module.exports = function(grunt) {
         }]
       }
     },
+    // watch: {
+    //   scripts: {
+    //     files: 'src/js/**/*.js',
+    //     tasks: ['jshint', 'browserify'],
+    //   },
+    //   styles: {
+    //     files: 'src/css/**/*',
+    //     tasks: ['sass'],
+    //   },
+    //   static: {
+    //     files: [
+    //       'src/img/**/*',
+    //       'src/*.html',
+    //       'src/manifest.json'
+    //     ],
+    //     tasks: ['copy'],
+    //   }
+    // },
     watch: {
       scripts: {
         files: 'src/js/**/*.js',
-        tasks: ['jshint', 'browserify'],
+        tasks: ['browserify'],
       },
       styles: {
         files: 'src/css/**/*',
@@ -103,7 +121,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('build', ['jshint', 'browserify', 'sass', 'copy']);
-  grunt.registerTask('dist', ['build', 'uglify', 'compress'])
+  grunt.registerTask('build', ['browserify','sass', 'copy']);
   grunt.registerTask('default', ['build', 'watch'])
+  //grunt.registerTask('build', ['jshint', 'browserify', 'sass', 'copy']);
+  //grunt.registerTask('dist', ['build', 'uglify', 'compress'])
+  //grunt.registerTask('default', ['build', 'watch'])
 };
