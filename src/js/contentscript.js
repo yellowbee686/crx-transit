@@ -32,12 +32,11 @@ function toggleLinkInspectMode(flag) {
 
 // Inspect translation works only on word
 function canTranslate(text) {
-  return /^[a-z]+(\'|\'s)?$/i.test(text);
-  //return true;
+  //return /^[a-z]+(\'|\'s)?$/i.test(text);
+  return true;
 }
 
 function selectionHandler(evt) {
-  //连接划词莫名报错
   //toggleLinkInspectMode(false);
 
   const selection = getSelection(evt);
@@ -50,12 +49,14 @@ function selectionHandler(evt) {
         notify(selection.text, {
           mode: 'in-place',
           position: selection.position,
-          timeout: app.options.notifyTimeout
+          timeout: app.options.notifyTimeout,
+          replaceMode: app.options.replaceMode
         });
       } else {
         top.notify(selection.text, {
           mode: 'margin',
-          timeout: app.options.notifyTimeout
+          timeout: app.options.notifyTimeout,
+          replaceMode: app.options.replaceMode
         });
       }
     }

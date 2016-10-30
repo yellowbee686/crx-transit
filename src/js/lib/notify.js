@@ -30,7 +30,19 @@ function getNotifyList() {
   return $notifyList;
 }
 
+function clearNotifyList() {
+  for(var i=0;i<notifyList.length;i++){
+    notifyList[i].close();
+  }
+}
+
 var Notify = function(text, options) {
+  //如果是替代模式，立即销毁上一个
+  var self = this;
+  if(options.replaceMode=='replace'){
+    clearNotifyList();
+  }
+
   this.text = text;
   this.options = options;
 
@@ -58,7 +70,6 @@ Notify.prototype.render = function() {
 Notify.prototype.request = function() {
   var self = this;
   var message = { type: 'translate', text: self.text };
-
   chrome.extension.sendMessage(message, function(response) {
     var result = renderTranslation(self.text, response);
     self.$el.find('.transit-notify-content').html(result);
@@ -81,6 +92,7 @@ Notify.prototype.mouseover = function() {
 
 // Setup event binding
 Notify.prototype.bind = function() {
+  //鼠标划入时调用mouseover 划出时调用hide
   this.$el.hover(
     $.proxy(this.mouseover, this),
     $.proxy(this.hide, this)
@@ -95,8 +107,11 @@ Notify.prototype.bind = function() {
 
 // Hide the notify after configured seconds.
 Notify.prototype.hide = function() {
-  this.$el.delay(this.options.timeout * 1000)
+  //如果替代模式是队列，则一个个按时间销毁
+  if(this.options.replaceMode=='queue'){
+    this.$el.delay(this.options.timeout * 1000)
           .fadeOut($.proxy(this.destroy, this));
+  }
 };
 
 // Close the notify immediately
@@ -108,10 +123,13 @@ Notify.prototype.close = function(event) {
 // Destroy the notify and remove it from the page.
 Notify.prototype.destroy = function() {
   notifyList.remove({ text: this.text });
-  this.$el.remove();
+  if(this.$el && this.$el.remove){
+    this.$el.remove();
+  }
 };
 
 const notify = function(text, options) {
+  // 相同的搜索存在时不会再加入
   if (!notifyList.find({ text: text })) {
     notifyList.push(new Notify(text, options));
   }
