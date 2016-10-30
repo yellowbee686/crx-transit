@@ -71,7 +71,7 @@
   import pako from 'pako';
   import lzo from './minilzo-decompress.min';
   import ripemd128 from './ripemd128.min';
-  import Promise from './bluebird.min';
+  import Promise from '../bluebird.min';
   import parseXml from './mdict-parseXml';
   import common from './mdict-common';
   // Value of undefined.

@@ -16,7 +16,11 @@ function format(result) {
   var response = {};
   response.translation = '';
   for(var i=0;i<result.length;i++){
-    response.translation += result[i]+'<br/><br/>';
+    response.translation += result[i].title+'<br/><br/>';
+    var content = result[i].content;
+    for(var j=0;j<content.length;j++){
+      response.translation += content[j]+'<br/><br/>';
+    }
   }
   return response;
 
