@@ -1,4 +1,5 @@
 import app from '../lib/crxkit';
+import Promise from '../lib/mdict_js/bluebird.min';
 
 app.setup({
   name: 'transit',

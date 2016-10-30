@@ -32,12 +32,13 @@ function toggleLinkInspectMode(flag) {
 
 // Inspect translation works only on word
 function canTranslate(text) {
-  //return /^[a-z]+(\'|\'s)?$/i.test(text);
-  return true;
+  return /^[a-z]+(\'|\'s)?$/i.test(text);
+  //return true;
 }
 
 function selectionHandler(evt) {
-  toggleLinkInspectMode(false);
+  //连接划词莫名报错
+  //toggleLinkInspectMode(false);
 
   const selection = getSelection(evt);
 
