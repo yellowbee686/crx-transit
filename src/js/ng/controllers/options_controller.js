@@ -75,9 +75,12 @@ angular
               }));
             }).then(function(){
               sendResponse(results);
-            })
+            }, function(){
+              console.log('reject!!!');
+              sendResponse(results);
+            });
           } else {
-            console.log('nothing found');
+            //console.log('nothing found');
             //sendResponse('');
           }
         }

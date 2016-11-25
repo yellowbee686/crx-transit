@@ -10,20 +10,7 @@ import app from '../config/application';
 // import MCommon from '../lib/mdict_js/mdict-common'
 // import MParser from '../lib/mdict_js/mdict-parser'
 // import MRenderer from '../lib/mdict_js/mdict-renderer'
-
-function format(result) {
-  if (!result || !result.length) return null;
-  var response = {};
-  response.translation = '';
-  for(var i=0;i<result.length;i++){
-    response.translation += result[i].title+'<br/><br/>';
-    var content = result[i].content;
-    for(var j=0;j<content.length;j++){
-      response.translation += content[j]+'<br/><br/>';
-    }
-  }
-  return response;
-}
+var async = require('../lib/async.min');
 
 var convertMap = {
   'Ā' : 'ā',
@@ -49,6 +36,40 @@ function convertUpcase(text) {
     var element = text[index];
     if(convertMap[element]){
       output += convertMap[element];
+    } else {
+      output += element;
+    }
+  }
+  return output;
+}
+
+var convertTokyoMap = {
+  'ā' : 'A',
+  'ī' : 'I',
+  'ū' : 'U',
+  'ṛ' : 'R',
+  'ṝ' : 'RR',
+  'ḷ' : 'IR',
+  'ḹ' : 'IRR',
+  'ṅ' : 'G',
+  'ñ' : 'J',
+  'ṭ' : 'T',  
+  'ḍ' : 'D',
+  'ṇ' : 'N',
+  'ś' : 'z',
+  'ṣ' : 'S',
+  'ṃ' : 'M',
+  'ḥ' : 'H',
+};
+
+// 将大写转为小写的形式，需要查询的网址中并没有大写的部分
+function convertToTokyo(text) {
+  text = text.trim();
+  var output = '';
+  for (var index = 0; index < text.length; index++) {
+    var element = text[index];
+    if(convertTokyoMap[element]){
+      output += convertTokyoMap[element];
     } else {
       output += element;
     }
@@ -88,13 +109,15 @@ const markLen = mark.length;
 const postMark = ']<a href=&quot;javascript:hideBox()';
 const bracket = '<';
 const rbracket = '>';
+const unicodeStart = '&#';
+const unicodeEnd = ';';
 
 function parseHTML(text) {
   var arr = new Array();
   var idx = 0;
   idx = text.indexOf(mark, idx);
   while(idx!=-1){
-    var lastIdx = text.indexOf(postMark);
+    var lastIdx = text.indexOf(postMark, idx);
     var during = text.substring(idx+markLen, lastIdx); //中间的字符需要去除所有<>中间的部分
     var pure = '';
     var start = false;
@@ -110,14 +133,71 @@ function parseHTML(text) {
         pure += ch;
       }
     }
+    idx = text.indexOf(mark, idx+markLen);
     //还需要转码为字符
-    
+    //pure = pure.replace(new RegExp('&#','gm'),'\\u');
+    //pure = pure.replace(new RegExp(';','gm'),'');
+    //前面花括号中的暂时不保留，以后需要用到再存储
+    var start = pure.indexOf('[');
+    //var last = pure.indexOf(']');
+    //pure = pure.substr(start+1, last - start - 1);
+    pure = pure.substr(start+1);
+    // 有些会嵌套答案写在后面，比如buddha { pp. }[budh_1] 暂时只留前面不解析后面
+    var bigStart = pure.indexOf('{');
+    if(bigStart!=-1){
+      pure = pure.substr(0, bigStart).trim();
+    }
+    var i = pure.indexOf(unicodeStart);
+    var result = '';
+    var last = 0;
+    while(i!=-1){
+      result += pure.substring(0, i);
+      last = pure.indexOf(unicodeEnd);
+      var during = pure.substring(i+2, last);
+      result += String.fromCharCode(parseInt(during));
+      if(last>=pure.length-1){
+        break;
+      }
+      pure = pure.substr(last+1);
+      i = pure.indexOf(unicodeStart);
+    }
+    result += pure; //补上最后一段正常的
+    pure = result;
     //pure还需要分析下划线，如果后面不是数字，则表示没查到，拆成两个词丢给mdict查询，即arr要再push一个
-    
-
+    var pureArr = pure.split('_');
+    if(pureArr.length>=2){
+      var num = parseInt(pureArr[1]);
+      if(isNaN(num)){
+        arr = arr.concat(pureArr);
+        continue;
+      } else {
+        pure = pureArr[0];
+      }
+    }
     arr.push(pure);
   }
   return arr;
+}
+
+function format(result) {
+  if (!result || !result.length) return null;
+  var response = {};
+  response.translation = '';
+  for(var k=0;k<result.length;k++){
+    var item = result[k];
+    if(item && item.length){
+      for(var i=0;i<item.length;i++){
+        response.translation += item[i].title+'<br/><br/>';
+        var content = item[i].content;
+        for(var j=0;j<content.length;j++){
+          response.translation += content[j]+'<br/><br/>';
+        }
+      }
+    }
+    response.translation += '<br/><br/>';
+  }
+  
+  return response;
 }
 
 const API_URL = 'http://sanskrit.inria.fr/cgi-bin/SKT/sktgraph?lex=SH&st=t&us=f&cp=t&text=';
@@ -131,18 +211,36 @@ function request(text, callback) {
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (this.readyState == 4) {
-      var result = JSON.parse(this.responseText);
-      console.log('http result text: ' + result);
-      chrome.extension.sendMessage({type: 'searchSanskrit', text: result }, function(content) {
-        callback(format(content));
-        console.log('--');
-      });
+      var result = this.responseText;
+      if(result != ''){
+        var arr = parseHTML(result);
+        console.log('http result text: ' + arr[0]);
+        var resultArr = [];
+        async.eachSeries(arr, function(item, cb){
+          item = convertToTokyo(item);
+          chrome.extension.sendMessage({type: 'searchSanskrit', text: item }, function(content) {
+            resultArr.push(content);
+            cb();
+          });
+        }, function(err){
+          if(err){
+            callback('');
+          } else {
+            callback(format(resultArr));
+          }
+        });
+        // chrome.extension.sendMessage({type: 'searchSanskrit', text: arr[0] }, function(content) {
+        //   callback(format(content));
+        //   console.log('--');
+        // });
+      } else {
+        console.log('http timeout');
+        callback('');
+      }
     }
   };
   xhr.open('GET', API_URL + formatted + URL_POSTFIX, true);
   xhr.send();
-
-  
 };
 
 var SanskritTranslator = { name: 'sanskrit' };
