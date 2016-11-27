@@ -41,7 +41,7 @@ function selectionHandler(evt) {
 
   const selection = getSelection(evt);
 
-  if (selection) {
+  if (selection && !top.overNotify) {
     chrome.runtime.sendMessage({ type: 'selection', text: selection.text });
 
     if (app.options.pageInspect && canTranslate(selection.text)) {
@@ -63,7 +63,15 @@ function selectionHandler(evt) {
   }
 }
 
+function startMouseHandler(evt){
+  console.log('startMouseHandler', top.overNotify);
+  if(!top.overNotify){
+    top.clearNotifyList();
+  }
+}
+
 app.initOptions(function(options) {
   $(document).on('keypress', shortcutHandler);
   $(document).on('mouseup', selectionHandler);
+  $(document).on('mousedown', startMouseHandler);
 });

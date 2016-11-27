@@ -90,6 +90,16 @@ Notify.prototype.mouseover = function() {
   }
 };
 
+Notify.prototype.mouseout = function(){
+  console.log('mouseout!!!');
+  window.overNotify = false;
+};
+
+Notify.prototype.mouseenter = function(){
+  console.log('mouseenter!!!');
+  window.overNotify = true;
+};
+
 // Setup event binding
 Notify.prototype.bind = function() {
   //鼠标划入时调用mouseover 划出时调用hide
@@ -97,6 +107,8 @@ Notify.prototype.bind = function() {
     $.proxy(this.mouseover, this),
     $.proxy(this.hide, this)
   );
+  this.$el.mouseleave($.proxy(this.mouseout, this));
+  this.$el.mouseenter($.proxy(this.mouseenter, this));
 
   var $close = this.$el.find('.transit-notify-close');
   $close.click($.proxy(this.close, this));
@@ -135,5 +147,6 @@ const notify = function(text, options) {
   }
 };
 
+window.clearNotifyList = clearNotifyList;
 window.notify = notify;
 export default notify;

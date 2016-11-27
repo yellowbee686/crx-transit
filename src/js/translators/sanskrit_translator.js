@@ -116,65 +116,73 @@ function parseHTML(text) {
   var arr = new Array();
   var idx = 0;
   idx = text.indexOf(mark, idx);
-  while(idx!=-1){
+  while (idx != -1) {
     var lastIdx = text.indexOf(postMark, idx);
-    var during = text.substring(idx+markLen, lastIdx); //中间的字符需要去除所有<>中间的部分
+    var during = text.substring(idx + markLen, lastIdx); //中间的字符需要去除所有<>中间的部分
     var pure = '';
+    //剔除尖括号内的html部分
     var start = false;
-    for(var i = 0;i<during.length;i++){
+    for (var i = 0; i < during.length; i++) {
       var ch = during[i];
-      if(ch == bracket){
+      if (ch == bracket) {
         start = true;
-      } else if(ch == rbracket){
+      } else if (ch == rbracket) {
         start = false;
         continue;
       }
-      if(!start){
+      if (!start) {
         pure += ch;
       }
     }
-    idx = text.indexOf(mark, idx+markLen);
-    //还需要转码为字符
-    //pure = pure.replace(new RegExp('&#','gm'),'\\u');
-    //pure = pure.replace(new RegExp(';','gm'),'');
-    //前面花括号中的暂时不保留，以后需要用到再存储
-    var start = pure.indexOf('[');
-    //var last = pure.indexOf(']');
-    //pure = pure.substr(start+1, last - start - 1);
-    pure = pure.substr(start+1);
-    // 有些会嵌套答案写在后面，比如buddha { pp. }[budh_1] 暂时只留前面不解析后面
-    var bigStart = pure.indexOf('{');
-    if(bigStart!=-1){
-      pure = pure.substr(0, bigStart).trim();
-    }
-    var i = pure.indexOf(unicodeStart);
-    var result = '';
-    var last = 0;
-    while(i!=-1){
-      result += pure.substring(0, i);
-      last = pure.indexOf(unicodeEnd);
-      var during = pure.substring(i+2, last);
-      result += String.fromCharCode(parseInt(during));
-      if(last>=pure.length-1){
-        break;
-      }
-      pure = pure.substr(last+1);
-      i = pure.indexOf(unicodeStart);
-    }
-    result += pure; //补上最后一段正常的
-    pure = result;
-    //pure还需要分析下划线，如果后面不是数字，则表示没查到，拆成两个词丢给mdict查询，即arr要再push一个
-    var pureArr = pure.split('_');
-    if(pureArr.length>=2){
-      var num = parseInt(pureArr[1]);
-      if(isNaN(num)){
-        arr = arr.concat(pureArr);
-        continue;
+    idx = text.indexOf(mark, idx + markLen);
+    var needParse = pure;
+    //needParse一定是以{开头
+    do{
+      var bigIdx = needParse.indexOf('{', 1); //检查是否有嵌套的另一个词
+      if(bigIdx!=-1){ //有并排的另一个词或嵌套的词
+        pure = needParse.substr(0, bigIdx);
+        needParse = needParse.substr(bigIdx);
       } else {
-        pure = pureArr[0];
+        pure = needParse;
+        needParse = '';
       }
-    }
-    arr.push(pure);
+
+      var start = pure.indexOf('[');
+      var vol = pure.substring(0, start); //截取词性
+      pure = pure.substr(start + 1);
+      var i = pure.indexOf(unicodeStart);
+      var result = '';
+      var last = 0;
+      //转码为字符
+      while (i != -1) {
+        result += pure.substring(0, i);
+        last = pure.indexOf(unicodeEnd);
+        var during = pure.substring(i + 2, last);
+        result += String.fromCharCode(parseInt(during));
+        if (last >= pure.length - 1) {
+          break;
+        }
+        pure = pure.substr(last + 1);
+        i = pure.indexOf(unicodeStart);
+      }
+      result += pure; //补上最后一段正常的
+      result = result.replace(']','');
+      pure = result.trim();
+      //pure还需要分析下划线，如果后面不是数字，则表示没查到，拆成两个词丢给mdict查询，即arr要再push一个
+      var pureArr = pure.split('_');
+      if (pureArr.length >= 2) {
+        var num = parseInt(pureArr[1]);
+        if (isNaN(num)) {
+          for(var ii = 0;ii<pureArr.length;ii++){
+            arr.push({vol:vol, word:pureArr[ii]});
+          }
+          continue;
+        } else {
+          pure = pureArr[0];
+        }
+      }
+      arr.push({vol:vol, word:pure});
+    }while(needParse.length>0)
   }
   return arr;
 }
@@ -183,20 +191,21 @@ function format(result) {
   if (!result || !result.length) return null;
   var response = {};
   response.translation = '';
-  for(var k=0;k<result.length;k++){
+  for (var k = 0; k < result.length; k++) {
     var item = result[k];
-    if(item && item.length){
-      for(var i=0;i<item.length;i++){
-        response.translation += item[i].title+'<br/><br/>';
-        var content = item[i].content;
-        for(var j=0;j<content.length;j++){
-          response.translation += content[j]+'<br/><br/>';
+    var ic = item.content;
+    if (ic && ic.length) {
+      for (var i = 0; i < ic.length; i++) {
+        response.translation += ic[i].title + '<br/><br/>';
+        response.translation += item.vol + '<br/><br/>';
+        var content = ic[i].content;
+        for (var j = 0; j < content.length; j++) {
+          response.translation += content[j] + '<br/><br/>';
         }
       }
     }
     response.translation += '<br/><br/>';
   }
-  
   return response;
 }
 
@@ -204,35 +213,28 @@ const API_URL = 'http://sanskrit.inria.fr/cgi-bin/SKT/sktgraph?lex=SH&st=t&us=f&
 const URL_POSTFIX = '&t=VH&topic=&mode=g';
 
 function request(text, callback) {
-  //app.log('sanskrit request ', app.options.dictfiles);
-  console.log('original text: ' + text);
   var formatted = convert(convertUpcase(text));
-  console.log('formatted text: ' + formatted);
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
+  xhr.onreadystatechange = function () {
     if (this.readyState == 4) {
       var result = this.responseText;
-      if(result != ''){
+      if (result != '') {
         var arr = parseHTML(result);
-        console.log('http result text: ' + arr[0]);
+        //console.log('http result text: ' + arr[0]);
         var resultArr = [];
-        async.eachSeries(arr, function(item, cb){
-          item = convertToTokyo(item);
-          chrome.extension.sendMessage({type: 'searchSanskrit', text: item }, function(content) {
-            resultArr.push(content);
+        async.eachSeries(arr, function (item, cb) {
+          var text = convertToTokyo(item.word);
+          chrome.extension.sendMessage({ type: 'searchSanskrit', text: text }, function (content) {
+            resultArr.push({vol:item.vol, content:content});
             cb();
           });
-        }, function(err){
-          if(err){
+        }, function (err) {
+          if (err) {
             callback('');
           } else {
             callback(format(resultArr));
           }
         });
-        // chrome.extension.sendMessage({type: 'searchSanskrit', text: arr[0] }, function(content) {
-        //   callback(format(content));
-        //   console.log('--');
-        // });
       } else {
         console.log('http timeout');
         callback('');

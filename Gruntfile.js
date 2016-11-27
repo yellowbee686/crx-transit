@@ -123,6 +123,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['browserify','sass', 'copy']);
   grunt.registerTask('default', ['build', 'watch'])
+  grunt.registerTask('dist', ['build', 'compress'])
   //grunt.registerTask('build', ['jshint', 'browserify', 'sass', 'copy']);
   //grunt.registerTask('dist', ['build', 'uglify', 'compress'])
   //grunt.registerTask('default', ['build', 'watch'])
