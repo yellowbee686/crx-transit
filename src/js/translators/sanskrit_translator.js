@@ -168,8 +168,13 @@ function parseHTML(text) {
       result += pure; //补上最后一段正常的
       result = result.replace(']','');
       pure = result.trim();
+      //还有可能被-分割，这种只查前面的词
+      var pureArr = pure.split('-');
+      if (pureArr.length >= 2) {
+        pure = pureArr[0];
+      }
       //pure还需要分析下划线，如果后面不是数字，则表示没查到，拆成两个词丢给mdict查询，即arr要再push一个
-      var pureArr = pure.split('_');
+      pureArr = pure.split('_');
       if (pureArr.length >= 2) {
         var num = parseInt(pureArr[1]);
         if (isNaN(num)) {
@@ -178,11 +183,15 @@ function parseHTML(text) {
           }
           continue;
         } else {
+          //pure = pureArr[0]+' '+pureArr[1];
           pure = pureArr[0];
         }
       }
       arr.push({vol:vol, word:pure});
     }while(needParse.length>0)
+  }
+  for(var i=0;i<arr.length;i++){
+    arr[i].word = convertToTokyo(arr[i].word);
   }
   return arr;
 }
@@ -222,17 +231,48 @@ function request(text, callback) {
         var arr = parseHTML(result);
         //console.log('http result text: ' + arr[0]);
         var resultArr = [];
+        var realKeys = [];
+        // 先查一遍每个词的列表，如果有相同的，则加入realKeys中，最终在realKeys中查询
         async.eachSeries(arr, function (item, cb) {
-          var text = convertToTokyo(item.word);
-          chrome.extension.sendMessage({ type: 'searchSanskrit', text: text }, function (content) {
-            resultArr.push({vol:item.vol, content:content});
+          //倒数第二个是空格，则已经是有数字标记的，不应该再到字典中查key了
+          if(item.word[item.word.length-2]==' '){
+            realKeys.push(item);
             cb();
-          });
+          } else {
+            chrome.extension.sendMessage({ type: 'searchSanskrit', query: {phrase: item.word, max: 10} }, function (ret) {
+              for(var j=0;j<ret.length;j++){
+                var keyArr = ret[j].content;
+                for(var i=0;i<keyArr.length;i++){
+                  var key = keyArr[i];
+                  //如果有原始的词，则只查原始的词
+                  if(key == item.word){
+                    realKeys.push(item);
+                    break;
+                  }
+                  if(key.indexOf(item.word+' ')!=-1){
+                    realKeys.push({vol:item.vol, word:key});
+                  }
+                }
+              }
+              cb();
+            });
+          }
         }, function (err) {
           if (err) {
             callback('');
           } else {
-            callback(format(resultArr));
+            async.eachSeries(realKeys, function (item, cb) {
+              chrome.extension.sendMessage({ type: 'searchSanskrit', query: item.word }, function (content) {
+                resultArr.push({vol:item.vol, content:content});
+                cb();
+              });
+            }, function (err) {
+              if (err) {
+                callback('');
+              } else {
+                callback(format(resultArr));
+              }
+            });
           }
         });
       } else {

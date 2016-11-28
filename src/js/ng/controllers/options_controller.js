@@ -58,7 +58,8 @@ angular
       }
 
       function doSearchHandler(message, sender, sendResponse){
-        if(message.text){
+        // query是一个结构体{phrase: .., max: .., follow: true}
+        if(message.query){
           // if($scope.mdict.search){
           //   $scope.mdict.search(message.text).then(function(content) {
           //     sendResponse(content);
@@ -69,7 +70,7 @@ angular
           if($scope.resources.length>0){
             var results = [];
             Promise.mapSeries($scope.resources, function(item, index, length){
-              return Promise.resolve(item(message.text).then(function(content){
+              return Promise.resolve(item(message.query).then(function(content){
                 var title = $scope.dictfiles[index].name;
                 results.push({title: title, content: content});
               }));
