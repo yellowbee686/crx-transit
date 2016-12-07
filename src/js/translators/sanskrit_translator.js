@@ -160,6 +160,7 @@ function parseHTML(text) {
         var during = pure.substring(i + 2, last);
         result += String.fromCharCode(parseInt(during));
         if (last >= pure.length - 1) {
+          pure = '';
           break;
         }
         pure = pure.substr(last + 1);
